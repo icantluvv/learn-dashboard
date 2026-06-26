@@ -1,7 +1,7 @@
 openapi: 3.0.2
 
 servers:
-  - url: "https://bcp-dev.dobro.zone"
+  - url: "https://example.com"
 
 info:
   version: 1.0.0

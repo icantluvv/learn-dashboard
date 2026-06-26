@@ -39,7 +39,7 @@ description: Поведенческая TDD-стратегия тестиров�
 - E2E-тесты;
 - ручное exploratory-тестирование для сложных или рискованных сценариев.
 
-Особенности frontend BCP:
+Особенности frontend проекта:
 
 - Разрешены только три вида frontend-тестов:
     - Unit: `*.unit.test.ts` или `*.unit.test.tsx`, Vitest в node environment.
@@ -54,7 +54,7 @@ description: Поведенческая TDD-стратегия тестиров�
 - В unit/component-тестах не обращайся к реальному backend endpoint. Мокай `fetch`, API client/hook или передавай typed fixtures; глобальный `fetch` в Vitest должен падать на unhandled request.
 - Для component-тестов используй только `render` из `vitest-browser-react` или общий helper `src/test/render.tsx` (`renderWithProviders`). Не используй `react-dom`, `react-dom/client`, `react-dom/test-utils` или `ReactDOM.render` для рендера компонентов в тестах.
 - Для unit-тестов не рендери React-компоненты через `react-dom/render`; если проверяется UI-поведение, это component-тест с Vitest Browser Mode.
-- Применяй лейблы Allure ко всем frontend-тестам: Unit-front, Component-front или E2E-front layer, Epic `БЧП`, Feature по домену. Для unit/component используй setup files `src/test/setup-allure-unit.ts` и `src/test/setup-allure-component.ts`; для E2E импортируй `test`/`expect` из `apps/frontend/e2e/fixtures.ts`, а не напрямую из `@playwright/test`.
+- Применяй лейблы Allure ко всем frontend-тестам: Unit-front, Component-front или E2E-front layer, Epic `Проект`, Feature по домену. Для unit/component используй setup files `src/test/setup-allure-unit.ts` и `src/test/setup-allure-component.ts`; для E2E импортируй `test`/`expect` из `apps/frontend/e2e/fixtures.ts`, а не напрямую из `@playwright/test`.
 - Если новая область не попадает в существующий Feature mapping, обновляй `apps/frontend/src/test/allure-labels.ts` вместе с тестом.
 
 Не добавляй как отдельные направления:

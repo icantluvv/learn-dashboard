@@ -8,10 +8,8 @@ describe('component test setup', () => {
 
 		try {
 			expect(
-				getComputedStyle(document.documentElement)
-					.getPropertyValue('--color-text-default')
-					.trim(),
-			).toBe('#202020')
+				getComputedStyle(document.documentElement).getPropertyValue('--foreground').trim(),
+			).toBe('#171717')
 		} finally {
 			probe.remove()
 		}

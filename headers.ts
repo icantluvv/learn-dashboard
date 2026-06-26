@@ -61,7 +61,7 @@ export const headers: NextConfig['headers'] = async () => {
                             frame-src 'self' https://mc.yandex.ru https://top-fwz1.mail.ru;
                             frame-ancestors *;
                             upgrade-insecure-requests;
-                            connect-src 'self' data: wss: ws: https://mc.yandex.ru https://mc.yandex.com https://top-fwz1.mail.ru https://privacy-cs.mail.ru https://ad.mail.ru https://telegram.org https://tr.telegram.org https://errors.dobro.services https://unleash.dobro.services;
+                            connect-src 'self' data: wss: ws: https://mc.yandex.ru https://mc.yandex.com https://top-fwz1.mail.ru https://privacy-cs.mail.ru https://ad.mail.ru https://telegram.org https://tr.telegram.org
                         `.replaceAll('\n', ''),
 				},
 				{

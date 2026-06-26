@@ -118,7 +118,7 @@ export function getFrontendAllureFeature(testPath: string) {
 }
 
 export async function setFrontendAllureLabels(testPath: string, layer: FrontendAllureLayer) {
-	await label('Epic', 'БЧП')
+	await label('Epic', '')
 	await label('Feature', getFrontendAllureFeature(testPath))
 	await label('layer', layer)
 }

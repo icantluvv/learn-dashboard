@@ -3,7 +3,7 @@ import type { MetadataRoute } from 'next'
 export default function manifest(): MetadataRoute.Manifest {
 	return {
 		background_color: '#ffffff',
-		description: 'Больше, чем путешествие',
+		description: '',
 		display: 'standalone',
 		icons: [
 			{
@@ -17,8 +17,8 @@ export default function manifest(): MetadataRoute.Manifest {
 				type: 'image/png',
 			},
 		],
-		name: 'БЧП',
-		short_name: 'БЧП',
+		name: '',
+		short_name: '',
 		start_url: '/',
 		theme_color: '#ffffff',
 	}

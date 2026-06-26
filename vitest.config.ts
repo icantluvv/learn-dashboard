@@ -15,9 +15,6 @@ const nextNavigationMock = fileURLToPath(
 )
 const nextScriptMock = fileURLToPath(new URL('./src/test/mocks/next-script.tsx', import.meta.url))
 const nextImageMock = fileURLToPath(new URL('./src/test/mocks/next-image.tsx', import.meta.url))
-const dobroUiIconsMock = fileURLToPath(
-	new URL('./src/test/mocks/dobro-ui-icons.tsx', import.meta.url),
-)
 const dotEnvPath = new URL('./.env', import.meta.url)
 
 const testExclude = [
@@ -46,12 +43,6 @@ const testEnvironmentKeys = [
 	'BETTER_AUTH_DATABASE_POOL_METRICS_INTERVAL_MS',
 	'BETTER_AUTH_URL',
 	'BETTER_AUTH_SECRET',
-	'DOBRO_AUTHORIZATION_URL',
-	'DOBRO_CLIENT_ID',
-	'DOBRO_CLIENT_SECRET',
-	'DOBRO_TOKEN_URL',
-	'DOBRO_USERINFO_URL',
-	'DOBRO_INTERNAL_BASE_URL',
 	'DADATA_URL',
 	'DADATA_TOKEN',
 	'PARTNER_API_TOKEN',
@@ -129,7 +120,6 @@ export default defineConfig({
 	],
 	resolve: {
 		alias: [
-			{ find: /^@dobro\/dobro-ui\/icons\/.+$/, replacement: dobroUiIconsMock },
 			{ find: /^next\/navigation$/, replacement: nextNavigationMock },
 			{ find: /^next\/script$/, replacement: nextScriptMock },
 			{ find: /^next\/image$/, replacement: nextImageMock },

@@ -1,16 +1,6 @@
 {
 	"cookies": [
 		{
-			"name": "seraph.confluence",
-			"value": "82673670%3Ae8406057944bbf8ec3d370388944eebe67de4a05",
-			"domain": "confluence.dobro.services",
-			"path": "/",
-			"expires": 1780913309.359861,
-			"httpOnly": true,
-			"secure": true,
-			"sameSite": "Lax"
-		},
-		{
 			"name": "ajs_anonymous_id",
 			"value": "%2251e4e4a9-0370-43a2-b97b-38c76c383312%22",
 			"domain": ".figma.com",
@@ -19,26 +9,6 @@
 			"httpOnly": false,
 			"secure": true,
 			"sameSite": "None"
-		},
-		{
-			"name": "JSESSIONID",
-			"value": "CB7DFFAA65519950060B2EA79CF0B346",
-			"domain": "confluence.dobro.services",
-			"path": "/",
-			"expires": -1,
-			"httpOnly": true,
-			"secure": true,
-			"sameSite": "Lax"
-		},
-		{
-			"name": "_yasc",
-			"value": "+EfUYfyjSt1jwU449RWCq0XcoxxMBhAAtkLO4GxqxfnV7wJqLEDkclL/SB+aYn9s1EEBvEM=.MTc4MDA1MTE3OTkwMg==",
-			"domain": ".confluence.dobro.services",
-			"path": "/",
-			"expires": 1814611179.926089,
-			"httpOnly": false,
-			"secure": true,
-			"sameSite": "Lax"
 		},
 		{
 			"name": "AWSALBTGCORS",
@@ -62,31 +32,6 @@
 		}
 	],
 	"origins": [
-		{
-			"origin": "https://confluence.dobro.services",
-			"localStorage": [
-				{
-					"name": "confluence.i.rybakov@webpractik.ru.sidebar.width",
-					"value": "285"
-				},
-				{
-					"name": "k15t/cxp/word/export/selected/zlg/templateId",
-					"value": "com.k15t.scroll.office.default-template-1"
-				},
-				{
-					"name": "atlassian-analytics.confluence.lock",
-					"value": "null"
-				},
-				{
-					"name": "atst.healthcheck.sensors.page-protocols",
-					"value": "cki626"
-				},
-				{
-					"name": "k15t/cxp/word/export/selected/zlg/pageSet",
-					"value": "descendants"
-				}
-			]
-		},
 		{
 			"origin": "https://www.figma.com",
 			"localStorage": [
