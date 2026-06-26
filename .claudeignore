@@ -1,0 +1,43 @@
+# Secrets and local environment
+.env
+.env.*
+**/.env
+**/.env.*
+!**/.env.example
+!**/.env.test
+
+# IDE and OS files
+.idea/
+.vscode/
+.zed/
+.DS_Store
+mise.toml
+
+# Dependencies
+**/node_modules/
+apps/backend/vendor/
+
+# Backend runtime and generated files
+apps/backend/var/
+apps/backend/public/bundles/
+apps/backend/config/reference.php
+apps/backend/.phpunit.cache/
+apps/backend/.phpunit.result.cache
+apps/backend/.php-cs-fixer.cache
+
+# Frontend build and test output
+apps/frontend/.next/
+apps/frontend/out/
+apps/frontend/dist/
+apps/frontend/coverage/
+
+# API build and test output
+api/dist/
+api/coverage/
+
+# Local infrastructure data
+infra/.docker/data/
+
+# Logs and temporary files
+*.log
+*.tmp

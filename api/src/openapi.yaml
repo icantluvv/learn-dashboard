@@ -1,0 +1,25 @@
+openapi: 3.0.2
+
+servers:
+  - url: "https://bcp-dev.dobro.zone"
+
+info:
+  version: 1.0.0
+  title: Example
+  license:
+    name: Proprietary
+    url: https://exmaple.com
+
+tags:
+  - name: Registration
+    description: Registration operations
+  - name: Me
+    description: Current user
+paths:
+  /api/example:
+    $ref: paths/api_example.yaml
+
+components:
+  securitySchemes:
+    auth_cookie:
+      $ref: components/securitySchemes/auth_cookie.yaml
