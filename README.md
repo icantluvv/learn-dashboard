@@ -1,4 +1,4 @@
-# Frontend Starter: архитектура и contract-first pipeline
+# Frontend Starter Next App: архитектура и contract-first pipeline
 
 ## Стек
 
