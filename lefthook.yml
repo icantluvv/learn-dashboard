@@ -9,17 +9,17 @@ pre-commit:
               piped: true
               jobs:
                   - name: lint
-                    run: bun run lint --no-warn-ignored {staged_files}
+                    run: npm run lint -- {staged_files}
                     glob: '*.{js,mjs,jsx,ts,mts,tsx,md,json,jsonc,yaml,yml,toml}'
                   - name: format
-                    run: bun fmt --no-error-on-unmatched-pattern {staged_files}
+                    run: npm run fmt -- --no-error-on-unmatched-pattern {staged_files}
                     glob: '*.{js,mjs,jsx,ts,mts,tsx,md,json,jsonc,yaml,yml,toml,html,css}'
                     stage_fixed: true
         - name: typecheck
-          run: bun typecheck
+          run: npm run tsc
           glob: '*.{ts,mts,tsx}'
         - name: test
-          run: bun run test --silent --reporter=minimal
+          run: npm run test -- --silent --reporter=minimal
           glob: '*.{js,mjs,jsx,ts,mts,tsx}'
 
 commit-msg:
@@ -43,6 +43,6 @@ prepare-commit-msg:
                 - merge
                 - rebase
             interactive: true
-            run: bun cz --hook
+            run: npx cz --hook
             env:
                 LEFTHOOK: '0'

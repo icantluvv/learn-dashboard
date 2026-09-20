@@ -1,7 +1,7 @@
 {
 	"$schema": "https://unpkg.com/knip@6/schema.json",
 	"tags": ["-lintignore"],
-	"ignore": ["packages/api/**", "src/test/**"],
+	"ignore": ["packages/api/**", "src/tests/**"],
 	"ignoreBinaries": ["openspec"],
 	"ignoreDependencies": ["adze", "commitizen", "eslint-formatter-gitlab"],
 	"workspaces": {

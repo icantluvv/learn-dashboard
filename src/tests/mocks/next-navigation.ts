@@ -1,7 +1,5 @@
 import { vi } from 'vitest'
 
-/* eslint-disable react/no-unnecessary-use-prefix -- Next.js navigation exports are hook-compatible mocks. */
-
 export const nextRouterMock = {
 	back: vi.fn(),
 	forward: vi.fn(),
@@ -11,8 +9,12 @@ export const nextRouterMock = {
 	replace: vi.fn(),
 }
 
-export const nextNavigationMock = {
-	params: {} as Record<string, string | string[]>,
+export const nextNavigationMock: {
+	params: Record<string, string | string[]>
+	pathname: string
+	searchParams: URLSearchParams
+} = {
+	params: {},
 	pathname: '/',
 	searchParams: new URLSearchParams(),
 }

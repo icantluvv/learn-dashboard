@@ -94,14 +94,14 @@ const featureByPath = [
 	{ feature: 'Утилиты', includes: ['/src/lib/pluralize.unit.test.ts', '/src/utils/'] },
 	{ feature: 'Инфраструктура приложения', includes: ['/app/layout.unit.test.tsx'] },
 	{ feature: 'Инфраструктура тестов', includes: ['/src/test/'] },
-] as const satisfies ReadonlyArray<{
+] as const satisfies readonly {
 	feature: string
 	includes: readonly string[]
-}>
+}[]
 
 function getNormalizedPathVariants(testPath: string) {
 	const normalizedPath = `/${testPath.replaceAll('\\', '/')}`
-	const pathWithoutRouteGroups = normalizedPath.replace(/\/\([^)]+\)/g, '')
+	const pathWithoutRouteGroups = normalizedPath.replaceAll(/\/\([^)]+\)/g, '')
 
 	return [normalizedPath, pathWithoutRouteGroups]
 }

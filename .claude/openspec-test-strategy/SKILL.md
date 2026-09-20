@@ -1,6 +1,6 @@
 ---
 name: openspec-test-strategy
-description: Поведенческая TDD-стратегия тестирования для OpenSpec/SDD в BCP. Используй при создании или обновлении OpenSpec-артефактов (`proposal.md`, `design.md`, `tasks.md`, specs, `test-plan.md`), выборе unit/component/E2E уровней для frontend, проверке правил frontend-тестов, покрытия сценариев и рисков, verification gates, Definition of Ready и Definition of Done.
+description: Поведенческая TDD-стратегия тестирования для OpenSpec/SDD в learn-dashboard. Используй при создании или обновлении OpenSpec-артефактов (`proposal.md`, `design.md`, `tasks.md`, specs, `test-plan.md`), выборе unit/component/E2E уровней для frontend, проверке правил frontend-тестов, покрытия сценариев и рисков, verification gates, Definition of Ready и Definition of Done.
 ---
 
 # Тестовая стратегия OpenSpec

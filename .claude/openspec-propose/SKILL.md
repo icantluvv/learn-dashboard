@@ -1,6 +1,6 @@
 ---
 name: openspec-propose
-description: Propose a new change with all artifacts generated in one step, including the BCP behavioral test plan. Use when the user wants to quickly describe what they want to build and get a complete proposal with design, specs, tasks, and OpenSpec scenario coverage ready for implementation.
+description: Propose a new change with all artifacts generated in one step, including the learn-dashboard behavioral test plan. Use when the user wants to quickly describe what they want to build and get a complete proposal with design, specs, tasks, and OpenSpec scenario coverage ready for implementation.
 license: MIT
 compatibility: Requires openspec CLI.
 metadata:
@@ -206,7 +206,7 @@ After completing all artifacts, summarize:
 **Guardrails**
 
 - Create ALL artifacts needed for implementation (as defined by schema's `apply.requires`)
-- Always create or update `test-plan.md` for BCP changes, even though it is a companion file rather than a schema-required artifact
+- Always create or update `test-plan.md` for learn-dashboard changes, even though it is a companion file rather than a schema-required artifact
 - Always read dependency artifacts before creating a new one
 - If context is critically unclear, ask the user - but prefer making reasonable decisions to keep momentum
 - If a change with that name already exists, ask if user wants to continue it or create a new one

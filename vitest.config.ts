@@ -1,21 +1,18 @@
-// https://vitest.dev/config/
 import { existsSync, readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { parseEnv } from 'node:util'
 
 import react from '@vitejs/plugin-react'
 import { playwright } from '@vitest/browser-playwright'
-import { isAgent } from 'std-env'
 import svgr from 'vite-plugin-svgr'
 import { defineConfig } from 'vitest/config'
 
-const sonnerMock = fileURLToPath(new URL('./src/test/mocks/sonner.ts', import.meta.url))
 const nextNavigationMock = fileURLToPath(
-	new URL('./src/test/mocks/next-navigation.ts', import.meta.url),
+	new URL('src/tests/mocks/next-navigation.ts', import.meta.url),
 )
-const nextScriptMock = fileURLToPath(new URL('./src/test/mocks/next-script.tsx', import.meta.url))
-const nextImageMock = fileURLToPath(new URL('./src/test/mocks/next-image.tsx', import.meta.url))
-const dotEnvPath = new URL('./.env', import.meta.url)
+const nextScriptMock = fileURLToPath(new URL('src/tests/mocks/next-script.tsx', import.meta.url))
+const nextImageMock = fileURLToPath(new URL('src/tests/mocks/next-image.tsx', import.meta.url))
+const dotEnvPath = new URL('.env', import.meta.url)
 
 const testExclude = [
 	'**/.next/**',
@@ -29,36 +26,25 @@ const testExclude = [
 ]
 
 const testEnvironmentKeys = [
+	'APP_ENV',
+	'APP_NAME',
 	'BACK_INTERNAL_URL',
-	'BACK_INTERNAL_BASIC_AUTH',
+	'CI',
+	'FRONT_HOST',
+	'PORT',
+	'HTTP_AUTH_LOGIN',
+	'HTTP_AUTH_PASS',
 	'MOCK_MODE',
+	'SENTRY_AUTH_TOKEN',
+	'SENTRY_DSN',
 	'SENTRY_ORG',
 	'SENTRY_URL',
-	'SENTRY_AUTH_TOKEN',
-	'DATABASE_URL',
-	'BETTER_AUTH_DATABASE_POOL_MAX',
-	'BETTER_AUTH_DATABASE_POOL_IDLE_TIMEOUT_MS',
-	'BETTER_AUTH_DATABASE_POOL_CONNECTION_TIMEOUT_MS',
-	'BETTER_AUTH_DATABASE_POOL_MAX_LIFETIME_SECONDS',
-	'BETTER_AUTH_DATABASE_POOL_METRICS_INTERVAL_MS',
-	'BETTER_AUTH_URL',
-	'BETTER_AUTH_SECRET',
-	'DADATA_URL',
-	'DADATA_TOKEN',
-	'PARTNER_API_TOKEN',
-	'UNLEASH_SERVER_API_URL',
-	'UNLEASH_SERVER_API_TOKEN',
-	'UNLEASH_APP_NAME',
-	'NEXT_PUBLIC_APP_NAME',
-	'NEXT_PUBLIC_FRONT_URL',
+	'NEXT_PUBLIC_APP_ENV',
 	'NEXT_PUBLIC_BFF_PATH',
+	'NEXT_PUBLIC_FRONT_URL',
 	'NEXT_PUBLIC_BACK_URL',
 	'NEXT_PUBLIC_MOCK_MODE',
 	'NEXT_PUBLIC_SENTRY_DSN',
-	'NEXT_PUBLIC_S3_URL',
-	'NEXT_PUBLIC_UNLEASH_FRONTEND_API_URL',
-	'NEXT_PUBLIC_UNLEASH_FRONTEND_API_TOKEN',
-	'NEXT_PUBLIC_UNLEASH_APP_NAME',
 ] as const
 
 const dotEnvEnvironment = existsSync(dotEnvPath) ? parseEnv(readFileSync(dotEnvPath, 'utf8')) : {}
@@ -77,56 +63,12 @@ const testProcessEnvironment: Partial<NodeJS.ProcessEnv> = {
 }
 
 export default defineConfig({
-	define: {
-		__BCP_TEST_ENV__: JSON.stringify(testProcessEnvironment),
-	},
-	optimizeDeps: {
-		exclude: ['@faker-js/faker', 'undici'],
-		include: [
-			'@wavesurfer/react',
-			'adze',
-			'better-auth/cookies',
-			'better-auth/client/plugins',
-			'better-auth/react',
-			'class-variance-authority',
-			'nanoid',
-			'next/headers',
-			'next/link',
-			'next/link.js',
-			'nuqs',
-			'nuqs/adapters/testing',
-			'nuqs/server',
-		],
-	},
 	plugins: [
 		react(),
 		svgr({
 			include: '**/*.svg',
-			svgrOptions: {
-				svgoConfig: {
-					plugins: [
-						{
-							name: 'preset-default',
-							params: {
-								overrides: {
-									removeViewBox: false,
-								},
-							},
-						},
-					],
-				},
-			},
 		}),
 	],
-	resolve: {
-		alias: [
-			{ find: /^next\/navigation$/, replacement: nextNavigationMock },
-			{ find: /^next\/script$/, replacement: nextScriptMock },
-			{ find: /^next\/image$/, replacement: nextImageMock },
-			{ find: /^sonner$/, replacement: sonnerMock },
-		],
-		tsconfigPaths: true,
-	},
 	test: {
 		clearMocks: true,
 		coverage: {
@@ -148,21 +90,15 @@ export default defineConfig({
 			reportsDirectory: './coverage/vitest',
 		},
 		css: true,
-		env: testProcessEnvironment,
 		deps: {
 			optimizer: {
 				client: {
 					enabled: true,
 					include: [
-						'@faker-js/faker',
 						'@sentry/nextjs',
-						'@wavesurfer/react',
-						'adze',
-						'better-auth/cookies',
-						'better-auth/client/plugins',
-						'better-auth/react',
 						'class-variance-authority',
-						'nanoid',
+						'clsx',
+						'lodash-es',
 						'next/dist/client/components/navigation',
 						'next/dist/client/link',
 						'next/dist/shared/lib/app-router-context.shared-runtime',
@@ -170,15 +106,15 @@ export default defineConfig({
 						'next/link',
 						'next/link.js',
 						'nuqs',
-						'nuqs/adapters/testing',
 						'nuqs/server',
+						'tailwind-merge',
 						'vitest-browser-react',
 					],
 				},
 			},
 		},
+		env: testProcessEnvironment,
 		globals: true,
-		setupFiles: ['./src/test/setup-env.ts'],
 		outputFile: {
 			json: './test-results/vitest.json',
 			junit: './test-results/vitest.junit.xml',
@@ -187,47 +123,71 @@ export default defineConfig({
 			{
 				extends: true,
 				test: {
-					environment: 'node',
-					exclude: testExclude,
-					include: ['**/*.unit.test.{ts,tsx}'],
 					name: 'unit',
-					setupFiles: [
-						'allure-vitest/setup',
-						'./src/test/setup-env.ts',
-						'./src/test/setup-allure-unit.ts',
-					],
+					exclude: testExclude,
+					environment: 'node',
+					include: ['**/*.unit.test.{ts,tsx}', 'packages/**/*.test.ts'],
+					setupFiles: ['./src/tests/setup-env.ts', './src/tests/setup-allure-unit.ts'],
 				},
 			},
 			{
 				extends: true,
 				test: {
+					name: 'component',
+					exclude: testExclude,
 					browser: {
 						enabled: true,
 						headless: true,
 						instances: [{ browser: 'chromium' }],
 						provider: playwright(),
 					},
-					exclude: testExclude,
-					include: ['**/*.component.test.{ts,tsx}'],
-					name: 'component',
+					include: [
+						'**/*.component.test.{ts,tsx}',
+						'app/**/*.test.tsx',
+						'src/**/*.test.tsx',
+					],
 					setupFiles: [
-						'allure-vitest/browser/setup',
-						'./src/test/setup-env.ts',
-						'./src/test/setup-browser.ts',
-						'./src/test/setup-allure-component.ts',
+						'./src/tests/setup-env.ts',
+						'./src/tests/setup-browser.ts',
+						'./src/tests/setup-allure-component.ts',
 					],
 				},
 			},
 		],
-		reporters: isAgent
-			? ['agent']
-			: [
-					'default',
-					'junit',
-					'json',
-					['allure-vitest/reporter', { resultsDir: './allure-results' }],
-				],
+		reporters: [
+			'default',
+			'junit',
+			'json',
+			['allure-vitest/reporter', { resultsDir: './allure-results' }],
+		],
 		restoreMocks: true,
 		unstubGlobals: true,
+	},
+	define: {
+		__NEXTJS_STARTER_TEST_ENV__: JSON.stringify(testProcessEnvironment),
+	},
+	optimizeDeps: {
+		exclude: ['undici'],
+		include: [
+			'@sentry/nextjs',
+			'class-variance-authority',
+			'clsx',
+			'lodash-es',
+			'next/headers',
+			'next/link',
+			'next/link.js',
+			'nuqs',
+			'nuqs/server',
+			'tailwind-merge',
+			'vitest-browser-react',
+		],
+	},
+	resolve: {
+		alias: [
+			{ find: /^next\/navigation$/, replacement: nextNavigationMock },
+			{ find: /^next\/script$/, replacement: nextScriptMock },
+			{ find: /^next\/image$/, replacement: nextImageMock },
+		],
+		tsconfigPaths: true,
 	},
 })

@@ -2,6 +2,6 @@ extends:
   - recommended
 
 apis:
-  bcp@v1:
+  learn-dashboard@v1:
     root: ./src/openapi.yaml
     output: ./dist/openapi.yaml
