@@ -1,66 +1,36 @@
 import { defineOxlintConfig } from '@webpractik/oxlint-config'
 
-// https://github.com/webpractik/oxlint-config#использование
 export default defineOxlintConfig({
-	ignores: [
-		'**/.vscode',
-		'**/.turbo',
-		'**/.million',
-		'**/.remember',
-		'**/.vitest-attachments',
-		'**/next-env.d.ts',
-		'**/storybook-static',
-		'**/coverage-ts',
-		'**/report',
-		'**/test-results',
-		'**/allure-results',
-		'**/playwright-report',
-		'**/blob-report',
-		'.pnp',
-		'**/.pnp.js',
-		'out',
-		'build',
-		'.kuber',
-		'styles',
-		'docs',
-		'packages/api/bundled.yaml',
-		'packages/api/base/codegen',
-	],
+	ignores: ['**/codegen/**'],
 	jsxA11y: true,
 	nextjs: true,
-	react: true,
-	storybook: true,
-	stylistic: {
-		indent: 4,
-		printWidth: 100,
-		tabWidth: 4,
-	},
-	tailwindcss: {
-		entryPoint: './app/globals.css',
-		overrides: {
-			'prefer-template/multiline-classname': 'error',
-			'tailwindcss/enforce-canonical-classes': 'warn',
-			'tailwindcss/no-deprecated-classes': 'warn',
-			'tailwindcss/no-duplicate-classes': 'warn',
-			'tailwindcss/no-unnecessary-whitespace': 'warn',
-		},
-	},
-	type: 'app',
-	typescript: {
-		tsconfigPath: './tsconfig.json',
-	},
+	oxc: { overrides: { 'oxc/no-map-spread': 'off' } },
+	react: { overrides: { 'react/refs': 'off' } },
+	tailwindcss: { entryPoint: 'app/globals.css' },
+	typescript: { tsconfigPath: 'tsconfig.json' },
+	unicorn: { overrides: { 'unicorn/no-nested-ternary': 'off' } },
 	rules: {
+		'no-console': 'error',
 		'no-restricted-imports': [
 			'error',
 			{
+				paths: [{ name: 'zod', message: 'Используй zod/mini вместо zod' }],
 				patterns: [
 					{
-						group: ['~/packages/core/*'],
-						message: 'Please use import from @repo/core instead',
+						group: ['**/packages/api', '**/packages/api/**'],
+						message: 'Используй @repo/api вместо прямого пути',
 					},
 					{
-						group: ['~/packages/api/*'],
-						message: 'Please use import from @repo/api instead',
+						group: ['**/packages/logger', '**/packages/logger/**'],
+						message: 'Используй @repo/logger вместо прямого пути',
+					},
+					{
+						group: ['../**/src', '../**/src/**', '~/src', '~/src/**'],
+						message: 'Используй алиас #/ для импортов из src/',
+					},
+					{
+						group: ['../**/app', '../**/app/**', '~/app', '~/app/**'],
+						message: 'Используй алиас @/ для импортов из app/',
 					},
 				],
 			},

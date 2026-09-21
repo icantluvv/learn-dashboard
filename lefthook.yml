@@ -9,7 +9,7 @@ pre-commit:
               piped: true
               jobs:
                   - name: lint
-                    run: npm run lint -- {staged_files}
+                    run: npm run lint -- --no-error-on-unmatched-pattern {staged_files}
                     glob: '*.{js,mjs,jsx,ts,mts,tsx,md,json,jsonc,yaml,yml,toml}'
                   - name: format
                     run: npm run fmt -- --no-error-on-unmatched-pattern {staged_files}
@@ -43,6 +43,10 @@ prepare-commit-msg:
                 - merge
                 - rebase
             interactive: true
-            run: npx cz --hook
+            run: |
+                if [ -n "{2}" ]; then
+                  exit 0
+                fi
+                npx cz --hook {1}
             env:
                 LEFTHOOK: '0'
