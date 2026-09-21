@@ -12,9 +12,9 @@ export default async function Home() {
 	return (
 		<HydrationBoundary state={dehydrate(queryClient)}>
 			<div className={`
-       page-wrapper v-stack gap-12
-       md:flex-row
-   `}>
+					page-wrapper v-stack gap-12
+					md:flex-row
+				`}>
 				<SidebarFilters />
 				<Catalog />
 			</div>
