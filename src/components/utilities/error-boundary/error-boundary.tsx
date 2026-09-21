@@ -5,8 +5,8 @@ import { ErrorBoundary as SentryBoundary } from '@sentry/nextjs'
 interface ErrorFallbackProps {
 	description?: string
 	error: unknown
-	resetError?: () => void
 	title?: string
+	resetError?: () => void
 }
 
 const DEFAULT_ERROR_TITLE = 'Техническая ошибка'
@@ -27,7 +27,11 @@ export function ErrorFallback({
 			<p>{DEFAULT_ERROR_TEXT}</p>
 			<br />
 			{description}
-			{resetError && <button onClick={resetError}>Попробовать еще</button>}
+			{resetError && (
+				<button type="button" onClick={resetError}>
+					Попробовать еще
+				</button>
+			)}
 		</div>
 	)
 }

@@ -7,7 +7,7 @@ import { Toaster as Sonner } from 'sonner'
 export function Toaster({ ...props }: ToasterProps) {
 	return (
 		<Sonner
-			className="tw:group"
+			className="group"
 			icons={{}}
 			style={{}}
 			toastOptions={{

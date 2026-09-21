@@ -3,7 +3,9 @@
 import type { MockRoute } from '../mock-client'
 
 import { createGetExampleQueryResponse } from './mocks/exampleController/createGetExample'
+import { createGetSkillsQueryResponse } from './mocks/skillsController/createGetSkills'
 
 export const mockRoutes = [
 	{ method: 'GET', pattern: /^\/api\/example$/, create: createGetExampleQueryResponse },
+	{ method: 'GET', pattern: /^\/api\/skills$/, create: createGetSkillsQueryResponse },
 ] as MockRoute[]

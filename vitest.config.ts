@@ -95,7 +95,10 @@ export default defineConfig({
 				client: {
 					enabled: true,
 					include: [
+						'@heroui/react',
 						'@sentry/nextjs',
+						'@t3-oss/env-nextjs',
+						'@tanstack/react-query',
 						'class-variance-authority',
 						'clsx',
 						'lodash-es',
@@ -106,9 +109,11 @@ export default defineConfig({
 						'next/link',
 						'next/link.js',
 						'nuqs',
+						'nuqs/adapters/testing',
 						'nuqs/server',
 						'tailwind-merge',
 						'vitest-browser-react',
+						'zod/mini',
 					],
 				},
 			},
@@ -169,7 +174,10 @@ export default defineConfig({
 	optimizeDeps: {
 		exclude: ['undici'],
 		include: [
+			'@heroui/react',
 			'@sentry/nextjs',
+			'@t3-oss/env-nextjs',
+			'@tanstack/react-query',
 			'class-variance-authority',
 			'clsx',
 			'lodash-es',
@@ -177,9 +185,11 @@ export default defineConfig({
 			'next/link',
 			'next/link.js',
 			'nuqs',
+			'nuqs/adapters/testing',
 			'nuqs/server',
 			'tailwind-merge',
 			'vitest-browser-react',
+			'zod/mini',
 		],
 	},
 	resolve: {

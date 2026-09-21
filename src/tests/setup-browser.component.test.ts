@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest'
 describe('component test setup', () => {
 	it('подключает глобальные стили приложения', () => {
 		const probe = document.createElement('div')
-		probe.className = 'tw:text-text-label'
+		probe.className = 'text-text-label'
 		document.body.append(probe)
 
 		try {

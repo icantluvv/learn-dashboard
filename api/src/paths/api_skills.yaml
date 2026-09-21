@@ -1,0 +1,78 @@
+get:
+  summary: List skill cards
+  operationId: getSkills
+  tags:
+    - Skills
+  parameters:
+    - name: search
+      in: query
+      required: false
+      schema:
+        type: string
+      example: "Замыкания"
+    - name: topic
+      in: query
+      required: false
+      schema:
+        type: string
+      example: "JavaScript"
+    - name: difficulty
+      in: query
+      required: false
+      schema:
+        type: string
+        enum:
+          - easy
+          - medium
+          - hard
+      example: medium
+    - name: minQuestionsCount
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 0
+      example: 5
+    - name: maxQuestionsCount
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 0
+      example: 20
+  responses:
+    "200":
+      description: Success
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              type: object
+              required:
+                - id
+                - title
+                - questionsCount
+                - difficulty
+                - topic
+              properties:
+                id:
+                  type: string
+                  example: "js-closures"
+                title:
+                  type: string
+                  example: "Замыкания в JavaScript"
+                questionsCount:
+                  type: integer
+                  minimum: 0
+                  example: 12
+                difficulty:
+                  type: string
+                  enum:
+                    - easy
+                    - medium
+                    - hard
+                  example: medium
+                topic:
+                  type: string
+                  example: "JavaScript"

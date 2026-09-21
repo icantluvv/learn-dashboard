@@ -1,8 +1,8 @@
 export default function NotFound() {
 	return (
 		<div
-			className="tw:page-container tw:v-stack tw:min-h-svh tw:items-center tw:justify-center"
+			className="page-wrapper v-stack min-h-svh items-center justify-center"
 			data-testid="error-boundary"
-		></div>
+		/>
 	)
 }

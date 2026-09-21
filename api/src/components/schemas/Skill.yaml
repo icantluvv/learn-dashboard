@@ -1,0 +1,15 @@
+type: object
+required:
+  - title
+  - questions
+properties:
+  title:
+    type: string
+    example: "Замыкания в JavaScript"
+  questions:
+    type: array
+    items:
+      type: string
+    example:
+      - "Что такое замыкание?"
+      - "Как замыкания используются для мемоизации?"

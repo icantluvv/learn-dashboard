@@ -47,7 +47,7 @@ export async function getMockResponse<TData>(
 	const status = route.status ?? 200
 
 	return {
-		data: route.create() as TData,
+		data: route.create(config) as TData,
 		status,
 		statusText: statusTexts[status] ?? 'OK',
 		headers: new Headers({

@@ -24,7 +24,7 @@ export default defineOxlintConfig({
 		'styles',
 		'docs',
 		'packages/api/bundled.yaml',
-		'packages/api/codegen',
+		'packages/api/base/codegen',
 	],
 	jsxA11y: true,
 	nextjs: true,

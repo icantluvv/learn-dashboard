@@ -15,11 +15,18 @@ tags:
     description: Registration operations
   - name: Me
     description: Current user
+  - name: Skills
+    description: Skill catalog operations
 paths:
   /api/example:
     $ref: paths/api_example.yaml
+  /api/skills:
+    $ref: paths/api_skills.yaml
 
 components:
   securitySchemes:
     auth_cookie:
       $ref: components/securitySchemes/auth_cookie.yaml
+  schemas:
+    Skill:
+      $ref: components/schemas/Skill.yaml

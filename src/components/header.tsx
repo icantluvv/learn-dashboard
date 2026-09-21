@@ -10,5 +10,5 @@ export function Header() {
 		return <MobileHeader />
 	}
 
-	return <header className="fixed top-0 left-0 z-10 h-20 w-full bg-white" />
+	return null
 }
