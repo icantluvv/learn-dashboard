@@ -35,6 +35,11 @@ commit-msg:
                   echo "  Удалите указанные выше строки и повторите коммит."
                   exit 1
                 fi
+        commitlint:
+            skip:
+                - merge
+                - rebase
+            run: npx commitlint --edit {1}
 
 prepare-commit-msg:
     commands:
