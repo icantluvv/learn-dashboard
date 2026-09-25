@@ -15,7 +15,7 @@ export function SkillSearchInput() {
 				void setFilters({ search: value === '' ? null : value })
 			}}
 		>
-			<SearchField.Group className="h-12 rounded-2xl border-shaded">
+			<SearchField.Group className="base-input">
 				<SearchField.SearchIcon />
 				<SearchField.Input placeholder="Поиск по названию" />
 				<SearchField.ClearButton />

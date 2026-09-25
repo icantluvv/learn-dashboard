@@ -37,6 +37,19 @@ body {
 	border: 1px solid var(--color-border-shaded);
 }
 
+@utility base-select {
+	height: calc(var(--spacing) * 12);
+	align-items: center;
+	border-radius: theme(--radius-2xl);
+	border: 1px solid var(--color-border-shaded);
+}
+
+@utility base-input {
+	height: calc(var(--spacing) * 12);
+	border-radius: theme(--radius-2xl);
+	border: 1px solid var(--color-border-shaded);
+}
+
 @utility page-wrapper {
 	width: 100%;
 	margin-inline: auto;

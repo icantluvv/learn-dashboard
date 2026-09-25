@@ -19,7 +19,7 @@ export function DifficultySelect() {
 				})
 			}}
 		>
-			<Select.Trigger className="h-12 items-center rounded-2xl border-shaded">
+			<Select.Trigger className="base-select">
 				<Select.Value />
 				<Select.Indicator />
 			</Select.Trigger>
