@@ -13,9 +13,9 @@ export function SkillCard({ skill }: SkillCardProps) {
 	return (
 		<Link href={`/catalog/${skill.id}`} className="flex">
 			<Card className={`
-       size-full rounded-xl transition-transform border-shaded
-       hover:scale-[1.02]
-   `}>
+				size-full rounded-2xl shadow-none transition-transform border-shaded
+				hover:scale-[1.02]
+			`}>
 				<div className="flex items-center justify-between gap-4">
 					<span className="text-xs font-medium text-gray-500">{skill.topic}</span>
 					<span className="text-xs font-medium text-gray-500">
