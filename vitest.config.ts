@@ -12,6 +12,7 @@ const nextNavigationMock = fileURLToPath(
 )
 const nextScriptMock = fileURLToPath(new URL('src/tests/mocks/next-script.tsx', import.meta.url))
 const nextImageMock = fileURLToPath(new URL('src/tests/mocks/next-image.tsx', import.meta.url))
+const serverOnlyMock = fileURLToPath(new URL('src/tests/mocks/server-only.ts', import.meta.url))
 const dotEnvPath = new URL('.env', import.meta.url)
 
 const testExclude = [
@@ -28,6 +29,7 @@ const testExclude = [
 const testEnvironmentKeys = [
 	'APP_ENV',
 	'APP_NAME',
+	'NEXT_PUBLIC_APP_NAME',
 	'BACK_INTERNAL_URL',
 	'CI',
 	'FRONT_HOST',
@@ -35,6 +37,8 @@ const testEnvironmentKeys = [
 	'HTTP_AUTH_LOGIN',
 	'HTTP_AUTH_PASS',
 	'MOCK_MODE',
+	'SUPABASE_URL',
+	'SUPABASE_SERVICE_ROLE_KEY',
 	'SENTRY_AUTH_TOKEN',
 	'SENTRY_DSN',
 	'SENTRY_ORG',
@@ -197,6 +201,7 @@ export default defineConfig({
 			{ find: /^next\/navigation$/, replacement: nextNavigationMock },
 			{ find: /^next\/script$/, replacement: nextScriptMock },
 			{ find: /^next\/image$/, replacement: nextImageMock },
+			{ find: /^server-only$/, replacement: serverOnlyMock },
 		],
 		tsconfigPaths: true,
 	},

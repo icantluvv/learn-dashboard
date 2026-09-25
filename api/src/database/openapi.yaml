@@ -1,0 +1,24 @@
+openapi: 3.0.2
+
+servers:
+  - url: "https://example.supabase.co/rest/v1"
+
+info:
+  version: 1.0.0
+  title: Supabase database access (PostgREST)
+  license:
+    name: Proprietary
+    url: https://exmaple.com
+
+tags:
+  - name: Skills
+    description: Direct PostgREST access to the skills table
+
+paths:
+  /skills:
+    $ref: paths/skills.yaml
+
+components:
+  schemas:
+    SkillRow:
+      $ref: components/schemas/SkillRow.yaml

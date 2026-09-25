@@ -1,13 +1,20 @@
 import { getSkillsQueryOptions } from '@repo/api'
 import { dehydrate, HydrationBoundary } from '@tanstack/react-query'
 
+import { getSkills } from '#/modules/skills/server/skills-repository'
 import { getQueryClient } from '#/utils/get-query-client'
 import { Catalog } from '@/(home)/_components/catalog'
 import { SidebarFilters } from '@/(home)/_components/sidebar-filters'
 
 export default async function Home() {
 	const queryClient = getQueryClient()
-	await queryClient.query(getSkillsQueryOptions()).catch(() => undefined)
+
+	try {
+		const skills = await getSkills()
+		queryClient.setQueryData(getSkillsQueryOptions().queryKey, skills)
+	} catch {
+		// SSR warm-up is best-effort — the client hook fetches on hydration if this fails.
+	}
 
 	return (
 		<HydrationBoundary state={dehydrate(queryClient)}>

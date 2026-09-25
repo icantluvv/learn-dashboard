@@ -1,9 +1,8 @@
-import type { GetSkillById200 } from '@repo/api'
-
 import { getSkillByIdQueryOptions } from '@repo/api'
 import { dehydrate, HydrationBoundary } from '@tanstack/react-query'
 import { notFound } from 'next/navigation'
 
+import { getSkillById } from '#/modules/skills/server/skills-repository'
 import { getQueryClient } from '#/utils/get-query-client'
 import {
 	BackButton,
@@ -19,18 +18,11 @@ export default async function CatalogSkillPage({ params }: CatalogSkillPageProps
 	const { id } = await params
 	const queryClient = getQueryClient()
 
-	let skill: GetSkillById200
+	let skill: Awaited<ReturnType<typeof getSkillById>>
 
 	try {
-		skill = await queryClient.query(getSkillByIdQueryOptions({ id }))
-	} catch (error) {
-		if (
-			error instanceof Error &&
-			(error.cause as { status?: number } | undefined)?.status === 404
-		) {
-			notFound()
-		}
-
+		skill = await getSkillById(id)
+	} catch {
 		return (
 			<HydrationBoundary state={dehydrate(queryClient)}>
 				<div className={`
@@ -42,6 +34,12 @@ export default async function CatalogSkillPage({ params }: CatalogSkillPageProps
 			</HydrationBoundary>
 		)
 	}
+
+	if (skill == null) {
+		notFound()
+	}
+
+	queryClient.setQueryData(getSkillByIdQueryOptions({ id }).queryKey, skill)
 
 	return (
 		<HydrationBoundary state={dehydrate(queryClient)}>

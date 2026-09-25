@@ -9,6 +9,8 @@ export const serverEnvironment = createEnv({
 		BACK_INTERNAL_URL: z.url(),
 		MOCK_MODE: z.optional(z.string()),
 		BACK_INTERNAL_BASIC_AUTH: z.optional(z.string()),
+		SUPABASE_URL: z.url(),
+		SUPABASE_SERVICE_ROLE_KEY: z.string(),
 		SENTRY_AUTH_TOKEN: z.optional(z.string()),
 		SENTRY_ORG: z.optional(z.string()),
 		SENTRY_URL: z.optional(z.url()),

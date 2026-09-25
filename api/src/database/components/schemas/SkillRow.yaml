@@ -1,0 +1,33 @@
+type: object
+# No `required` fields: this is a raw PostgREST row projection, and callers
+# always pass an explicit `select` — the actual set of present columns varies
+# per query, so every property must be optional at the contract level. Callers
+# are responsible for knowing which columns they selected.
+properties:
+  id:
+    type: string
+    example: "js-closures"
+  title:
+    type: string
+    example: "Замыкания в JavaScript"
+  topic:
+    type: string
+    example: "JavaScript"
+  difficulty:
+    type: string
+    enum:
+      - easy
+      - medium
+      - hard
+    example: medium
+  questions:
+    type: array
+    items:
+      type: string
+    example:
+      - "Что такое замыкание?"
+      - "Как замыкания используются для мемоизации?"
+  questions_count:
+    type: integer
+    minimum: 0
+    example: 12

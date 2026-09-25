@@ -20,21 +20,24 @@ export { setOnProfileIncomplete, setOnUnauthorized } from './client-handlers'
 /** Subset of FetchRequestConfig */
 export interface RequestConfig<TData = unknown> {
 	baseURL?: string
-	url?: string
-	method?: 'GET' | 'PUT' | 'PATCH' | 'POST' | 'DELETE' | 'OPTIONS' | 'HEAD'
-	params?: object
-	data?: TData | FormData
-	signal?: AbortSignal
-	headers?: [string, string][] | Record<string, string>
 	credentials?: RequestCredentials
+	data?: FormData | TData
+	headers?: [string, string][] | Record<string, string>
+	method?: 'DELETE' | 'GET' | 'HEAD' | 'OPTIONS' | 'PATCH' | 'POST' | 'PUT'
+	// Record<string, unknown> breaks assignability of Kubb-generated typed query param objects
+	// (no index signature); see the identical constraint in packages/api/database/client.ts.
+	// eslint-disable-next-line typescript/no-restricted-types
+	params?: object
+	signal?: AbortSignal
+	url?: string
 }
 
 /** Subset of FetchResponse */
 export interface ResponseConfig<TData = unknown> {
 	data: TData
+	headers: Headers
 	status: number
 	statusText: string
-	headers: Headers
 }
 
 let _config: Partial<RequestConfig> = {}
@@ -46,21 +49,19 @@ export function setConfig(config: Partial<RequestConfig>) {
 	return getConfig()
 }
 
-export function mergeConfig<T extends RequestConfig>(...configs: Array<Partial<T>>): Partial<T> {
-	return configs.reduce<Partial<T>>((merged, config) => {
-		return {
-			...merged,
-			...config,
-			headers: {
-				...(Array.isArray(merged.headers)
-					? Object.fromEntries(merged.headers)
-					: merged.headers),
-				...(Array.isArray(config.headers)
-					? Object.fromEntries(config.headers)
-					: config.headers),
-			},
-		}
-	}, {})
+function headersToRecord(headers: RequestConfig['headers']): Record<string, string> {
+	return Array.isArray(headers) ? Object.fromEntries(headers) : (headers ?? {})
+}
+
+export function mergeConfig<T extends RequestConfig>(...configs: Partial<T>[]): Partial<T> {
+	const merged: Partial<T> = {}
+
+	for (const config of configs) {
+		const headers = { ...headersToRecord(merged.headers), ...headersToRecord(config.headers) }
+		Object.assign(merged, config, { headers })
+	}
+
+	return merged
 }
 
 export type ResponseErrorConfig<TError = unknown> = TError
@@ -69,8 +70,18 @@ export type Client = <TData, _TError = unknown, TVariables = unknown>(
 	config: RequestConfig<TVariables>,
 ) => Promise<ResponseConfig<TData>>
 
-function getBaseUrl() {
-	if (typeof window === 'undefined') {
+export function isSameOriginPath(url: string | undefined) {
+	return url != null && (url === '/api/skills' || url.startsWith('/api/skills/'))
+}
+
+export function getBaseUrl(url: string | undefined) {
+	// Skills are served by this app's own Route Handlers (backed by Supabase) —
+	// no external backend exists for them, so requests stay same-origin.
+	if (isSameOriginPath(url)) {
+		return ''
+	}
+
+	if (globalThis.window === undefined) {
 		return serverEnvironment.BACK_INTERNAL_URL
 	}
 
@@ -87,7 +98,7 @@ function isEnvFlagEnabled(value: boolean | string | undefined) {
 }
 
 async function isMockModeEnabled(config: Partial<RequestConfig>) {
-	if (typeof window === 'undefined') {
+	if (globalThis.window === undefined) {
 		if (
 			isEnvFlagEnabled(process.env.MOCK_MODE) ||
 			isEnvFlagEnabled(serverEnvironment.MOCK_MODE) ||
@@ -118,11 +129,12 @@ async function isMockModeEnabled(config: Partial<RequestConfig>) {
 
 async function getRawMockScenario(config: Partial<RequestConfig>) {
 	const rawFromConfig = getRequestMockScenario(config.headers)
+
 	if (rawFromConfig != null) {
 		return rawFromConfig
 	}
 
-	if (typeof window === 'undefined') {
+	if (globalThis.window === undefined) {
 		if (process.env.NEXT_RUNTIME !== 'nodejs' && process.env.NEXT_RUNTIME !== 'edge') {
 			return
 		}
@@ -140,10 +152,17 @@ async function getRawMockScenario(config: Partial<RequestConfig>) {
 
 async function getMockScenario(config: Partial<RequestConfig>) {
 	const raw = await getRawMockScenario(config)
-	if (raw == null) return
+
+	if (raw == null) {
+		return
+	}
 
 	const { isBaseMockScenarioName } = await import('./mock-scenarios')
-	if (!isBaseMockScenarioName(raw)) return
+
+	if (!isBaseMockScenarioName(raw)) {
+		return
+	}
+
 	return raw
 }
 
@@ -155,19 +174,141 @@ async function getResponseJson<TData>(response: Response) {
 	}
 }
 
-async function getAuthHeaders(): Promise<HeadersInit> {
-	const resolvedHeaders: HeadersInit = {}
-	if (typeof window !== 'undefined') return resolvedHeaders
+async function getAuthHeaders(): Promise<Record<string, string>> {
+	const resolvedHeaders: Record<string, string> = {}
+
+	if (globalThis.window !== undefined) {
+		return resolvedHeaders
+	}
+
 	const basicAuth = serverEnvironment.BACK_INTERNAL_BASIC_AUTH
+
 	if (basicAuth != null) {
 		resolvedHeaders.Authorization = `Basic ${basicAuth}`
 	}
+
 	const { headers } = await import('next/headers')
-	const cookiesHeader = (await headers()).get('Cookie')
+	const requestHeaders = await headers()
+	const cookiesHeader = requestHeaders.get('Cookie')
+
 	if (cookiesHeader != null) {
 		resolvedHeaders.Cookie = cookiesHeader
 	}
+
 	return resolvedHeaders
+}
+
+function isNoContentStatus(status: number) {
+	return [204, 205, 304].includes(status)
+}
+
+async function parseResponseData<TData>(response: Response): Promise<TData> {
+	if (isNoContentStatus(response.status) || !response.body) {
+		const empty: Record<string, never> = {}
+		return empty as TData
+	}
+
+	return (await response.json()) as TData
+}
+
+function toResponseConfig<TData>(response: Response, data: TData): ResponseConfig<TData> {
+	return {
+		data,
+		status: response.status,
+		statusText: response.statusText,
+		headers: response.headers,
+	}
+}
+
+async function buildFetchResponse<TData>(response: Response): Promise<ResponseConfig<TData>> {
+	const data = await parseResponseData<TData>(response)
+	return toResponseConfig(response, data)
+}
+
+async function throwFetchError<TError>(response: Response): Promise<never> {
+	const errorData = await getResponseJson<TError>(response)
+
+	throw new Error(response.statusText, {
+		cause: {
+			data: errorData,
+			status: response.status,
+			statusText: response.statusText,
+		},
+	})
+}
+
+function buildRetryRequestInit(
+	config: Partial<RequestConfig>,
+	isFormData: boolean,
+	headers: HeadersInit,
+): RequestInit {
+	return {
+		credentials: config.credentials ?? 'include',
+		method: config.method?.toUpperCase(),
+		body: isFormData ? (config.data as FormData) : JSON.stringify(config.data),
+		signal: config.signal,
+		headers,
+	}
+}
+
+async function retryAfterUnauthorized<TData, TError>(
+	unauthorizedResponse: Response,
+	targetUrl: string,
+	config: Partial<RequestConfig>,
+	requestHeaders: Headers,
+	isFormData: boolean,
+): Promise<ResponseConfig<TData>> {
+	const onUnauthorized = getOnUnauthorized()
+	const retryHeaders = onUnauthorized
+		? requestHeaders
+		: await getServerUnauthorizedRetryHeaders(requestHeaders)
+
+	if (onUnauthorized) {
+		await onUnauthorized()
+	}
+
+	if (retryHeaders === null) {
+		return throwFetchError<TError>(unauthorizedResponse)
+	}
+
+	const retryResponse = await globalThis.fetch(
+		targetUrl,
+		buildRetryRequestInit(config, isFormData, retryHeaders),
+	)
+
+	if (!retryResponse.ok && retryResponse.status !== 304) {
+		return throwFetchError<TError>(retryResponse)
+	}
+
+	return buildFetchResponse<TData>(retryResponse)
+}
+
+function buildTargetUrl(config: Partial<RequestConfig>): string {
+	const baseURL = getBaseUrl(config.url)
+	let targetUrl = [baseURL, config.url].filter(Boolean).join('')
+
+	if (config.params) {
+		const serializedSearchParams = serializeSearchParams(config.params)
+
+		if (serializedSearchParams !== '') {
+			targetUrl += `?${serializedSearchParams}`
+		}
+	}
+
+	return targetUrl
+}
+
+async function buildRequestHeaders(
+	config: Partial<RequestConfig>,
+	isFormData: boolean,
+): Promise<Headers> {
+	const authHeaders = await getAuthHeaders()
+
+	return new Headers({
+		...authHeaders,
+		...headersToRecord(config.headers),
+		...(!isFormData && { 'Content-Type': 'application/json' }),
+	})
 }
 
 async function fetch<TData, TError = unknown, TVariables = unknown>(
@@ -176,29 +317,16 @@ async function fetch<TData, TError = unknown, TVariables = unknown>(
 	const config = mergeConfig(getConfig(), paramsConfig)
 
 	const isMockMode = await isMockModeEnabled(config)
+
 	if (isMockMode) {
 		const { getMockResponse } = await import('./mock-client')
 		const scenario = await getMockScenario(config)
 		return getMockResponse<TData>(config, scenario)
 	}
 
-	const baseURL = getBaseUrl()
-	let targetUrl = [baseURL, config.url].filter(Boolean).join('')
-
-	if (config.params) {
-		const serializedSearchParams = serializeSearchParams(config.params)
-		if (serializedSearchParams !== '') {
-			targetUrl += `?${serializedSearchParams}`
-		}
-	}
-
+	const targetUrl = buildTargetUrl(config)
 	const isFormData = config.data instanceof FormData
-	const authHeaders = await getAuthHeaders()
-	const requestHeaders = new Headers({
-		...authHeaders,
-		...(Array.isArray(config.headers) ? Object.fromEntries(config.headers) : config.headers),
-		...(!isFormData && { 'Content-Type': 'application/json' }),
-	})
+	const requestHeaders = await buildRequestHeaders(config, isFormData)
 	const method = config.method ?? 'GET'
 
 	const response = await globalThis.fetch(targetUrl, {
@@ -210,79 +338,22 @@ async function fetch<TData, TError = unknown, TVariables = unknown>(
 	})
 
 	if (response.status === 401) {
-		const onUnauthorized = getOnUnauthorized()
-		const retryHeaders = onUnauthorized
-			? requestHeaders
-			: await getServerUnauthorizedRetryHeaders(requestHeaders)
-
-		if (onUnauthorized) {
-			await onUnauthorized()
-		}
-
-		if (retryHeaders === null) {
-			const errorData = await getResponseJson<TError>(response)
-
-			throw new Error(response.statusText, {
-				cause: {
-					data: errorData,
-					status: response.status,
-					statusText: response.statusText,
-				},
-			})
-		}
-
-		const retryResponse = await globalThis.fetch(targetUrl, {
-			credentials: config.credentials ?? 'include',
-			method: config.method?.toUpperCase(),
-			body: isFormData ? (config.data as FormData) : JSON.stringify(config.data),
-			signal: config.signal,
-			headers: retryHeaders,
-		})
-		if (retryResponse.status === 304) {
-			return {
-				data: {} as TData,
-				status: retryResponse.status,
-				statusText: retryResponse.statusText,
-				headers: retryResponse.headers,
-			}
-		}
-		if (!retryResponse.ok) {
-			const errorData = await getResponseJson<TError>(retryResponse)
-
-			throw new Error(retryResponse.statusText, {
-				cause: {
-					data: errorData,
-					status: retryResponse.status,
-					statusText: retryResponse.statusText,
-				},
-			})
-		}
-		const retryData =
-			[204, 205, 304].includes(retryResponse.status) || !retryResponse.body
-				? {}
-				: await getResponseJson(retryResponse)
-		return {
-			data: retryData as TData,
-			status: retryResponse.status,
-			statusText: retryResponse.statusText,
-			headers: retryResponse.headers,
-		}
+		return retryAfterUnauthorized<TData, TError>(
+			response,
+			targetUrl,
+			config,
+			requestHeaders,
+			isFormData,
+		)
 	}
 
-	if (response.status === 304) {
-		return {
-			data: {} as TData,
-			status: response.status,
-			statusText: response.statusText,
-			headers: response.headers,
-		}
-	}
-
-	if (!response.ok) {
+	if (!response.ok && response.status !== 304) {
 		const errorData = await getResponseJson<{ error?: string }>(response)
+
 		if (response.status === 403 && errorData?.error === 'profile_incomplete') {
 			getOnProfileIncomplete()?.()
 		}
+
 		throw new Error(response.statusText, {
 			cause: {
 				data: errorData,
@@ -292,15 +363,7 @@ async function fetch<TData, TError = unknown, TVariables = unknown>(
 		})
 	}
 
-	const data =
-		[204, 205, 304].includes(response.status) || !response.body ? {} : await response.json()
-
-	return {
-		data: data as TData,
-		status: response.status,
-		statusText: response.statusText,
-		headers: response.headers,
-	}
+	return buildFetchResponse<TData>(response)
 }
 
 fetch.getConfig = getConfig

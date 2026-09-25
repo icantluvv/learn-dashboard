@@ -1,0 +1,76 @@
+get:
+  summary: Query the skills table directly via PostgREST
+  operationId: getSkillRows
+  tags:
+    - Skills
+  parameters:
+    - name: id
+      in: query
+      required: false
+      description: PostgREST filter expression, e.g. "eq.js-closures"
+      schema:
+        type: string
+      example: "eq.js-closures"
+    - name: title
+      in: query
+      required: false
+      description: PostgREST filter expression, e.g. "ilike.*Замыкания*"
+      schema:
+        type: string
+      example: "ilike.*Замыкания*"
+    - name: topic
+      in: query
+      required: false
+      description: PostgREST filter expression, e.g. "eq.JavaScript"
+      schema:
+        type: string
+      example: "eq.JavaScript"
+    - name: difficulty
+      in: query
+      required: false
+      description: PostgREST filter expression, e.g. "eq.medium"
+      schema:
+        type: string
+      example: "eq.medium"
+    - name: questions_count
+      in: query
+      required: false
+      description: One or two PostgREST filter expressions for a range, e.g. "gte.5" and "lte.20"
+      style: form
+      explode: true
+      schema:
+        type: array
+        items:
+          type: string
+      example:
+        - "gte.5"
+        - "lte.20"
+    - name: select
+      in: query
+      required: false
+      description: PostgREST column projection
+      schema:
+        type: string
+      example: "id,title,topic,difficulty,questions,questions_count"
+    - name: order
+      in: query
+      required: false
+      schema:
+        type: string
+      example: "title.asc"
+    - name: limit
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 0
+      example: 20
+  responses:
+    "200":
+      description: Success
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: ../components/schemas/SkillRow.yaml
