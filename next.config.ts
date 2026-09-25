@@ -1,7 +1,5 @@
 import type { NextConfig } from 'next'
 
-import { fileURLToPath } from 'node:url'
-
 import { withSentryConfig } from '@sentry/nextjs'
 import { nanoid } from 'nanoid'
 
@@ -32,22 +30,22 @@ const nextConfig: NextConfig = {
 	cleanDistDir: true,
 	devIndicators: { position: 'top-right' },
 	experimental: {
-		serverSourceMaps: true,
 		optimizePackageImports: [],
+		serverSourceMaps: true,
 	},
 	generateBuildId: () => `${nanoid()}-${Date.now()}`,
 	headers,
 	images: {
-		disableStaticImages: true,
 		dangerouslyAllowSVG: true,
-		remotePatterns: [{ protocol: 'https', hostname: 'storage.yandexcloud.net' }],
+		disableStaticImages: true,
 		qualities: [75, 100],
+		remotePatterns: [{ hostname: 'storage.yandexcloud.net', protocol: 'https' }],
 	},
 	logging: isDev
-		? { browserToTerminal: true, serverFunctions: true, fetches: { fullUrl: true } }
+		? { browserToTerminal: true, fetches: { fullUrl: true }, serverFunctions: true }
 		: false,
 	output: 'standalone',
-	outputFileTracingRoot: fileURLToPath(new URL('.', import.meta.url)),
+	outputFileTracingRoot: import.meta.dirname,
 	poweredByHeader: false,
 	reactProductionProfiling: false,
 	reactStrictMode: true,
@@ -55,8 +53,8 @@ const nextConfig: NextConfig = {
 		return {
 			beforeFiles: [
 				{
-					source: `${clientEnvironment.NEXT_PUBLIC_BFF_PATH}/:path*`,
 					destination: `${serverEnvironment.BACK_INTERNAL_URL ?? clientEnvironment.NEXT_PUBLIC_BACK_URL}/:path*`,
+					source: `${clientEnvironment.NEXT_PUBLIC_BFF_PATH ?? ''}/:path*`,
 				},
 			],
 		}
@@ -70,35 +68,37 @@ const nextConfig: NextConfig = {
 		'pgpass',
 	],
 	transpilePackages: ['@t3-oss/env-nextjs', '@t3-oss/env-core'],
-	typedRoutes: true,
 	turbopack: {
 		rules: {
 			'*.svg': {
+				as: '*.js',
 				loaders: [
 					{
 						loader: '@svgr/webpack',
 						options: svgrOptions,
 					},
 				],
-				as: '*.js',
 			},
 		},
 	},
+	typedRoutes: true,
 }
 
 function withSentry(config: NextConfig) {
-	if (clientEnvironment.NEXT_PUBLIC_SENTRY_DSN == null || !isProd) return config
+	if (clientEnvironment.NEXT_PUBLIC_SENTRY_DSN == null || !isProd) {
+		return config
+	}
 
 	return withSentryConfig(config, {
 		authToken: serverEnvironment.SENTRY_AUTH_TOKEN,
 		bundleSizeOptimizations: {
 			excludeDebugStatements: true,
-			excludeReplayShadowDom: true,
 			excludeReplayIframe: true,
+			excludeReplayShadowDom: true,
 		},
 		org: serverEnvironment.SENTRY_ORG,
-		sentryUrl: serverEnvironment.SENTRY_URL,
 		project: clientEnvironment.NEXT_PUBLIC_APP_NAME,
+		sentryUrl: serverEnvironment.SENTRY_URL,
 		silent: true,
 		sourcemaps: { deleteSourcemapsAfterUpload: true },
 		telemetry: false,

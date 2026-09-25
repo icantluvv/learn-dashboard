@@ -5,7 +5,7 @@ import { NextResponse } from 'next/server'
 export type ProxyFn = (
 	request: NextRequest,
 	response: NextResponse,
-) => NextResponse | Response | Promise<NextResponse | Response>
+) => NextResponse | Promise<NextResponse | Response> | Response
 
 export function chainProxy(proxies: ProxyFn[]) {
 	return async (request: NextRequest) => {

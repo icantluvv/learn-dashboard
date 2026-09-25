@@ -1,6 +1,6 @@
 'use client'
 
-import { ListBox, Select } from '@heroui/react'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@repo/core'
 
 import { useSkillsFilters } from '../../_hooks/use-skills-filters'
 
@@ -25,27 +25,22 @@ export function TopicSelect() {
 
 	return (
 		<Select
-			aria-label="Тема"
-			placeholder="Тема"
 			value={topic}
-			onChange={(key) => {
-				void setFilters({ topic: key as string | null })
+			onValueChange={(value: string | null) => {
+				void setFilters({ topic: value })
 			}}
 		>
-			<Select.Trigger className="base-select">
-				<Select.Value />
-				<Select.Indicator />
-			</Select.Trigger>
+			<SelectTrigger aria-label="Тема" className="w-full">
+				<SelectValue>{(value: string | null) => value ?? 'Тема'}</SelectValue>
+			</SelectTrigger>
 
-			<Select.Popover>
-				<ListBox>
-					{TOPIC_OPTIONS.map((topicOption) => (
-						<ListBox.Item key={topicOption} id={topicOption}>
-							{topicOption}
-						</ListBox.Item>
-					))}
-				</ListBox>
-			</Select.Popover>
+			<SelectContent>
+				{TOPIC_OPTIONS.map((topicOption) => (
+					<SelectItem key={topicOption} value={topicOption}>
+						{topicOption}
+					</SelectItem>
+				))}
+			</SelectContent>
 		</Select>
 	)
 }

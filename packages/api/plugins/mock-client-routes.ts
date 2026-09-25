@@ -11,27 +11,27 @@ export const pluginMockClientRoutesName = 'plugin-mock-client-routes'
 type OpenApiMethod = 'delete' | 'get' | 'patch' | 'post' | 'put'
 
 interface OperationLike {
-	getOperationId: (options: { friendlyCase: boolean }) => string
 	schema?: {
 		responses?: Record<string, unknown>
 		tags?: string[]
 	}
+	getOperationId: (options: { friendlyCase: boolean }) => string
 }
 
 interface Options {
+	mockClientImportPath?: string
+	mocksImportPath?: string
 	output?: {
 		path: string
 	}
-	mocksImportPath?: string
-	mockClientImportPath?: string
 }
 
 interface ResolvedOptions {
+	mockClientImportPath: string
+	mocksImportPath: string
 	output: {
 		path: string
 	}
-	mocksImportPath: string
-	mockClientImportPath: string
 }
 
 type PluginMockClientRoutes = PluginFactoryOptions<
@@ -43,15 +43,15 @@ type GeneratedBaseName = `${string}.${string}`
 
 export interface MockClientRouteDefinition {
 	method: OpenApiMethod
-	path: string
 	operationId: string
+	path: string
 	status: number
 	tag?: string
 }
 
 interface RenderOptions {
-	mocksImportPath: string
 	mockClientImportPath: string
+	mocksImportPath: string
 }
 
 const successfulStatusPattern = /^[23]\d\d$/
@@ -66,7 +66,9 @@ function capitalize(value: string) {
 }
 
 function toPascalCase(value: string) {
-	return splitWords(value).map(capitalize).join('')
+	return splitWords(value)
+		.map((word) => capitalize(word))
+		.join('')
 }
 
 function toCamelCase(value: string) {
@@ -76,7 +78,7 @@ function toCamelCase(value: string) {
 		return ''
 	}
 
-	return [firstWord.toLowerCase(), ...restWords.map(capitalize)].join('')
+	return [firstWord.toLowerCase(), ...restWords.map((word) => capitalize(word))].join('')
 }
 
 function toMockControllerName(tag?: string) {
@@ -88,23 +90,23 @@ function toMockControllerName(tag?: string) {
 }
 
 function escapeRegexLiteral(value: string) {
-	return value.replaceAll(/[\\^$.*+?()[\]{}|/]/g, '\\$&')
+	return value.replaceAll(/[\\^$.*+?()[\]{}|/]/g, String.raw`\$&`)
 }
 
-function toRoutePattern(path: string) {
+function toRoutePattern(routePath: string) {
 	let offset = 0
 	let source = ''
 
-	for (const match of path.matchAll(pathParameterPattern)) {
+	for (const match of routePath.matchAll(pathParameterPattern)) {
 		const [value] = match
-		const index = match.index
+		const { index } = match
 
-		source += escapeRegexLiteral(path.slice(offset, index))
+		source += escapeRegexLiteral(routePath.slice(offset, index))
 		source += '[^/]+'
 		offset = index + value.length
 	}
 
-	source += escapeRegexLiteral(path.slice(offset))
+	source += escapeRegexLiteral(routePath.slice(offset))
 
 	return `^${source}$`
 }
@@ -138,10 +140,10 @@ function compareRoutes(a: MockClientRouteDefinition, b: MockClientRouteDefinitio
 function renderImports(routes: MockClientRouteDefinition[], mocksImportPath: string) {
 	return routes
 		.map((route) => ({
+			importPath: toMockImportPath(route, mocksImportPath),
 			name: toMockFactoryName(route),
-			path: toMockImportPath(route, mocksImportPath),
 		}))
-		.map(({ name, path }) => `import { ${name} } from '${path}'`)
+		.map(({ importPath, name }) => `import { ${name} } from '${importPath}'`)
 		.join('\n')
 }
 
@@ -153,7 +155,7 @@ function renderRoute(route: MockClientRouteDefinition) {
 
 export function renderMockClientRoutes(
 	routes: MockClientRouteDefinition[],
-	{ mocksImportPath, mockClientImportPath }: RenderOptions,
+	{ mockClientImportPath, mocksImportPath }: RenderOptions,
 ) {
 	const orderedRoutes = [...routes].sort(compareRoutes)
 
@@ -170,8 +172,8 @@ ${orderedRoutes.map((route) => `\t${renderRoute(route)},`).join('\n')}
 
 function getPreferredMockStatus(statusCodes: string[]) {
 	const status =
-		statusCodes.find((item) => item.match(/^2\d\d$/)) ??
-		statusCodes.find((item) => item.match(successfulStatusPattern))
+		statusCodes.find((item) => /^2\d\d$/.exec(item)) ??
+		statusCodes.find((item) => successfulStatusPattern.exec(item))
 
 	return status === undefined ? 200 : Number(status)
 }
@@ -190,9 +192,9 @@ function isOpenApiMethod(method: string): method is OpenApiMethod {
 
 export const pluginMockClientRoutes = definePlugin<PluginMockClientRoutes>((options) => {
 	const {
-		output = { path: 'mock-client-routes.ts' },
-		mocksImportPath = './mocks',
 		mockClientImportPath = '../mock-client',
+		mocksImportPath = './mocks',
+		output = { path: 'mock-client-routes.ts' },
 	} = options
 
 	return {
@@ -218,7 +220,7 @@ export const pluginMockClientRoutes = definePlugin<PluginMockClientRoutes>((opti
 			})
 			const operations = await generator.getOperations()
 			const routes = operations.flatMap<MockClientRouteDefinition>(
-				({ method, operation, path }) => {
+				({ method, operation, path: operationPath }) => {
 					if (!isOpenApiMethod(method)) {
 						return []
 					}
@@ -226,7 +228,7 @@ export const pluginMockClientRoutes = definePlugin<PluginMockClientRoutes>((opti
 					return [
 						{
 							method,
-							path,
+							path: operationPath,
 							operationId: operation.getOperationId({ friendlyCase: true }),
 							status: getPreferredMockStatus(getOperationStatusCodes(operation)),
 							tag: getOperationTag(operation),

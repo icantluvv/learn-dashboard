@@ -1,21 +1,9 @@
 'use client'
 
-import type { ToasterProps } from 'sonner'
+import type { ComponentProps } from 'react'
 
-import { Toaster as Sonner } from 'sonner'
+import { Toaster as CoreToaster } from '@repo/core'
 
-export function Toaster({ ...props }: ToasterProps) {
-	return (
-		<Sonner
-			className="group"
-			icons={{}}
-			style={{}}
-			toastOptions={{
-				classNames: {
-					toast: 'cn-toast',
-				},
-			}}
-			{...props}
-		/>
-	)
+export function Toaster(props: ComponentProps<typeof CoreToaster>) {
+	return <CoreToaster {...props} />
 }

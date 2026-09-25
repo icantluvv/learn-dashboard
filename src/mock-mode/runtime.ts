@@ -1,6 +1,6 @@
 import { mockModeExcludedPagePaths, mockModePagePaths } from './config'
 
-type HeadersInput = [string, string][] | Record<string, string> | Headers | undefined
+type HeadersInput = [string, string][] | Headers | Record<string, string> | undefined
 
 const mockModeCookieName = 'mock-mode'
 const mockScenarioCookieName = 'mock-scenario'
@@ -10,7 +10,9 @@ export function isRuntimeMockFlagEnabled(value: string | null | undefined): bool
 }
 
 export function getHeaderValue(headers: HeadersInput, name: string): string | null {
-	if (headers == null) return null
+	if (headers == null) {
+		return null
+	}
 
 	if (headers instanceof Headers) {
 		return headers.get(name)
@@ -23,7 +25,9 @@ export function getHeaderValue(headers: HeadersInput, name: string): string | nu
 	}
 
 	for (const [key, value] of Object.entries(headers)) {
-		if (key.toLowerCase() === normalizedName) return value
+		if (key.toLowerCase() === normalizedName) {
+			return value
+		}
 	}
 
 	return null
@@ -33,11 +37,16 @@ export function getCookieValue(
 	cookieHeader: string | null | undefined,
 	name: string,
 ): string | null {
-	if (cookieHeader == null || cookieHeader === '') return null
+	if (cookieHeader == null || cookieHeader === '') {
+		return null
+	}
 
 	for (const cookie of cookieHeader.split(';')) {
 		const [rawName, ...rawValue] = cookie.trim().split('=')
-		if (rawName === name) return decodeURIComponent(rawValue.join('='))
+
+		if (rawName === name) {
+			return decodeURIComponent(rawValue.join('='))
+		}
 	}
 
 	return null
@@ -54,7 +63,9 @@ function normalizePath(pathname: string): string {
 }
 
 export function getPathnameFromUrl(value: string | null | undefined): string | null {
-	if (value == null || value === '') return null
+	if (value == null || value === '') {
+		return null
+	}
 
 	try {
 		return new URL(value, 'http://localhost').pathname
@@ -78,11 +89,15 @@ function matchesPagePath(paths: typeof mockModePagePaths, currentPath: string): 
 }
 
 export function isMockModePagePath(pathname: string | null | undefined): boolean {
-	if (pathname == null || pathname === '') return false
+	if (pathname == null || pathname === '') {
+		return false
+	}
 
 	const currentPath = normalizePath(pathname)
 
-	if (matchesPagePath(mockModeExcludedPagePaths, currentPath)) return false
+	if (matchesPagePath(mockModeExcludedPagePaths, currentPath)) {
+		return false
+	}
 
 	return matchesPagePath(mockModePagePaths, currentPath)
 }

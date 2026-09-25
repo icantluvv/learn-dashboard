@@ -1,6 +1,6 @@
 'use client'
 
-import { Button } from '@heroui/react'
+import { Button } from '@repo/core'
 
 import { useSkillsFilters } from '../../_hooks/use-skills-filters'
 
@@ -9,10 +9,9 @@ export function ResetFiltersButton() {
 
 	return (
 		<Button
-			className="h-12 rounded-lg text-base font-medium text-black"
+			className="h-12 w-full rounded-lg text-base font-medium"
 			variant="outline"
-			fullWidth
-			onPress={() => {
+			onClick={() => {
 				void setFilters(null)
 			}}
 		>

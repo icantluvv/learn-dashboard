@@ -1,6 +1,6 @@
 import type { GetSkills200 } from '@repo/api'
 
-import { Card } from '@heroui/react'
+import { Card, CardContent } from '@repo/core'
 import Link from 'next/link'
 
 import { DIFFICULTY_LABELS } from '../../_constants/difficulty-options'
@@ -13,20 +13,24 @@ export function SkillCard({ skill }: SkillCardProps) {
 	return (
 		<Link href={`/catalog/${skill.id}`} className="flex">
 			<Card className={`
-				size-full rounded-2xl shadow-none transition-transform border-shaded
+				size-full rounded-2xl shadow-none ring-0 transition-transform border-shaded
 				hover:scale-[1.02]
 			`}>
-				<div className="flex items-center justify-between gap-4">
-					<span className="text-xs font-medium text-gray-500">{skill.topic}</span>
-					<span className="text-xs font-medium text-gray-500">
-						{DIFFICULTY_LABELS[skill.difficulty]}
-					</span>
-				</div>
+				<CardContent className="v-stack gap-4">
+					<div className="flex items-center justify-between gap-4">
+						<span className="text-xs font-medium text-gray-500">{skill.topic}</span>
+						<span className="text-xs font-medium text-gray-500">
+							{DIFFICULTY_LABELS[skill.difficulty]}
+						</span>
+					</div>
 
-				<div className="v-stack gap-1">
-					<h3 className="text-2xl font-semibold">{skill.title}</h3>
-					<span className="text-sm text-gray-500">{skill.questionsCount} вопросов</span>
-				</div>
+					<div className="v-stack gap-1">
+						<h3 className="text-2xl font-semibold">{skill.title}</h3>
+						<span className="text-sm text-gray-500">
+							{skill.questionsCount} вопросов
+						</span>
+					</div>
+				</CardContent>
 			</Card>
 		</Link>
 	)

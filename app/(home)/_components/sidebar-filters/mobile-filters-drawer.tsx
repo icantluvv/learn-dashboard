@@ -1,26 +1,30 @@
 'use client'
 
-import { Button, Drawer } from '@heroui/react'
+import { Button, Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from '@repo/core'
 import { Settings } from 'lucide-react'
 
 import { FiltersContent } from './filters-content'
 
 export function MobileFiltersDrawer() {
 	return (
-		<Drawer.Root>
-			<Button aria-label="Открыть фильтры" variant="outline" isIconOnly>
-				<Settings className="size-5" />
-			</Button>
+		<Drawer>
+			<DrawerTrigger
+				render={
+					<Button aria-label="Открыть фильтры" variant="outline" size="icon-lg">
+						<Settings className="size-5" />
+					</Button>
+				}
+			/>
 
-			<Drawer.Backdrop>
-				<Drawer.Content placement="bottom">
-					<Drawer.Dialog aria-label="Фильтры" className="min-h-[80vh]">
-						<Drawer.Body>
-							<FiltersContent />
-						</Drawer.Body>
-					</Drawer.Dialog>
-				</Drawer.Content>
-			</Drawer.Backdrop>
-		</Drawer.Root>
+			<DrawerContent className="min-h-[80vh]">
+				<DrawerHeader>
+					<DrawerTitle>Фильтры</DrawerTitle>
+				</DrawerHeader>
+
+				<div className="min-h-0 flex-1 overflow-y-auto p-4">
+					<FiltersContent />
+				</div>
+			</DrawerContent>
+		</Drawer>
 	)
 }

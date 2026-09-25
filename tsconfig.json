@@ -36,7 +36,9 @@
 		"paths": {
 			"~/*": ["./*"],
 			"@/*": ["./app/*"],
-			"#/*": ["./src/*"]
+			"#/*": ["./src/*"],
+			"@repo/core/src": ["./packages/core/src"],
+			"@repo/core/src/*": ["./packages/core/src/*"]
 		},
 		"plugins": [
 			{

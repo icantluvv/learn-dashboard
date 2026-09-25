@@ -1,4 +1,4 @@
-import { buttonVariants } from '@heroui/styles'
+import { buttonVariants } from '@repo/core'
 import Link from 'next/link'
 
 export default function NotFound() {
@@ -16,7 +16,7 @@ export default function NotFound() {
 			</div>
 
 			<Link className={`
-				${buttonVariants({ size: 'md', variant: 'outline' })}
+				${buttonVariants({ variant: 'outline' })}
 				h-12 w-full rounded-lg
 				md:max-w-74
 			`} href="/">

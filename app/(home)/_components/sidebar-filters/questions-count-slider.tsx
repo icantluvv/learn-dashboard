@@ -1,6 +1,6 @@
 'use client'
 
-import { Slider } from '@heroui/react'
+import { Slider } from '@repo/core'
 
 import { useSkillsFilters } from '../../_hooks/use-skills-filters'
 
@@ -10,33 +10,35 @@ const MAX_QUESTIONS_COUNT = 25
 export function QuestionsCountSlider() {
 	const [{ maxQuestionsCount, minQuestionsCount }, setFilters] = useSkillsFilters()
 
+	const min = minQuestionsCount ?? MIN_QUESTIONS_COUNT
+	const max = maxQuestionsCount ?? MAX_QUESTIONS_COUNT
+
 	return (
-		<Slider
-			aria-label="Количество вопросов"
-			value={[
-				minQuestionsCount ?? MIN_QUESTIONS_COUNT,
-				maxQuestionsCount ?? MAX_QUESTIONS_COUNT,
-			]}
-			maxValue={MAX_QUESTIONS_COUNT}
-			minValue={MIN_QUESTIONS_COUNT}
-			onChangeEnd={(value) => {
-				const [min, max] = value as number[]
-				void setFilters({
-					minQuestionsCount: min === MIN_QUESTIONS_COUNT ? null : min,
-					maxQuestionsCount: max === MAX_QUESTIONS_COUNT ? null : max,
-				})
-			}}
-		>
+		<div className="v-stack gap-2">
 			<div className="flex items-center justify-between gap-2">
 				<span className="text-sm text-gray-600">Количество вопросов</span>
-				<Slider.Output />
+				<span className="text-sm text-gray-600">
+					{min} – {max}
+				</span>
 			</div>
 
-			<Slider.Track>
-				<Slider.Fill />
-				<Slider.Thumb index={0} />
-				<Slider.Thumb index={1} />
-			</Slider.Track>
-		</Slider>
+			<Slider
+				aria-label="Количество вопросов"
+				value={[min, max]}
+				min={MIN_QUESTIONS_COUNT}
+				max={MAX_QUESTIONS_COUNT}
+				onValueCommitted={(value: number | readonly number[]) => {
+					const committed: readonly number[] =
+						typeof value === 'number' ? [value, value] : value
+					const nextMin = committed[0] ?? MIN_QUESTIONS_COUNT
+					const nextMax = committed[1] ?? MAX_QUESTIONS_COUNT
+
+					void setFilters({
+						minQuestionsCount: nextMin === MIN_QUESTIONS_COUNT ? null : nextMin,
+						maxQuestionsCount: nextMax === MAX_QUESTIONS_COUNT ? null : nextMax,
+					})
+				}}
+			/>
+		</div>
 	)
 }

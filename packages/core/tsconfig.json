@@ -1,0 +1,14 @@
+{
+	"$schema": "https://json.schemastore.org/tsconfig",
+	"extends": "../../tsconfig.json",
+	"compilerOptions": {
+		"types": ["../../src/types/global.d.ts"],
+		"paths": {
+			"@repo/core": ["./index.ts"],
+			"@repo/core/src": ["./src"],
+			"@repo/core/src/*": ["./src/*"]
+		}
+	},
+	"include": ["**/*.ts", "**/*.tsx"],
+	"exclude": ["node_modules"]
+}

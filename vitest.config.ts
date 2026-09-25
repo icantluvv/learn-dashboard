@@ -99,7 +99,6 @@ export default defineConfig({
 				client: {
 					enabled: true,
 					include: [
-						'@heroui/react',
 						'@sentry/nextjs',
 						'@t3-oss/env-nextjs',
 						'@tanstack/react-query',
@@ -178,7 +177,6 @@ export default defineConfig({
 	optimizeDeps: {
 		exclude: ['undici'],
 		include: [
-			'@heroui/react',
 			'@sentry/nextjs',
 			'@t3-oss/env-nextjs',
 			'@tanstack/react-query',

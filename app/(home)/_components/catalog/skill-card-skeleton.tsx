@@ -1,4 +1,4 @@
-import { Skeleton } from '@heroui/react'
+import { Skeleton } from '@repo/core'
 
 export function SkillCardSkeleton() {
 	return (
