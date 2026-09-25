@@ -9,6 +9,7 @@ import { serverEnvironment } from './src/env/server'
 
 const isDev = process.env.NODE_ENV === 'development'
 const isProd = process.env.NODE_ENV === 'production'
+const isVercel = process.env.VERCEL === '1'
 
 const svgrOptions = {
 	svgoConfig: {
@@ -44,7 +45,9 @@ const nextConfig: NextConfig = {
 	logging: isDev
 		? { browserToTerminal: true, fetches: { fullUrl: true }, serverFunctions: true }
 		: false,
-	output: 'standalone',
+	// Vercel сам выполняет output file tracing и падает на standalone-сборке,
+	// поэтому standalone остаётся только для контейнерного контура.
+	output: isVercel ? undefined : 'standalone',
 	outputFileTracingRoot: import.meta.dirname,
 	poweredByHeader: false,
 	reactProductionProfiling: false,
