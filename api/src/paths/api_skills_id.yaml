@@ -1,0 +1,21 @@
+get:
+  summary: Get skill by id
+  operationId: getSkillById
+  tags:
+    - Skills
+  parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+      example: "js-closures"
+  responses:
+    "200":
+      description: Success
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/Skill.yaml
+    "404":
+      description: Not found

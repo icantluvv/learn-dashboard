@@ -1,4 +1,4 @@
-import type { GetSkillsQueryResponse } from './codegen'
+import type { GetSkillByIdQueryResponse, GetSkillsQueryResponse } from './codegen'
 
 import { describe, expect, it } from 'vitest'
 
@@ -12,6 +12,17 @@ function getSkills(params?: Record<string, unknown>): GetSkillsQueryResponse {
 	}
 
 	return route.create({ params }) as GetSkillsQueryResponse
+}
+
+function getSkillById(id: string): GetSkillByIdQueryResponse {
+	const url = `/api/skills/${id}`
+	const route = getMockScenarioRoute('GET', url)
+
+	if (!route) {
+		throw new Error(`Mock route for GET ${url} is not registered`)
+	}
+
+	return route.create({ url }) as GetSkillByIdQueryResponse
 }
 
 describe('mock filtering for GET /api/skills', () => {
@@ -66,5 +77,29 @@ describe('mock filtering for GET /api/skills', () => {
 		const skills = getSkills({ search: 'no such skill exists' })
 
 		expect(skills).toStrictEqual([])
+	})
+})
+
+describe('mock detail for GET /api/skills/:id', () => {
+	it('returns title and numbered questions for an existing skill id', () => {
+		const skill = getSkillById('skill-01')
+
+		expect(skill.title).toBe('Авторизация и аутентификация')
+		expect(skill.questions).toHaveLength(14)
+		expect(skill.questions[0]).toBe('Вопрос 1 по теме «Авторизация и аутентификация»')
+		expect(skill.questions[13]).toBe('Вопрос 14 по теме «Авторизация и аутентификация»')
+	})
+
+	it('throws a 404-shaped error for an unknown skill id', () => {
+		let caughtError: unknown
+
+		try {
+			getSkillById('does-not-exist')
+		} catch (error) {
+			caughtError = error
+		}
+
+		expect(caughtError).toBeInstanceOf(Error)
+		expect((caughtError as Error).cause).toStrictEqual({ status: 404, statusText: 'Not Found' })
 	})
 })

@@ -3,9 +3,11 @@
 import type { MockRoute } from '../mock-client'
 
 import { createGetExampleQueryResponse } from './mocks/exampleController/createGetExample'
+import { createGetSkillByIdQueryResponse } from './mocks/skillsController/createGetSkillById'
 import { createGetSkillsQueryResponse } from './mocks/skillsController/createGetSkills'
 
 export const mockRoutes = [
 	{ method: 'GET', pattern: /^\/api\/example$/, create: createGetExampleQueryResponse },
 	{ method: 'GET', pattern: /^\/api\/skills$/, create: createGetSkillsQueryResponse },
+	{ method: 'GET', pattern: /^\/api\/skills\/[^/]+$/, create: createGetSkillByIdQueryResponse },
 ] as MockRoute[]

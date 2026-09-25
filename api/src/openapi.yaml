@@ -22,6 +22,8 @@ paths:
     $ref: paths/api_example.yaml
   /api/skills:
     $ref: paths/api_skills.yaml
+  /api/skills/{id}:
+    $ref: paths/api_skills_id.yaml
 
 components:
   securitySchemes:

@@ -1,5 +1,9 @@
 import type { RequestConfig } from './client'
-import type { GetSkillsQueryParams, GetSkillsQueryResponse } from './codegen'
+import type {
+	GetSkillByIdQueryResponse,
+	GetSkillsQueryParams,
+	GetSkillsQueryResponse,
+} from './codegen'
 import type { MockRoute, RequestMethod } from './mock-client'
 
 export type BaseMockScenarioName = 'default'
@@ -689,6 +693,33 @@ const skillCards: GetSkillsQueryResponse = [
 	},
 ]
 
+function createSkillQuestions(skill: GetSkillsQueryResponse[number]): string[] {
+	return Array.from(
+		{ length: skill.questionsCount },
+		(_, index) => `Вопрос ${index + 1} по теме «${skill.title}»`,
+	)
+}
+
+const skillQuestions: Record<string, GetSkillByIdQueryResponse> = Object.fromEntries(
+	skillCards.map((skill) => [
+		skill.id,
+		{ title: skill.title, questions: createSkillQuestions(skill) },
+	]),
+)
+
+const skillDetailPattern = /^\/api\/skills\/([^/]+)$/
+
+function getSkillDetail(config: Partial<RequestConfig> | undefined): GetSkillByIdQueryResponse {
+	const id = skillDetailPattern.exec(config?.url ?? '')?.[1]
+	const skill = id == null ? undefined : skillQuestions[id]
+
+	if (!skill) {
+		throw new Error('Not Found', { cause: { status: 404, statusText: 'Not Found' } })
+	}
+
+	return skill
+}
+
 function filterSkillCards(params: GetSkillsQueryParams | undefined): GetSkillsQueryResponse {
 	if (!params) {
 		return skillCards
@@ -729,6 +760,11 @@ const mockScenarios = {
 			method: 'GET',
 			pattern: /^\/api\/skills$/,
 			create: (config?: Partial<RequestConfig>) => filterSkillCards(config?.params),
+		},
+		{
+			method: 'GET',
+			pattern: skillDetailPattern,
+			create: (config?: Partial<RequestConfig>) => getSkillDetail(config),
 		},
 	],
 } satisfies Record<BaseMockScenarioName, MockRoute[]>
