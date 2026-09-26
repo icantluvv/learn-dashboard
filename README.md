@@ -105,8 +105,9 @@ bun run --filter @packages/api kubb generate
 - `src/proxy/auth-guard.ts` — оптимистичная проверка cookie в proxy (редиректы). Авторитетная
   проверка сессии всегда делается на сервере через `getCurrentUser()`.
 
-Переменные окружения: `SUPABASE_DB_URL`, `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL` (server) и
-`NEXT_PUBLIC_BETTER_AUTH_URL` (client).
+Переменные окружения (все server-only): `SUPABASE_DB_URL`, `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL`.
+Браузерному `authClient` базовый URL не нужен — Better Auth берёт `window.location.origin`, а
+handler висит на том же origin.
 
 ## Скрипты
 

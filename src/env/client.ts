@@ -12,7 +12,6 @@ export const clientEnvironment = createEnv({
 		NEXT_PUBLIC_UNLEASH_FRONTEND_API_URL: z.optional(z.url()),
 		NEXT_PUBLIC_UNLEASH_FRONTEND_API_TOKEN: z.optional(z.string()),
 		NEXT_PUBLIC_UNLEASH_APP_NAME: z.optional(z.string()),
-		NEXT_PUBLIC_BETTER_AUTH_URL: z.url(),
 	},
 	emptyStringAsUndefined: true,
 	runtimeEnv: {
@@ -25,6 +24,5 @@ export const clientEnvironment = createEnv({
 		NEXT_PUBLIC_UNLEASH_FRONTEND_API_URL: process.env.NEXT_PUBLIC_UNLEASH_FRONTEND_API_URL,
 		NEXT_PUBLIC_UNLEASH_FRONTEND_API_TOKEN: process.env.NEXT_PUBLIC_UNLEASH_FRONTEND_API_TOKEN,
 		NEXT_PUBLIC_UNLEASH_APP_NAME: process.env.NEXT_PUBLIC_UNLEASH_APP_NAME,
-		NEXT_PUBLIC_BETTER_AUTH_URL: process.env.NEXT_PUBLIC_BETTER_AUTH_URL,
 	},
 })

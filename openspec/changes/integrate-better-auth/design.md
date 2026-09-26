@@ -223,7 +223,9 @@ user: {
 | `SUPABASE_DB_URL`             | server | Postgres connection string (session pooler) |
 | `NEXT_PUBLIC_BETTER_AUTH_URL` | client | `baseURL` для `createAuthClient` в браузере |
 
-Добавляются в `src/env/server.ts` / `src/env/client.ts`, `.env.example` и `docs/environment.md`.
+Добавляются в `src/env/server.ts`, `.env.example` и README. Клиентской переменной нет: браузерный
+`createAuthClient` без `baseURL` использует `window.location.origin`, а handler живёт на том же
+origin.
 `SUPABASE_DB_URL` и `BETTER_AUTH_SECRET` не попадают в client schema; логгер не пишет ни cookie, ни
 заголовок `Authorization`.
 

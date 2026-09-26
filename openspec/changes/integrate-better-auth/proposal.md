@@ -47,8 +47,8 @@ generate` и дополненная `enable row level security` + deny-all по�
 - В `proxy.ts` добавляется шаг оптимистичной проверки cookie (`getSessionCookie`) — только для
   редиректа гостя со страниц, требующих авторизации; настоящая проверка сессии всегда делается на
   странице/в route handler через `auth.api.getSession`.
-- Новые переменные окружения: `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL`, `SUPABASE_DB_URL`
-  (server-only) и `NEXT_PUBLIC_BETTER_AUTH_URL` — с добавлением в `src/env/*` и `.env.example`.
+- Новые переменные окружения: `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL`, `SUPABASE_DB_URL` — все
+  server-only, с добавлением в `src/env/server.ts` и `.env.example`.
 
 ## Capabilities
 

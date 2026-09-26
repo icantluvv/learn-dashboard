@@ -42,7 +42,6 @@ const testEnvironmentKeys = [
 	'SUPABASE_DB_URL',
 	'BETTER_AUTH_SECRET',
 	'BETTER_AUTH_URL',
-	'NEXT_PUBLIC_BETTER_AUTH_URL',
 	'SENTRY_AUTH_TOKEN',
 	'SENTRY_DSN',
 	'SENTRY_ORG',
@@ -60,7 +59,6 @@ const dotEnvEnvironment = existsSync(dotEnvPath) ? parseEnv(readFileSync(dotEnvP
 const testEnvironmentFallbacks: Partial<Record<(typeof testEnvironmentKeys)[number], string>> = {
 	BETTER_AUTH_SECRET: 'test-secret-not-used-for-real-sessions',
 	BETTER_AUTH_URL: 'http://localhost:3000',
-	NEXT_PUBLIC_BETTER_AUTH_URL: 'http://localhost:3000',
 	SUPABASE_DB_URL: 'postgresql://postgres:test@localhost:5432/postgres',
 }
 

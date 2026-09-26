@@ -5,7 +5,8 @@
       обновить `package-lock.json`
 - [x] 1.2 Добавить в `src/env/server.ts`: `BETTER_AUTH_SECRET: z.string()`,
       `BETTER_AUTH_URL: z.url()`, `SUPABASE_DB_URL: z.url()`
-- [x] 1.3 Добавить в `src/env/client.ts`: `NEXT_PUBLIC_BETTER_AUTH_URL: z.url()`
+- [~] 1.3 `NEXT_PUBLIC_BETTER_AUTH_URL` в `src/env/client.ts` — добавлена и затем **удалена**
+  (см. 13.18): браузерному клиенту базовый URL не нужен
 - [x] 1.4 Дополнить `.env.example` четырьмя новыми переменными (с placeholder-значениями, без
       реальных секретов) и описать их в `docs/environment.md`
 
@@ -224,3 +225,8 @@ formComponents })`, экспорт `useAppForm`, `withForm` и типов
       `src/modules/auth/index.ts` оставляет только actions (клиентские модули намеренно импортируют
       `./schemas` и `./types` напрямую, чтобы не тянуть server-only граф), из `@repo/core/form`
       убраны `withForm`, `useFieldContext`, `useFormContext`, из `schemas.ts` — неиспользуемые типы
+- [x] 13.18 (По вопросу пользователя) `NEXT_PUBLIC_BETTER_AUTH_URL` удалена целиком (env-схема,
+      `.env.example`, `vitest.config.ts`, README, `createAuthClient`). В `better-auth/dist/utils/url`
+      видно, что без `baseURL` клиент в браузере берёт `window.location.origin` и дописывает
+      `/api/auth` — а handler висит на том же origin, так что переменная была страховкой без смысла.
+      Серверный `BETTER_AUTH_URL` остаётся: на сервере `window` нет
