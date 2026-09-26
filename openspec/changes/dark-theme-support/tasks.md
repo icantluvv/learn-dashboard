@@ -19,7 +19,7 @@
       `dark:bg-input/30`/`dark:hover:bg-input/50` на `border-outline-border`,
       `hover:bg-outline-hover-background hover:text-outline-hover-foreground`,
       `active:border-outline-active-border active:bg-outline-active-background
-  active:text-outline-active-foreground`
+active:text-outline-active-foreground`
 - [x] 2.2 `button.tsx`: убрать `active:not-aria-[haspopup]:translate-y-px`; сузить `transition-all`
       до `transition-colors` и добавить `duration-200`
 - [x] 2.3 `select.tsx`: `SelectTrigger` — заменить `border-input`/`bg-transparent` на
@@ -51,6 +51,15 @@
       `hover:text-muted-foreground` (иконка `ArrowLeft` наследует цвет через `currentColor`)
 - [x] 3.7 `skill-detail-content.tsx`: оба `bg-white` → `bg-card text-card-foreground`,
       `text-gray-600`/`text-gray-500` → `text-muted-foreground`
+- [x] 3.8 `mobile-filters-drawer.tsx`: точечная правка вне темы — убрать `DrawerHeader`/
+      `DrawerTitle` («Фильтры»), контент Drawer'а уже начинается с заголовка «Фильтры» из
+      `FiltersContent`, второй заголовок был избыточен; добавлен `pt-8` контейнеру контента вместо
+      хедера
+- [x] 3.9 `mobile-filters-drawer.tsx`: добавить `--outline-backdrop-blur`/`--outline-backdrop-tint`
+      токены и применить их кнопке-триггеру фильтров — лёгкий backdrop-blur и полупрозрачная
+      подложка в тёмной теме для эффекта глубины (в светлой теме оба токена нейтральны)
+- [x] 3.10 `skill-card.tsx`: `active:scale-100` → `active:scale-[0.99]` — на мобильных `hover`
+      обычно не срабатывает, поэтому нужен собственный tap-feedback, а не просто сброс hover-скейла
 
 ## 4. Верификация
 

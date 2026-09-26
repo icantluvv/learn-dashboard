@@ -22,6 +22,8 @@
 	--select-background: #ffffff;
 	--select-foreground: #171717;
 	--select-placeholder: #6b7280;
+	--outline-backdrop-blur: 0px;
+	--outline-backdrop-tint: transparent;
 	--slider-track: var(--muted);
 	--slider-indicator: var(--primary);
 	--slider-thumb: #ffffff;
@@ -124,6 +126,8 @@
 		--foreground: #ededed;
 		--gray-ultralight: #1c2637;
 		--border-shaded: transparent;
+		--outline-backdrop-blur: 8px;
+		--outline-backdrop-tint: oklch(1 0 0 / 8%);
 		--heading: #fff;
 		--outline-border: #fff;
 		--outline-hover-background: #fff;

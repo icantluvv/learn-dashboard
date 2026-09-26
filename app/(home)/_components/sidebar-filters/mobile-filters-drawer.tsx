@@ -1,6 +1,6 @@
 'use client'
 
-import { Button, Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from '@repo/core'
+import { Button, Drawer, DrawerContent, DrawerTrigger } from '@repo/core'
 import { Settings } from 'lucide-react'
 
 import { FiltersContent } from './filters-content'
@@ -14,7 +14,7 @@ export function MobileFiltersDrawer() {
 						aria-label="Открыть фильтры"
 						variant="outline"
 						size="icon-lg"
-						className="size-12"
+						className="size-12 bg-(--outline-backdrop-tint) backdrop-blur-(--outline-backdrop-blur)"
 					>
 						<Settings className="size-6" />
 					</Button>
@@ -22,11 +22,7 @@ export function MobileFiltersDrawer() {
 			/>
 
 			<DrawerContent className="min-h-[80vh]">
-				<DrawerHeader>
-					<DrawerTitle>Фильтры</DrawerTitle>
-				</DrawerHeader>
-
-				<div className="min-h-0 flex-1 overflow-y-auto p-4">
+				<div className="min-h-0 flex-1 overflow-y-auto p-5 pt-8">
 					<FiltersContent />
 				</div>
 			</DrawerContent>
