@@ -1,0 +1,16 @@
+get:
+  summary: Get the current user profile
+  operationId: getAuthMe
+  tags:
+    - Me
+  security:
+    - auth_cookie: []
+  responses:
+    "200":
+      description: Success
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/AuthMe.yaml
+    "401":
+      description: Not authenticated

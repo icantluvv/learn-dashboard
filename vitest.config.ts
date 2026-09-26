@@ -39,6 +39,10 @@ const testEnvironmentKeys = [
 	'MOCK_MODE',
 	'SUPABASE_URL',
 	'SUPABASE_SERVICE_ROLE_KEY',
+	'SUPABASE_DB_URL',
+	'BETTER_AUTH_SECRET',
+	'BETTER_AUTH_URL',
+	'NEXT_PUBLIC_BETTER_AUTH_URL',
 	'SENTRY_AUTH_TOKEN',
 	'SENTRY_DSN',
 	'SENTRY_ORG',
@@ -53,9 +57,16 @@ const testEnvironmentKeys = [
 
 const dotEnvEnvironment = existsSync(dotEnvPath) ? parseEnv(readFileSync(dotEnvPath, 'utf8')) : {}
 
+const testEnvironmentFallbacks: Partial<Record<(typeof testEnvironmentKeys)[number], string>> = {
+	BETTER_AUTH_SECRET: 'test-secret-not-used-for-real-sessions',
+	BETTER_AUTH_URL: 'http://localhost:3000',
+	NEXT_PUBLIC_BETTER_AUTH_URL: 'http://localhost:3000',
+	SUPABASE_DB_URL: 'postgresql://postgres:test@localhost:5432/postgres',
+}
+
 const testEnvironment = Object.fromEntries(
 	testEnvironmentKeys.flatMap((key) => {
-		const value = process.env[key] ?? dotEnvEnvironment[key]
+		const value = process.env[key] ?? dotEnvEnvironment[key] ?? testEnvironmentFallbacks[key]
 
 		return value === undefined ? [] : [[key, value]]
 	}),

@@ -70,8 +70,14 @@ export type Client = <TData, _TError = unknown, TVariables = unknown>(
 	config: RequestConfig<TVariables>,
 ) => Promise<ResponseConfig<TData>>
 
+export function isAuthPath(url: string | undefined) {
+	return url != null && (url === '/api/me' || url.startsWith('/api/auth/'))
+}
+
 export function isSameOriginPath(url: string | undefined) {
-	return url != null && (url === '/api/skills' || url.startsWith('/api/skills/'))
+	return (
+		url != null && (url === '/api/skills' || url.startsWith('/api/skills/') || isAuthPath(url))
+	)
 }
 
 export function getBaseUrl(url: string | undefined) {
@@ -316,7 +322,7 @@ async function fetch<TData, TError = unknown, TVariables = unknown>(
 ): Promise<ResponseConfig<TData>> {
 	const config = mergeConfig(getConfig(), paramsConfig)
 
-	const isMockMode = await isMockModeEnabled(config)
+	const isMockMode = !isAuthPath(config.url) && (await isMockModeEnabled(config))
 
 	if (isMockMode) {
 		const { getMockResponse } = await import('./mock-client')
@@ -337,7 +343,7 @@ async function fetch<TData, TError = unknown, TVariables = unknown>(
 		headers: requestHeaders,
 	})
 
-	if (response.status === 401) {
+	if (response.status === 401 && !isAuthPath(config.url)) {
 		return retryAfterUnauthorized<TData, TError>(
 			response,
 			targetUrl,

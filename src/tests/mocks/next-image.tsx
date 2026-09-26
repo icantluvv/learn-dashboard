@@ -11,6 +11,7 @@ export default function Image({
 	quality: _quality,
 	sizes: _sizes,
 	src,
+	unoptimized: _unoptimized,
 	...props
 }: ComponentProps<'img'> & {
 	blurDataURL?: string
@@ -19,6 +20,7 @@ export default function Image({
 	priority?: boolean
 	quality?: number
 	sizes?: string
+	unoptimized?: boolean
 }) {
 	// eslint-disable-next-line next/no-img-element
 	return <img src={src} alt={alt} {...props} />

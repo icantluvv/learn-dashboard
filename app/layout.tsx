@@ -5,7 +5,6 @@ import { headers } from 'next/headers'
 import { NuqsAdapter } from 'nuqs/adapters/next/app'
 
 import { Layout } from '#/components/layout'
-import { AuthProvider } from '#/components/providers/auth-provider'
 import { QueryProvider } from '#/components/providers/query-provider'
 import { Toaster } from '#/components/toaster'
 import { ttFors } from '#/fonts/ttFors'
@@ -33,10 +32,8 @@ export default async function RootLayout({
 				<SsrWidthProvider value={ssrWidth}>
 					<NuqsAdapter>
 						<QueryProvider>
-							<AuthProvider>
-								<Layout>{children}</Layout>
-								<Toaster />
-							</AuthProvider>
+							<Layout>{children}</Layout>
+							<Toaster />
 						</QueryProvider>
 					</NuqsAdapter>
 				</SsrWidthProvider>
