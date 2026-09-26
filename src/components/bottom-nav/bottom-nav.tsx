@@ -34,9 +34,8 @@ export function BottomNav({ profile }: BottomNavProps) {
 						aria-current={isActive ? 'page' : undefined}
 						className={cn(`
 							v-stack min-h-14 min-w-16 flex-1 items-center justify-start gap-1.5
-							rounded-xl py-1.5 text-xs text-muted-foreground transition-colors
-							aria-[current=page]:bg-heading/10 aria-[current=page]:font-semibold
-							aria-[current=page]:text-heading
+							py-1.5 text-xs text-heading/45 transition-colors
+							aria-[current=page]:font-semibold aria-[current=page]:text-heading
 						`)}
 					>
 						<Icon className="size-7" aria-hidden="true" />

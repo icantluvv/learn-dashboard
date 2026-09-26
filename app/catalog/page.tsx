@@ -19,8 +19,8 @@ export default async function CatalogPage() {
 	return (
 		<HydrationBoundary state={dehydrate(queryClient)}>
 			<div className={`
-				page-wrapper v-stack gap-12
-				md:flex-row
+				page-wrapper v-stack gap-4
+				md:flex-row md:gap-12
 			`}>
 				<SidebarFilters />
 				<Catalog />
