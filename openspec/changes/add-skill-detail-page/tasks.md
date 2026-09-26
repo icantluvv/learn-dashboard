@@ -98,3 +98,17 @@ undefined` + `hasError` и тернарника в JSX — итоговая фу
       `/catalog/does-not-exist` отдаёт `404` через `notFound()`. Навыка с пустым `questions` в
       mock-данных нет (у всех 97 записей `questionsCount > 0`), ветка проверена только
       component-тестом (5.2) — зафиксировано как осознанный gap, а не пропуск
+
+## 8. Тёмная тема (последующая правка, см. `dark-theme-support`)
+
+- [x] 8.1 `skill-detail-content.tsx`: оба блока `rounded-xl bg-white p-6` → `bg-card p-6
+text-card-foreground` — фиксированный белый фон терялся на тёмном `--background`
+- [x] 8.2 `skill-detail-content.tsx`: `text-gray-600`/`text-gray-500` → `text-muted-foreground`
+      (сообщение об отсутствии вопросов, номер вопроса в списке)
+- [x] 8.3 `back-button.tsx`: `text-black` → `text-heading` (`#171717` в светлой теме, `#fff` в
+      тёмной), `hover:text-gray-600` → `hover:text-muted-foreground`; иконка `ArrowLeft` отдельного
+      цвета не имеет и наследует цвет текста через `currentColor`, поэтому отдельная правка иконки
+      не потребовалась
+- [x] 8.4 Ручная проверка не проводилась в рамках этой сессии (нет браузера с переключением
+      `prefers-color-scheme` в текущем окружении) — см. `dark-theme-support/test-plan.md - Manual
+checks`, пункт про `/catalog/[id]`, как открытый пункт верификации
