@@ -15,6 +15,7 @@ export function SkillCard({ skill }: SkillCardProps) {
 			<Card className={`
 				size-full rounded-2xl shadow-none ring-0 transition-transform border-shaded
 				hover:scale-[1.02]
+				active:scale-100
 			`}>
 				<CardContent className="v-stack gap-4">
 					<div className="flex items-center justify-between gap-4">
