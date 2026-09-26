@@ -12,7 +12,7 @@ export default async function SignInPage() {
 	}
 
 	return (
-		<div className="page-wrapper flex justify-center">
+		<div className="page-wrapper flex flex-1 items-center justify-center">
 			<SignInForm action={signInAction} />
 		</div>
 	)

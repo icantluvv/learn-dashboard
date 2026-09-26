@@ -53,7 +53,7 @@ export function SignInForm({ action }: SignInFormProps) {
 
 	return (
 		<form
-			className="flex w-full max-w-md flex-col gap-4 rounded-xl bg-white p-6"
+			className="flex w-full max-w-md flex-col gap-4 rounded-xl bg-card p-6 text-card-foreground"
 			noValidate
 			onSubmit={(event) => {
 				event.preventDefault()
@@ -90,7 +90,7 @@ export function SignInForm({ action }: SignInFormProps) {
 				)}
 			</form.Subscribe>
 
-			<p className="text-sm text-gray-600">
+			<p className="text-sm text-muted-foreground">
 				Нет аккаунта?{' '}
 				<Link href="/sign-up" className="underline">
 					Зарегистрироваться

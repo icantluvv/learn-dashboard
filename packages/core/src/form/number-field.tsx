@@ -2,7 +2,7 @@
 
 import type { ComponentProps } from 'react'
 
-import { Input } from '../ui/input'
+import { InputGroup, InputGroupInput } from '../ui/input-group'
 import { FieldShell } from './field-shell'
 import { useFieldContext } from './form-context'
 import { useFieldState } from './use-field-state'
@@ -28,21 +28,23 @@ export function NumberField({ className, label, ...props }: NumberFieldProps) {
 			isInvalid={isInvalid}
 			className={className}
 		>
-			<Input
-				id={id}
-				type="number"
-				inputMode="numeric"
-				name={field.name}
-				value={field.state.value ?? ''}
-				aria-invalid={isInvalid}
-				aria-describedby={isInvalid ? errorId : undefined}
-				onBlur={field.handleBlur}
-				onChange={(event) => {
-					const { value } = event.target
-					field.handleChange(value === '' ? null : Number(value))
-				}}
-				{...props}
-			/>
+			<InputGroup>
+				<InputGroupInput
+					id={id}
+					type="number"
+					inputMode="numeric"
+					name={field.name}
+					value={field.state.value ?? ''}
+					aria-invalid={isInvalid}
+					aria-describedby={isInvalid ? errorId : undefined}
+					onBlur={field.handleBlur}
+					onChange={(event) => {
+						const { value } = event.target
+						field.handleChange(value === '' ? null : Number(value))
+					}}
+					{...props}
+				/>
+			</InputGroup>
 		</FieldShell>
 	)
 }

@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import type { ReactNode } from 'react'
 
 import { headers } from 'next/headers'
@@ -12,6 +12,10 @@ import { SsrWidthProvider } from '#/hooks/use-ssr-width'
 import { getSsrWidthFromUserAgent } from '#/lib/get-ssr-width-from-user-agent'
 
 import './globals.css'
+
+export const viewport: Viewport = {
+	viewportFit: 'cover',
+}
 
 export const metadata: Metadata = {
 	title: 'Learn Frontend',

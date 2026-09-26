@@ -32,14 +32,14 @@ export function ProfilePopover({ triggerLabel, user }: ProfilePopoverProps) {
 							'shrink-0 cursor-pointer',
 							triggerLabel == null
 								? 'size-10 overflow-hidden rounded-full bg-heading/10 border-shaded'
-								: 'v-stack items-center gap-1 text-xs',
+								: 'v-stack items-center gap-1.5 text-xs',
 						)}
 					>
 						{triggerLabel == null ? (
 							<Avatar user={user} />
 						) : (
 							<>
-								<span className="size-6 overflow-hidden rounded-full bg-heading/10 border-shaded">
+								<span className="size-7 overflow-hidden rounded-full bg-heading/10 border-shaded">
 									<Avatar user={user} />
 								</span>
 								{triggerLabel}

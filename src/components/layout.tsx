@@ -10,7 +10,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 			<Header />
 
 			<div className={`
-				flex-1 pt-6 pb-28
+				flex flex-1 flex-col pt-6 pb-28
 				lg:pt-8 lg:pb-16
 			`}>{children}</div>
 

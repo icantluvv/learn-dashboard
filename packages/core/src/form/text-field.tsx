@@ -2,7 +2,7 @@
 
 import type { ComponentProps } from 'react'
 
-import { Input } from '../ui/input'
+import { InputGroup, InputGroupInput } from '../ui/input-group'
 import { FieldShell } from './field-shell'
 import { useFieldContext } from './form-context'
 import { useFieldState } from './use-field-state'
@@ -28,16 +28,18 @@ export function TextField({ className, label, ...props }: TextFieldProps) {
 			isInvalid={isInvalid}
 			className={className}
 		>
-			<Input
-				id={id}
-				name={field.name}
-				value={field.state.value}
-				aria-invalid={isInvalid}
-				aria-describedby={isInvalid ? errorId : undefined}
-				onBlur={field.handleBlur}
-				onChange={(event) => field.handleChange(event.target.value)}
-				{...props}
-			/>
+			<InputGroup>
+				<InputGroupInput
+					id={id}
+					name={field.name}
+					value={field.state.value}
+					aria-invalid={isInvalid}
+					aria-describedby={isInvalid ? errorId : undefined}
+					onBlur={field.handleBlur}
+					onChange={(event) => field.handleChange(event.target.value)}
+					{...props}
+				/>
+			</InputGroup>
 		</FieldShell>
 	)
 }

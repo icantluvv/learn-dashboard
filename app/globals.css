@@ -152,7 +152,7 @@
 		--muted-foreground: #e2e2e2;
 		--accent: #323b50;
 		--accent-foreground: #ededed;
-		--input: #323b50;
+		--input: oklch(1 0 0 / 15%);
 		--sidebar: #323b50;
 		--sidebar-foreground: #ededed;
 		--border: oklch(1 0 0 / 12%);

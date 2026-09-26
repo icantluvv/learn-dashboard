@@ -19,7 +19,7 @@ export function BottomNav({ profile }: BottomNavProps) {
 	return (
 		<nav aria-label="Основная навигация" className={`
 			fixed inset-x-0 bottom-0 z-40 flex items-stretch justify-around gap-1 border-t
-			border-border bg-card px-2 pt-2 pb-[max(0.5rem,env(safe-area-inset-bottom))]
+			border-border bg-card px-2 pt-2.5 pb-[max(0.625rem,env(safe-area-inset-bottom))]
 			text-card-foreground
 			lg:hidden
 		`}>
@@ -33,18 +33,19 @@ export function BottomNav({ profile }: BottomNavProps) {
 						href={link.href}
 						aria-current={isActive ? 'page' : undefined}
 						className={cn(`
-							v-stack min-w-16 flex-1 items-center justify-center gap-1 rounded-lg
-							py-1.5 text-xs transition-colors
-							aria-[current=page]:font-semibold aria-[current=page]:text-heading
+							v-stack min-h-14 min-w-16 flex-1 items-center justify-start gap-1.5
+							rounded-xl py-1.5 text-xs text-muted-foreground transition-colors
+							aria-[current=page]:bg-heading/10 aria-[current=page]:font-semibold
+							aria-[current=page]:text-heading
 						`)}
 					>
-						<Icon className="size-6" aria-hidden="true" />
+						<Icon className="size-7" aria-hidden="true" />
 						{link.label}
 					</Link>
 				)
 			})}
 
-			<div className="v-stack min-w-16 flex-1 items-center justify-center gap-1 py-1.5">
+			<div className="v-stack min-h-14 min-w-16 flex-1 items-center justify-start gap-1.5 py-1">
 				{profile}
 			</div>
 		</nav>
