@@ -78,16 +78,30 @@ export function SignUpForm({ action }: SignUpFormProps) {
 			)}
 
 			<form.AppField name="name">
-				{(field) => <field.TextField label="Имя" autoComplete="name" />}
+				{(field) => (
+					<field.TextField label="Имя" placeholder="Как вас зовут" autoComplete="name" />
+				)}
 			</form.AppField>
 
 			<form.AppField name="email">
-				{(field) => <field.TextField label="Email" type="email" autoComplete="email" />}
+				{(field) => (
+					<field.TextField
+						label="Email"
+						type="email"
+						placeholder="you@example.com"
+						autoComplete="email"
+					/>
+				)}
 			</form.AppField>
 
 			<form.AppField name="password">
 				{(field) => (
-					<field.TextField label="Пароль" type="password" autoComplete="new-password" />
+					<field.TextField
+						label="Пароль"
+						type="password"
+						placeholder="Минимум 8 символов"
+						autoComplete="new-password"
+					/>
 				)}
 			</form.AppField>
 
@@ -102,11 +116,24 @@ export function SignUpForm({ action }: SignUpFormProps) {
 			</form.AppField>
 
 			<form.AppField name="age">
-				{(field) => <field.NumberField label="Возраст" min={1} max={120} />}
+				{(field) => (
+					<field.NumberField
+						label="Возраст"
+						placeholder="Например, 25"
+						min={1}
+						max={120}
+					/>
+				)}
 			</form.AppField>
 
 			<form.AppField name="image">
-				{(field) => <field.TextField label="Ссылка на аватар (необязательно)" type="url" />}
+				{(field) => (
+					<field.TextField
+						label="Ссылка на аватар (необязательно)"
+						type="url"
+						placeholder="https://example.com/avatar.png"
+					/>
+				)}
 			</form.AppField>
 
 			<form.Subscribe selector={(state) => state.isSubmitting}>

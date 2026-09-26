@@ -69,7 +69,14 @@ export function SignInForm({ action }: SignInFormProps) {
 			)}
 
 			<form.AppField name="email">
-				{(field) => <field.TextField label="Email" type="email" autoComplete="email" />}
+				{(field) => (
+					<field.TextField
+						label="Email"
+						type="email"
+						placeholder="you@example.com"
+						autoComplete="email"
+					/>
+				)}
 			</form.AppField>
 
 			<form.AppField name="password">
@@ -77,6 +84,7 @@ export function SignInForm({ action }: SignInFormProps) {
 					<field.TextField
 						label="Пароль"
 						type="password"
+						placeholder="Ваш пароль"
 						autoComplete="current-password"
 					/>
 				)}
