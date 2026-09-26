@@ -31,6 +31,15 @@ export {
 	InputGroupTextarea,
 } from './src/ui/input-group'
 export {
+	Popover,
+	PopoverClose,
+	PopoverContent,
+	PopoverDescription,
+	PopoverPortal,
+	PopoverTitle,
+	PopoverTrigger,
+} from './src/ui/popover'
+export {
 	Select,
 	SelectContent,
 	SelectGroup,

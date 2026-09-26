@@ -60,6 +60,10 @@
 }
 
 @theme inline {
+	/* Переопределён только lg: 62rem = 992px, что совпадает с breakpointsDobroUi.lg
+	   в src/hooks/use-breakpoints.ts. Единица rem — как у остальной шкалы Tailwind,
+	   иначе сортировка вариантов в линтере сравнивает px с rem и ломается. */
+	--breakpoint-lg: 62rem;
 	--color-background: var(--background);
 	--color-foreground: var(--foreground);
 	--color-gray-ultralight: var(--gray-ultralight);
@@ -151,6 +155,7 @@
 		--input: #323b50;
 		--sidebar: #323b50;
 		--sidebar-foreground: #ededed;
+		--border: oklch(1 0 0 / 12%);
 	}
 }
 

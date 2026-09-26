@@ -2,7 +2,8 @@
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@repo/core'
 
-import { DIFFICULTY_OPTIONS } from '../../_constants/difficulty-options'
+import { DIFFICULTY_OPTIONS } from '#/constants/difficulty-options'
+
 import { useSkillsFilters } from '../../_hooks/use-skills-filters'
 
 type DifficultyValue = (typeof DIFFICULTY_OPTIONS)[number]['id']

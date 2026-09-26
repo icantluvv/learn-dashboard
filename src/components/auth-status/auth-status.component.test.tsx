@@ -40,22 +40,37 @@ describe('<AuthStatus />', () => {
 		signOut.mockClear()
 	})
 
-	it('показывает гостю ссылки на вход и регистрацию', async () => {
+	it('показывает гостю только кнопку входа', async () => {
 		getAuthMe.mockRejectedValue(new Error('Unauthorized', { cause: { status: 401 } }))
 
 		const view = await render(withQueryClient(<AuthStatus initialUser={null} />))
 
-		await expect.element(view.getByRole('link', { name: 'Войти' })).toBeVisible()
-		await expect.element(view.getByRole('link', { name: 'Регистрация' })).toBeVisible()
+		await expect
+			.element(view.getByRole('link', { name: 'Войти' }))
+			.toHaveAttribute('href', '/sign-in')
+		await expect
+			.element(view.getByRole('link', { name: 'Регистрация' }))
+			.not.toBeInTheDocument()
+		await expect.element(view.getByRole('button', { name: /Профиль/ })).not.toBeInTheDocument()
 	})
 
-	it('показывает имя авторизованного пользователя и кнопку выхода', async () => {
+	it('показывает авторизованному пользователю кнопку-аватар вместо входа', async () => {
 		getAuthMe.mockResolvedValue(user)
 
 		const view = await render(withQueryClient(<AuthStatus initialUser={null} />))
 
-		await expect.element(view.getByText('Сергей')).toBeVisible()
-		await expect.element(view.getByRole('button', { name: 'Выйти' })).toBeVisible()
+		await expect.element(view.getByRole('button', { name: 'Профиль: Сергей' })).toBeVisible()
+		await expect.element(view.getByRole('link', { name: 'Войти' })).not.toBeInTheDocument()
+	})
+
+	it('показывает текстовый фолбэк, когда аватар не задан', async () => {
+		getAuthMe.mockResolvedValue(user)
+
+		const view = await render(withQueryClient(<AuthStatus initialUser={null} />))
+
+		await expect
+			.element(view.getByRole('button', { name: 'Профиль: Сергей' }))
+			.toHaveTextContent('С')
 	})
 
 	it('показывает аватар, когда он задан', async () => {
@@ -73,7 +88,7 @@ describe('<AuthStatus />', () => {
 
 		const view = await render(withQueryClient(<AuthStatus initialUser={user} />))
 
-		await expect.element(view.getByText('Сергей')).toBeVisible()
+		await expect.element(view.getByRole('button', { name: 'Профиль: Сергей' })).toBeVisible()
 	})
 
 	it('сразу показывает гостевое состояние, когда сервер не нашёл сессии', async () => {
@@ -92,11 +107,12 @@ describe('<AuthStatus />', () => {
 		await expect.element(view.getByRole('link', { name: 'Войти' })).toBeVisible()
 	})
 
-	it('выполняет выход по кнопке', async () => {
+	it('выполняет выход из попапа профиля', async () => {
 		getAuthMe.mockResolvedValue(user)
 
 		const view = await render(withQueryClient(<AuthStatus initialUser={null} />))
 
+		await view.getByRole('button', { name: 'Профиль: Сергей' }).click()
 		await view.getByRole('button', { name: 'Выйти' }).click()
 
 		await vi.waitFor(() => {

@@ -3,7 +3,7 @@ import type { GetSkills200 } from '@repo/api'
 import { Card, CardContent } from '@repo/core'
 import Link from 'next/link'
 
-import { DIFFICULTY_LABELS } from '../../_constants/difficulty-options'
+import { DIFFICULTY_LABELS } from '#/constants/difficulty-options'
 
 interface SkillCardProps {
 	skill: GetSkills200[number]

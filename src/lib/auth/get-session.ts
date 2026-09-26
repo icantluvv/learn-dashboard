@@ -1,6 +1,7 @@
 import type { Gender } from './constants'
 
 import { headers } from 'next/headers'
+import { cache } from 'react'
 
 import { auth } from './server'
 
@@ -15,7 +16,7 @@ export interface CurrentUser {
 	name: string
 }
 
-export async function getCurrentUser(): Promise<CurrentUser | null> {
+export const getCurrentUser = cache(async (): Promise<CurrentUser | null> => {
 	const session = await auth.api.getSession({ headers: await headers() })
 
 	if (session == null) {
@@ -32,4 +33,4 @@ export async function getCurrentUser(): Promise<CurrentUser | null> {
 		age: user.age,
 		...(user.image == null ? {} : { image: user.image }),
 	}
-}
+})

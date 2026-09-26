@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test'
+import { expect, test } from './fixtures'
 
 function uniqueEmail() {
 	return `e2e-${Date.now()}-${Math.random().toString(36).slice(2, 8)}@example.com`
@@ -14,10 +14,11 @@ async function signUp(page: import('@playwright/test').Page, email: string) {
 	await page.getByRole('spinbutton', { name: 'Возраст' }).fill('28')
 	await page.getByRole('button', { name: 'Зарегистрироваться' }).click()
 	await page.waitForURL('/')
-	await expect(page.getByText('Сергей')).toBeVisible()
+	await expect(page.getByRole('button', { name: 'Профиль: Сергей' })).toBeVisible()
 }
 
 async function signOut(page: import('@playwright/test').Page) {
+	await page.getByRole('button', { name: 'Профиль: Сергей' }).click()
 	await page.getByRole('button', { name: 'Выйти' }).click()
 	await expect(page.getByRole('link', { name: 'Войти' })).toBeVisible()
 }
@@ -39,7 +40,7 @@ test('регистрация открывает сессию, выход её з
 	expect(await me.json()).toMatchObject({ email, gender: 'male', age: 28 })
 
 	await page.reload()
-	await expect(page.getByText('Сергей')).toBeVisible()
+	await expect(page.getByRole('button', { name: 'Профиль: Сергей' })).toBeVisible()
 
 	await signOut(page)
 
