@@ -17,10 +17,7 @@ export function ProfileTab({ initialUser }: ProfileTabProps) {
 
 	if (user == null) {
 		return (
-			<Link
-				href="/sign-in"
-				className="v-stack items-center gap-1.5 text-xs text-muted-foreground"
-			>
+			<Link href="/sign-in" className="v-stack items-center gap-1.5 text-xs text-heading/45">
 				<UserIcon className="size-7" aria-hidden="true" />
 				Войти
 			</Link>
