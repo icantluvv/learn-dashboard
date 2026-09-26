@@ -14,10 +14,10 @@ export function QuestionsCountSlider() {
 	const max = maxQuestionsCount ?? MAX_QUESTIONS_COUNT
 
 	return (
-		<div className="v-stack gap-2">
+		<div className="v-stack gap-4">
 			<div className="flex items-center justify-between gap-2">
-				<span className="text-sm text-gray-600">Количество вопросов</span>
-				<span className="text-sm text-gray-600">
+				<span className="text-sm text-heading">Количество вопросов</span>
+				<span className="text-sm text-heading">
 					{min} – {max}
 				</span>
 			</div>

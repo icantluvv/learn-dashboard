@@ -9,6 +9,22 @@
 	--foreground: oklch(0.145 0 0);
 	--gray-ultralight: #f1f1f3;
 	--border-shaded: #e4e4e7;
+	--button-default: #131313;
+	--button-default-hover: #373737;
+	--button-default-foreground: #ffffff;
+	--heading: #171717;
+	--outline-border: #131313;
+	--outline-hover-background: #131313;
+	--outline-hover-foreground: #ffffff;
+	--outline-active-border: #373737;
+	--outline-active-background: #373737;
+	--outline-active-foreground: #ffffff;
+	--select-background: #ffffff;
+	--select-foreground: #171717;
+	--select-placeholder: #6b7280;
+	--slider-track: var(--muted);
+	--slider-indicator: var(--primary);
+	--slider-thumb: #ffffff;
 	--card: oklch(1 0 0);
 	--card-foreground: oklch(0.145 0 0);
 	--popover: oklch(1 0 0);
@@ -46,6 +62,22 @@
 	--color-foreground: var(--foreground);
 	--color-gray-ultralight: var(--gray-ultralight);
 	--color-border-shaded: var(--border-shaded);
+	--color-button-default: var(--button-default);
+	--color-button-default-hover: var(--button-default-hover);
+	--color-button-default-foreground: var(--button-default-foreground);
+	--color-heading: var(--heading);
+	--color-outline-border: var(--outline-border);
+	--color-outline-hover-background: var(--outline-hover-background);
+	--color-outline-hover-foreground: var(--outline-hover-foreground);
+	--color-outline-active-border: var(--outline-active-border);
+	--color-outline-active-background: var(--outline-active-background);
+	--color-outline-active-foreground: var(--outline-active-foreground);
+	--color-select-background: var(--select-background);
+	--color-select-foreground: var(--select-foreground);
+	--color-select-placeholder: var(--select-placeholder);
+	--color-slider-track: var(--slider-track);
+	--color-slider-indicator: var(--slider-indicator);
+	--color-slider-thumb: var(--slider-thumb);
 	--font-heading: var(--font-tt-fors);
 	--font-sans: var(--font-tt-fors);
 	--color-sidebar-ring: var(--sidebar-ring);
@@ -88,8 +120,32 @@
 
 @media (prefers-color-scheme: dark) {
 	:root {
-		--background: #0a0a0a;
+		--background: #1c2637;
 		--foreground: #ededed;
+		--gray-ultralight: #1c2637;
+		--heading: #fff;
+		--outline-border: #fff;
+		--outline-hover-background: #fff;
+		--outline-hover-foreground: #171717;
+		--outline-active-border: oklch(1 0 0 / 20%);
+		--outline-active-background: oklch(1 0 0 / 20%);
+		--outline-active-foreground: #fff;
+		--slider-track: #fff;
+		--slider-indicator: #fff;
+		--slider-thumb: #171717;
+		--card: #323b50;
+		--card-foreground: #fff;
+		--popover: #1c2637;
+		--popover-foreground: #ededed;
+		--secondary: #1c2637;
+		--secondary-foreground: #ededed;
+		--muted: #323b50;
+		--muted-foreground: #e2e2e2;
+		--accent: #323b50;
+		--accent-foreground: #ededed;
+		--input: #323b50;
+		--sidebar: #323b50;
+		--sidebar-foreground: #ededed;
 	}
 }
 

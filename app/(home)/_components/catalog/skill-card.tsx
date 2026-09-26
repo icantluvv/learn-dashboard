@@ -18,15 +18,17 @@ export function SkillCard({ skill }: SkillCardProps) {
 			`}>
 				<CardContent className="v-stack gap-4">
 					<div className="flex items-center justify-between gap-4">
-						<span className="text-xs font-medium text-gray-500">{skill.topic}</span>
-						<span className="text-xs font-medium text-gray-500">
+						<span className="text-xs font-medium text-muted-foreground">
+							{skill.topic}
+						</span>
+						<span className="text-xs font-medium text-muted-foreground">
 							{DIFFICULTY_LABELS[skill.difficulty]}
 						</span>
 					</div>
 
 					<div className="v-stack gap-1">
 						<h3 className="text-2xl font-semibold">{skill.title}</h3>
-						<span className="text-sm text-gray-500">
+						<span className="text-sm text-muted-foreground">
 							{skill.questionsCount} вопросов
 						</span>
 					</div>

@@ -10,8 +10,13 @@ export function MobileFiltersDrawer() {
 		<Drawer>
 			<DrawerTrigger
 				render={
-					<Button aria-label="Открыть фильтры" variant="outline" size="icon-lg">
-						<Settings className="size-5" />
+					<Button
+						aria-label="Открыть фильтры"
+						variant="outline"
+						size="icon-lg"
+						className="size-12"
+					>
+						<Settings className="size-6" />
 					</Button>
 				}
 			/>
