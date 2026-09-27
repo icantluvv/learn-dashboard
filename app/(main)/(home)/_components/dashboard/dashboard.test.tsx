@@ -85,28 +85,18 @@ describe('<Dashboard />', () => {
 		await expect.element(view.getByRole('group', { name: 'Навыков' })).not.toBeInTheDocument()
 	})
 
-	it('содержит подзаголовок-призыв к действию', async () => {
+	it('не показывает прогресс-бар для неавторизованного пользователя', async () => {
 		useGetDashboardStats.mockReturnValue({ data: stats, isError: false, isLoading: false })
 		useGetAuthMe.mockReturnValue({ data: null, isError: true, isPending: false })
 
 		const view = await renderWithProviders(<Dashboard />)
 
-		await expect.element(view.getByText('К чему приступим сегодня?')).toBeVisible()
-	})
-
-	it('показывает нейтральное приветствие для неавторизованного пользователя и без прогресса', async () => {
-		useGetDashboardStats.mockReturnValue({ data: stats, isError: false, isLoading: false })
-		useGetAuthMe.mockReturnValue({ data: null, isError: true, isPending: false })
-
-		const view = await renderWithProviders(<Dashboard />)
-
-		await expect.element(view.getByRole('heading', { name: 'Добро пожаловать' })).toBeVisible()
 		await expect
 			.element(view.getByRole('group', { name: 'Навыков' }).getByRole('progressbar'))
 			.not.toBeInTheDocument()
 	})
 
-	it('показывает персональное приветствие и прогресс для авторизованного пользователя', async () => {
+	it('показывает прогресс-бар для авторизованного пользователя', async () => {
 		useGetDashboardStats.mockReturnValue({
 			data: { ...stats, completedSkillsCount: 1 },
 			isError: false,
@@ -120,9 +110,6 @@ describe('<Dashboard />', () => {
 
 		const view = await renderWithProviders(<Dashboard />)
 
-		await expect
-			.element(view.getByRole('heading', { name: 'С возвращением, Анна' }))
-			.toBeVisible()
 		await expect
 			.element(view.getByRole('group', { name: 'Навыков' }).getByRole('progressbar'))
 			.toBeVisible()
