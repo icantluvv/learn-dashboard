@@ -11,7 +11,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 			<Header />
 
 			<div className={`
-				flex flex-1 flex-col pt-6 pb-28
+				flex flex-1 flex-col pt-[max(1.5rem,env(safe-area-inset-top))] pb-32
 				lg:pt-8 lg:pb-16
 			`}>{children}</div>
 
