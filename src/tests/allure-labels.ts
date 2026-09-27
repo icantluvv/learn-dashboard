@@ -82,6 +82,10 @@ const featureByPath = [
 	},
 	{ feature: 'Авторизация', includes: ['/src/lib/auth/'] },
 	{
+		feature: 'Регистрация',
+		includes: ['/app/sign-up/', '/src/modules/auth/', '/src/tests/e2e/auth.spec.ts'],
+	},
+	{
 		feature: 'Моки API',
 		includes: [
 			'/packages/api/base/mock-scenarios.unit.test.ts',

@@ -102,6 +102,16 @@ bun run --filter @packages/api kubb generate
 - `GET /api/me` (`operationId: getAuthMe`) — контрактный эндпоинт профиля: `200` с
   `{ id, name, email, gender, age, image? }` либо `401` для гостя. Фронтенд определяет состояние
   авторизации только по нему (`useGetAuthMe`), `authClient` используется для мутаций.
+- Необязательный аватар регистрации принимается как JPEG, PNG или WebP размером до 5 МБ. Байты и
+  MIME хранятся в закрытой RLS-таблице `user_avatar`, а `image` содержит абсолютный same-origin URL
+  `GET /api/avatars/<uuid>`. Изображение отдаётся с `nosniff` и immutable cache headers; endpoint
+  загружается браузером напрямую и не входит в JSON-oriented generated SDK.
+- Если запись аватара после Better Auth завершается ошибкой, созданный этой попыткой пользователь
+  удаляется, а FK каскадно очищает session/account/avatar. Operational-проверка несогласованных
+  строк: найти `user.image LIKE '%/api/avatars/%'`, для которых отсутствует `user_avatar.user_id`;
+  такой результат требует ручного удаления незавершённого пользователя.
+- Новая регистрация принимает только `male` или `female`. Legacy-значение `other` остаётся в типе
+  чтения и DB CHECK, чтобы не ломать уже сохранённые профили, но server action его отклоняет.
 - `src/proxy/auth-guard.ts` — оптимистичная проверка cookie в proxy (редиректы). Авторитетная
   проверка сессии всегда делается на сервере через `getCurrentUser()`.
 

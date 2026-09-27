@@ -4,6 +4,8 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { render } from 'vitest-browser-react'
 
+import { createAvatarFile } from '#/tests/fixtures/avatar-files'
+
 import { SignUpForm } from './sign-up-form'
 
 const signUpAction = vi.fn<(values: unknown) => Promise<AuthActionResult>>()
@@ -41,10 +43,63 @@ describe('<SignUpForm />', () => {
 		await expect.element(view.getByLabelText('Пароль')).toBeVisible()
 		await expect.element(view.getByRole('combobox', { name: 'Пол' })).toBeVisible()
 		await expect.element(view.getByRole('spinbutton', { name: 'Возраст' })).toBeVisible()
-		await expect
-			.element(view.getByRole('textbox', { name: 'Ссылка на аватар (необязательно)' }))
-			.toBeVisible()
+		await expect.element(view.getByLabelText('Выбрать изображение')).toBeInTheDocument()
 		await expect.element(view.getByRole('link', { name: 'Войти' })).toBeVisible()
+		expect(document.querySelectorAll('label [aria-hidden="true"]')).toHaveLength(5)
+	})
+
+	it('показывает аватар первым полем формы', async () => {
+		const view = await renderForm(signUpAction)
+		const avatar = view.getByText('Аватар').element()
+		const name = view.getByRole('textbox', { name: 'Имя' }).element()
+
+		expect(avatar.compareDocumentPosition(name) & Node.DOCUMENT_POSITION_FOLLOWING).not.toBe(0)
+	})
+
+	it('предлагает только мужской и женский пол', async () => {
+		const view = await renderForm(signUpAction)
+
+		await view.getByRole('combobox', { name: 'Пол' }).click()
+
+		await expect.element(view.getByRole('option', { name: 'Мужской' })).toBeVisible()
+		await expect.element(view.getByRole('option', { name: 'Женский' })).toBeVisible()
+		expect(document.querySelectorAll('[role="option"]')).toHaveLength(2)
+	})
+
+	it('показывает и удаляет предпросмотр выбранного аватара', async () => {
+		const view = await renderForm(signUpAction)
+
+		await view.getByLabelText('Выбрать изображение').upload(createAvatarFile())
+
+		await expect.element(view.getByRole('img', { name: 'Предпросмотр аватара' })).toBeVisible()
+		await expect.element(view.getByText('avatar.png')).toBeVisible()
+
+		await view.getByRole('button', { name: 'Удалить изображение' }).click()
+
+		await expect.element(view.getByLabelText('Выбрать изображение')).toBeInTheDocument()
+	})
+
+	it('принимает аватар перетаскиванием', async () => {
+		const view = await renderForm(signUpAction)
+		const dataTransfer = new DataTransfer()
+		dataTransfer.items.add(createAvatarFile('image/jpeg'))
+
+		view.getByTestId('avatar-dropzone')
+			.element()
+			.dispatchEvent(new DragEvent('drop', { bubbles: true, dataTransfer }))
+
+		await expect.element(view.getByRole('img', { name: 'Предпросмотр аватара' })).toBeVisible()
+		await expect.element(view.getByText('avatar.jpeg')).toBeVisible()
+	})
+
+	it('отклоняет неподдерживаемый файл', async () => {
+		const view = await renderForm(signUpAction)
+
+		await view
+			.getByLabelText('Выбрать изображение')
+			.upload(new File(['text'], 'avatar.txt', { type: 'text/plain' }))
+
+		await expect.element(view.getByRole('alert')).toHaveTextContent(/JPEG, PNG или WebP/)
 	})
 
 	it('не отправляет форму, пока имя короче 3 символов', async () => {
@@ -82,16 +137,20 @@ describe('<SignUpForm />', () => {
 		expect(signUpAction).not.toHaveBeenCalled()
 	})
 
-	it('требует пол и возраст', async () => {
+	it('блокирует отправку, пока обязательные поля не заполнены', async () => {
 		const view = await renderForm(signUpAction)
+		const submit = view.getByRole('button', { name: 'Зарегистрироваться' })
 
+		await expect.element(submit).toBeDisabled()
 		await view.getByRole('textbox', { name: 'Имя' }).fill('Сергей')
 		await view.getByRole('textbox', { name: 'Email' }).fill('user@example.com')
 		await view.getByLabelText('Пароль').fill('12345678')
-		await view.getByRole('button', { name: 'Зарегистрироваться' }).click()
+		await expect.element(submit).toBeDisabled()
+		await view.getByRole('combobox', { name: 'Пол' }).click()
+		await view.getByRole('option', { name: 'Мужской' }).click()
+		await view.getByRole('spinbutton', { name: 'Возраст' }).fill('28')
 
-		await expect.element(view.getByText('Укажите возраст')).toBeVisible()
-		expect(signUpAction).not.toHaveBeenCalled()
+		await expect.element(submit).toBeEnabled()
 	})
 
 	it('отправляет валидную форму без аватара', async () => {
@@ -101,14 +160,31 @@ describe('<SignUpForm />', () => {
 		await view.getByRole('button', { name: 'Зарегистрироваться' }).click()
 
 		await vi.waitFor(() => {
-			expect(signUpAction).toHaveBeenCalledWith({
+			const formData = signUpAction.mock.calls[0]?.[0]
+
+			expect(formData).toBeInstanceOf(FormData)
+			expect(Object.fromEntries((formData as FormData).entries())).toStrictEqual({
 				name: 'Сергей',
 				email: 'user@example.com',
 				password: '12345678',
 				gender: 'male',
-				age: 28,
-				image: '',
+				age: '28',
 			})
+		})
+	})
+
+	it('отправляет выбранный аватар как File', async () => {
+		const view = await renderForm(signUpAction)
+		const avatar = createAvatarFile()
+
+		await fillValidForm(view)
+		await view.getByLabelText('Выбрать изображение').upload(avatar)
+		await view.getByRole('button', { name: 'Зарегистрироваться' }).click()
+
+		await vi.waitFor(() => {
+			const formData = signUpAction.mock.calls[0]?.[0] as FormData
+			expect(formData.get('avatar')).toBeInstanceOf(File)
+			expect((formData.get('avatar') as File).name).toBe('avatar.png')
 		})
 	})
 
@@ -150,7 +226,8 @@ describe('<SignUpForm />', () => {
 		const submit = view.getByRole('button', { name: 'Зарегистрироваться' })
 		await submit.click()
 
-		await expect.element(view.getByRole('button', { name: 'Регистрируем...' })).toBeDisabled()
+		await expect.element(view.getByRole('button', { name: 'Загрузка' })).toBeDisabled()
+		await expect.element(view.getByRole('status', { name: 'Загрузка' })).toBeVisible()
 
 		resolveAction?.({ ok: true })
 

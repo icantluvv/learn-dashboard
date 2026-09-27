@@ -32,4 +32,5 @@ properties:
   image:
     type: string
     format: uri
-    example: "https://example.com/avatar.png"
+    description: Same-origin URL of the stored user avatar.
+    example: "https://app.example.com/api/avatars/8f3b1c2e-2f5a-4a1e-9f3a-1d2c3b4a5e6f"

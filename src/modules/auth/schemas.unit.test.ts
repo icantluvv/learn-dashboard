@@ -50,6 +50,12 @@ describe('signUpSchema', () => {
 		expect(firstMessageFor({ ...validSignUp, gender: 'alien' }, 'gender')).toBeDefined()
 	})
 
+	it('accepts only male and female for a new registration', () => {
+		expect(signUpSchema.safeParse({ ...validSignUp, gender: 'male' }).success).toBe(true)
+		expect(signUpSchema.safeParse({ ...validSignUp, gender: 'female' }).success).toBe(true)
+		expect(signUpSchema.safeParse({ ...validSignUp, gender: 'other' }).success).toBe(false)
+	})
+
 	it('requires the age', () => {
 		expect(firstMessageFor({ ...validSignUp, age: null }, 'age')).toBeDefined()
 	})
@@ -63,14 +69,6 @@ describe('signUpSchema', () => {
 	it('accepts the boundary ages', () => {
 		expect(signUpSchema.safeParse({ ...validSignUp, age: 1 }).success).toBe(true)
 		expect(signUpSchema.safeParse({ ...validSignUp, age: 120 }).success).toBe(true)
-	})
-
-	it('treats an empty avatar as valid and a malformed one as invalid', () => {
-		expect(signUpSchema.safeParse({ ...validSignUp, image: '' }).success).toBe(true)
-		expect(
-			signUpSchema.safeParse({ ...validSignUp, image: 'https://example.com/a.png' }).success,
-		).toBe(true)
-		expect(firstMessageFor({ ...validSignUp, image: 'not-a-url' }, 'image')).toBeDefined()
 	})
 })
 

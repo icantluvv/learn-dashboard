@@ -12,6 +12,7 @@ interface FieldShellProps {
 	isInvalid: boolean
 	label: string
 	message?: string
+	required?: boolean
 }
 
 export function FieldShell({
@@ -22,11 +23,17 @@ export function FieldShell({
 	isInvalid,
 	label,
 	message,
+	required,
 }: FieldShellProps) {
 	return (
 		<div className={cn('flex flex-col gap-1.5', className)}>
 			<label htmlFor={id} className="text-sm font-medium">
 				{label}
+				{required === true ? (
+					<span aria-hidden="true" className="ml-0.5 text-destructive">
+						*
+					</span>
+				) : null}
 			</label>
 
 			{children}

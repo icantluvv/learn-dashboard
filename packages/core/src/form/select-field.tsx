@@ -15,9 +15,16 @@ interface SelectFieldProps {
 	label: string
 	options: readonly SelectFieldOption[]
 	placeholder: string
+	required?: boolean
 }
 
-export function SelectField({ className, label, options, placeholder }: SelectFieldProps) {
+export function SelectField({
+	className,
+	label,
+	options,
+	placeholder,
+	required,
+}: SelectFieldProps) {
 	const field = useFieldContext<string | null>()
 	const { errorId, id, isInvalid, message } = useFieldState()
 
@@ -29,6 +36,7 @@ export function SelectField({ className, label, options, placeholder }: SelectFi
 			message={message}
 			isInvalid={isInvalid}
 			className={className}
+			required={required}
 		>
 			<Select
 				name={field.name}
@@ -45,6 +53,7 @@ export function SelectField({ className, label, options, placeholder }: SelectFi
 					className="w-full"
 					aria-invalid={isInvalid}
 					aria-describedby={isInvalid ? errorId : undefined}
+					aria-required={required}
 				>
 					<SelectValue>
 						{(value: string | null) =>

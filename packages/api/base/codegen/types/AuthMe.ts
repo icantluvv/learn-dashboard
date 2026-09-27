@@ -18,6 +18,10 @@ export interface AuthMe {
 	 * @maxLength 120
 	 */
 	age: number
-	/** @type string | undefined, uri */
+	/**
+	 * Same-origin URL of the stored user avatar.
+	 *
+	 * @type string | undefined, uri
+	 */
 	image?: string
 }

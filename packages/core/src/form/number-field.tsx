@@ -15,7 +15,7 @@ type NumberFieldProps = Omit<
 	label: string
 }
 
-export function NumberField({ className, label, ...props }: NumberFieldProps) {
+export function NumberField({ className, label, required, ...props }: NumberFieldProps) {
 	const field = useFieldContext<number | null>()
 	const { errorId, id, isInvalid, message } = useFieldState()
 
@@ -27,6 +27,7 @@ export function NumberField({ className, label, ...props }: NumberFieldProps) {
 			message={message}
 			isInvalid={isInvalid}
 			className={className}
+			required={required}
 		>
 			<InputGroup>
 				<InputGroupInput
@@ -37,6 +38,7 @@ export function NumberField({ className, label, ...props }: NumberFieldProps) {
 					value={field.state.value ?? ''}
 					aria-invalid={isInvalid}
 					aria-describedby={isInvalid ? errorId : undefined}
+					required={required}
 					onBlur={field.handleBlur}
 					onChange={(event) => {
 						const { value } = event.target

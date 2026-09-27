@@ -33,12 +33,15 @@ describe('get /api/me', () => {
 	})
 
 	it('returns the avatar when the user has one', async () => {
-		getCurrentUser.mockResolvedValue({ ...user, image: 'https://example.com/a.png' })
+		getCurrentUser.mockResolvedValue({
+			...user,
+			image: 'http://localhost:3000/api/avatars/8f3b1c2e-2f5a-4a1e-9f3a-1d2c3b4a5e6f',
+		})
 
 		const response = await GET()
 
 		await expect(response.json()).resolves.toMatchObject({
-			image: 'https://example.com/a.png',
+			image: 'http://localhost:3000/api/avatars/8f3b1c2e-2f5a-4a1e-9f3a-1d2c3b4a5e6f',
 		})
 	})
 

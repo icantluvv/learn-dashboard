@@ -1,27 +1,16 @@
 import { betterAuth } from 'better-auth'
 import { nextCookies } from 'better-auth/next-js'
-import { Pool } from 'pg'
 
 import { isDev } from '#/constants/env'
 import { serverEnvironment } from '#/env/server'
 
 import { GENDER_VALUES } from './constants'
+import { getAuthDbPool } from './database.server'
 
 import 'server-only'
 
-const globalForPool = globalThis as typeof globalThis & { authDbPool?: Pool }
-
-function getPool() {
-	globalForPool.authDbPool ??= new Pool({
-		connectionString: serverEnvironment.SUPABASE_DB_URL,
-		max: 1,
-	})
-
-	return globalForPool.authDbPool
-}
-
 export const auth = betterAuth({
-	database: getPool(),
+	database: getAuthDbPool(),
 	secret: serverEnvironment.BETTER_AUTH_SECRET,
 	baseURL: serverEnvironment.BETTER_AUTH_URL,
 	emailAndPassword: {

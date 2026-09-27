@@ -5,3 +5,4 @@ export interface AuthActionResult {
 }
 
 export type AuthAction = (values: unknown) => Promise<AuthActionResult>
+export type SignUpAction = (values: FormData) => Promise<AuthActionResult>

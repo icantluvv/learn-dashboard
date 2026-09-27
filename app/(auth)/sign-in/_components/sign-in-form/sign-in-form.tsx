@@ -3,7 +3,7 @@
 import type { AuthAction } from '#/modules/auth/types'
 
 import { getAuthMeQueryKey } from '@repo/api'
-import { Button } from '@repo/core'
+import { Button, Spinner } from '@repo/core'
 import { useAppForm } from '@repo/core/form'
 import { useQueryClient } from '@tanstack/react-query'
 import Link from 'next/link'
@@ -90,15 +90,25 @@ export function SignInForm({ action }: SignInFormProps) {
 				)}
 			</form.AppField>
 
-			<form.Subscribe selector={(state) => state.isSubmitting}>
-				{(isSubmitting) => (
-					<Button type="submit" disabled={isSubmitting} aria-busy={isSubmitting}>
-						{isSubmitting ? 'Входим...' : 'Войти'}
+			<form.Subscribe
+				selector={(state) => ({
+					isSubmitting: state.isSubmitting,
+					requiredFieldsFilled:
+						state.values.email.trim() !== '' && state.values.password !== '',
+				})}
+			>
+				{({ isSubmitting, requiredFieldsFilled }) => (
+					<Button
+						type="submit"
+						disabled={isSubmitting || !requiredFieldsFilled}
+						aria-busy={isSubmitting}
+					>
+						{isSubmitting ? <Spinner className="size-5" /> : 'Войти'}
 					</Button>
 				)}
 			</form.Subscribe>
 
-			<p className="text-sm text-muted-foreground">
+			<p className="text-sm text-foreground">
 				Нет аккаунта?{' '}
 				<Link href="/sign-up" className="underline">
 					Зарегистрироваться

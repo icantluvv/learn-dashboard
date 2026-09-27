@@ -34,13 +34,16 @@ describe('<SignInForm />', () => {
 		await expect.element(view.getByRole('link', { name: 'Зарегистрироваться' })).toBeVisible()
 	})
 
-	it('не отправляет форму с пустыми полями', async () => {
+	it('блокирует отправку, пока email и пароль не заполнены', async () => {
 		const view = await renderForm(signInAction)
+		const submit = view.getByRole('button', { name: 'Войти' })
 
-		await view.getByRole('button', { name: 'Войти' }).click()
+		await expect.element(submit).toBeDisabled()
+		await view.getByRole('textbox', { name: 'Email' }).fill('user@example.com')
+		await expect.element(submit).toBeDisabled()
+		await view.getByLabelText('Пароль').fill('12345678')
 
-		await expect.element(view.getByText('Введите пароль')).toBeVisible()
-		expect(signInAction).not.toHaveBeenCalled()
+		await expect.element(submit).toBeEnabled()
 	})
 
 	it('отправляет валидные учётные данные', async () => {
@@ -87,7 +90,8 @@ describe('<SignInForm />', () => {
 		await view.getByLabelText('Пароль').fill('12345678')
 		await view.getByRole('button', { name: 'Войти' }).click()
 
-		await expect.element(view.getByRole('button', { name: 'Входим...' })).toBeDisabled()
+		await expect.element(view.getByRole('button', { name: 'Загрузка' })).toBeDisabled()
+		await expect.element(view.getByRole('status', { name: 'Загрузка' })).toBeVisible()
 
 		resolveAction?.({ ok: true })
 

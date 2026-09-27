@@ -2,6 +2,8 @@ import type { CurrentUser } from '#/lib/auth/get-session'
 
 import Image from 'next/image'
 
+import { getAvatarDisplayUrl } from '#/lib/auth/avatar-url'
+
 interface AvatarProps {
 	size?: number
 	user: CurrentUser
@@ -21,7 +23,7 @@ export function Avatar({ size = 40, user }: AvatarProps) {
 
 	return (
 		<Image
-			src={user.image}
+			src={getAvatarDisplayUrl(user.image)}
 			alt=""
 			width={size}
 			height={size}

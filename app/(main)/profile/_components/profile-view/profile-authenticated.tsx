@@ -8,6 +8,7 @@ import { useQueryClient } from '@tanstack/react-query'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 
+import { getAvatarDisplayUrl } from '#/lib/auth/avatar-url'
 import { authClient } from '#/lib/auth/client'
 
 interface ProfileAuthenticatedProps {
@@ -59,7 +60,7 @@ function Avatar({ user }: { user: CurrentUser }) {
 
 	return (
 		<Image
-			src={user.image}
+			src={getAvatarDisplayUrl(user.image)}
 			alt=""
 			width={80}
 			height={80}

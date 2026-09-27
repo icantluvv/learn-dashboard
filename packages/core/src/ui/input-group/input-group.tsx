@@ -11,7 +11,8 @@ import * as React from 'react'
 
 function InputGroup({ className, ...props }: React.ComponentProps<'div'>) {
 	return <div data-slot="input-group" role="group" className={cn(`
-		group/input-group relative flex min-h-12 w-full min-w-0 items-center rounded-lg border
+		group/input-group relative flex min-h-12 w-full min-w-0 items-center overflow-hidden rounded-lg
+		border
 		border-outline-border bg-select-background text-select-foreground transition-colors
 		outline-none
 		in-data-[slot=combobox-content]:focus-within:border-inherit

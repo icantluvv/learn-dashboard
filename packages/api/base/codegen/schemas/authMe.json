@@ -7,7 +7,12 @@
 		"email": { "type": "string", "format": "email", "example": "user@example.com" },
 		"gender": { "type": "string", "enum": ["male", "female", "other"], "example": "male" },
 		"age": { "type": "integer", "minimum": 1, "maximum": 120, "example": 28 },
-		"image": { "type": "string", "format": "uri", "example": "https://example.com/avatar.png" }
+		"image": {
+			"type": "string",
+			"format": "uri",
+			"description": "Same-origin URL of the stored user avatar.",
+			"example": "https://app.example.com/api/avatars/8f3b1c2e-2f5a-4a1e-9f3a-1d2c3b4a5e6f"
+		}
 	},
 	"x-readme-ref-name": "AuthMe"
 }

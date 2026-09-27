@@ -1,11 +1,11 @@
 import * as z from 'zod/mini'
 
 import {
-	GENDER_VALUES,
 	MAX_AGE,
 	MIN_AGE,
 	MIN_NAME_LENGTH,
 	MIN_PASSWORD_LENGTH,
+	SIGN_UP_GENDER_VALUES,
 } from '#/lib/auth/constants'
 
 const ageSchema = z
@@ -15,11 +15,6 @@ const ageSchema = z
 		z.minimum(MIN_AGE, { error: `Возраст должен быть не меньше ${MIN_AGE}` }),
 		z.maximum(MAX_AGE, { error: `Возраст должен быть не больше ${MAX_AGE}` }),
 	)
-
-const imageSchema = z.union([
-	z.literal(''),
-	z.url({ error: 'Введите корректную ссылку на изображение' }),
-])
 
 export const signUpSchema = z.object({
 	name: z.string().check(
@@ -34,9 +29,8 @@ export const signUpSchema = z.object({
 			error: `Пароль должен содержать минимум ${MIN_PASSWORD_LENGTH} символов`,
 		}),
 	),
-	gender: z.enum(GENDER_VALUES, { error: 'Выберите пол' }),
+	gender: z.enum(SIGN_UP_GENDER_VALUES, { error: 'Выберите пол' }),
 	age: ageSchema,
-	image: z.optional(imageSchema),
 })
 
 export const signInSchema = z.object({
@@ -45,9 +39,11 @@ export const signInSchema = z.object({
 })
 
 export const signUpFormSchema = z.extend(signUpSchema, {
-	image: imageSchema,
+	avatar: z.nullable(
+		z.custom<File>((value) => value instanceof File, { error: 'Выберите корректный файл' }),
+	),
 	gender: z
-		.nullable(z.enum(GENDER_VALUES))
+		.nullable(z.enum(SIGN_UP_GENDER_VALUES))
 		.check(z.refine((value) => value != null, { error: 'Выберите пол' })),
 	age: z
 		.nullable(ageSchema)

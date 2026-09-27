@@ -1,10 +1,10 @@
 'use client'
 
-import type { Gender } from '#/lib/auth/constants'
-import type { AuthAction } from '#/modules/auth/types'
+import type { SignUpGender } from '#/lib/auth/constants'
+import type { SignUpAction } from '#/modules/auth/types'
 
 import { getAuthMeQueryKey } from '@repo/api'
-import { Button } from '@repo/core'
+import { Button, Spinner } from '@repo/core'
 import { useAppForm } from '@repo/core/form'
 import { useQueryClient } from '@tanstack/react-query'
 import Link from 'next/link'
@@ -12,14 +12,16 @@ import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
 import { signUpFormSchema } from '#/modules/auth/schemas'
+import { AvatarDropzone } from '@/(auth)/sign-up/_components/avatar-dropzone'
 import { GENDER_OPTIONS } from '@/(auth)/sign-up/_constants/gender-options'
 
 interface SignUpFormProps {
-	action: AuthAction
+	action: SignUpAction
 }
 
 export function SignUpForm({ action }: SignUpFormProps) {
 	const [formError, setFormError] = useState<string | undefined>(undefined)
+	const [avatarError, setAvatarError] = useState<string | undefined>(undefined)
 	const queryClient = useQueryClient()
 	const router = useRouter()
 
@@ -28,24 +30,47 @@ export function SignUpForm({ action }: SignUpFormProps) {
 			name: '',
 			email: '',
 			password: '',
-			gender: null as Gender | null,
+			gender: null as SignUpGender | null,
 			age: null as number | null,
-			image: '',
+			avatar: null as File | null,
 		},
 		validators: { onSubmit: signUpFormSchema },
 		onSubmit: async ({ formApi, value }) => {
 			setFormError(undefined)
 
-			const result = await action(value)
+			if (avatarError != null) {
+				return
+			}
+
+			const formData = new FormData()
+			formData.set('name', value.name)
+			formData.set('email', value.email)
+			formData.set('password', value.password)
+			formData.set('gender', value.gender ?? '')
+			formData.set('age', value.age == null ? '' : String(value.age))
+
+			if (value.avatar != null) {
+				formData.set('avatar', value.avatar)
+			}
+
+			const result = await action(formData)
 
 			if (result.fieldErrors != null) {
 				for (const [field, message] of Object.entries(result.fieldErrors)) {
-					formApi.setFieldMeta(field as 'email', (meta) => ({
-						...meta,
-						isTouched: true,
-						errorMap: { ...meta.errorMap, onServer: message },
-						errors: [message],
-					}))
+					if (field === 'avatar') {
+						setAvatarError(message)
+						continue
+					}
+
+					formApi.setFieldMeta(
+						field as 'age' | 'email' | 'gender' | 'name' | 'password',
+						(meta) => ({
+							...meta,
+							isTouched: true,
+							errorMap: { ...meta.errorMap, onServer: message },
+							errors: [message],
+						}),
+					)
 				}
 			}
 
@@ -77,9 +102,25 @@ export function SignUpForm({ action }: SignUpFormProps) {
 				</p>
 			)}
 
+			<form.AppField name="avatar">
+				{(field) => (
+					<AvatarDropzone
+						value={field.state.value}
+						error={avatarError}
+						onChange={field.handleChange}
+						onError={setAvatarError}
+					/>
+				)}
+			</form.AppField>
+
 			<form.AppField name="name">
 				{(field) => (
-					<field.TextField label="Имя" placeholder="Как вас зовут" autoComplete="name" />
+					<field.TextField
+						label="Имя"
+						placeholder="Как вас зовут"
+						autoComplete="name"
+						required
+					/>
 				)}
 			</form.AppField>
 
@@ -90,6 +131,7 @@ export function SignUpForm({ action }: SignUpFormProps) {
 						type="email"
 						placeholder="you@example.com"
 						autoComplete="email"
+						required
 					/>
 				)}
 			</form.AppField>
@@ -101,6 +143,7 @@ export function SignUpForm({ action }: SignUpFormProps) {
 						type="password"
 						placeholder="Минимум 8 символов"
 						autoComplete="new-password"
+						required
 					/>
 				)}
 			</form.AppField>
@@ -111,6 +154,7 @@ export function SignUpForm({ action }: SignUpFormProps) {
 						label="Пол"
 						placeholder="Выберите пол"
 						options={GENDER_OPTIONS}
+						required
 					/>
 				)}
 			</form.AppField>
@@ -122,29 +166,34 @@ export function SignUpForm({ action }: SignUpFormProps) {
 						placeholder="Например, 25"
 						min={1}
 						max={120}
+						required
 					/>
 				)}
 			</form.AppField>
 
-			<form.AppField name="image">
-				{(field) => (
-					<field.TextField
-						label="Ссылка на аватар (необязательно)"
-						type="url"
-						placeholder="https://example.com/avatar.png"
-					/>
-				)}
-			</form.AppField>
-
-			<form.Subscribe selector={(state) => state.isSubmitting}>
-				{(isSubmitting) => (
-					<Button type="submit" disabled={isSubmitting} aria-busy={isSubmitting}>
-						{isSubmitting ? 'Регистрируем...' : 'Зарегистрироваться'}
+			<form.Subscribe
+				selector={(state) => ({
+					isSubmitting: state.isSubmitting,
+					requiredFieldsFilled:
+						state.values.name.trim() !== '' &&
+						state.values.email.trim() !== '' &&
+						state.values.password !== '' &&
+						state.values.gender != null &&
+						state.values.age != null,
+				})}
+			>
+				{({ isSubmitting, requiredFieldsFilled }) => (
+					<Button
+						type="submit"
+						disabled={isSubmitting || !requiredFieldsFilled || avatarError != null}
+						aria-busy={isSubmitting}
+					>
+						{isSubmitting ? <Spinner className="size-5" /> : 'Зарегистрироваться'}
 					</Button>
 				)}
 			</form.Subscribe>
 
-			<p className="text-sm text-muted-foreground">
+			<p className="text-sm text-foreground">
 				Уже есть аккаунт?{' '}
 				<Link href="/sign-in" className="underline">
 					Войти

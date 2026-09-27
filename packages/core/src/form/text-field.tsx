@@ -15,7 +15,7 @@ type TextFieldProps = Omit<
 	label: string
 }
 
-export function TextField({ className, label, ...props }: TextFieldProps) {
+export function TextField({ className, label, required, ...props }: TextFieldProps) {
 	const field = useFieldContext<string>()
 	const { errorId, id, isInvalid, message } = useFieldState()
 
@@ -27,6 +27,7 @@ export function TextField({ className, label, ...props }: TextFieldProps) {
 			message={message}
 			isInvalid={isInvalid}
 			className={className}
+			required={required}
 		>
 			<InputGroup>
 				<InputGroupInput
@@ -35,6 +36,7 @@ export function TextField({ className, label, ...props }: TextFieldProps) {
 					value={field.state.value}
 					aria-invalid={isInvalid}
 					aria-describedby={isInvalid ? errorId : undefined}
+					required={required}
 					onBlur={field.handleBlur}
 					onChange={(event) => field.handleChange(event.target.value)}
 					{...props}

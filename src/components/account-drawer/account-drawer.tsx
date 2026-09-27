@@ -39,7 +39,7 @@ export function AccountDrawer() {
 			/>
 
 			<DrawerContent
-				className="rounded-none border-l-0 bg-gray-ultralight"
+				className="rounded-none! border-l-0 bg-white"
 				style={{
 					['--drawer-content-width' as string]: '100vw',
 					['--drawer-content-max-height' as string]: '100dvh',
@@ -49,14 +49,23 @@ export function AccountDrawer() {
 				<div className="v-stack h-full gap-8 p-6 pt-[max(1.5rem,env(safe-area-inset-top))]">
 					<DrawerClose
 						render={
-							<button type="button" aria-label="Закрыть меню" className="self-start">
+							<button type="button" aria-label="Закрыть меню" className={`
+								-m-2.5 grid size-11 shrink-0 cursor-pointer place-items-center
+								self-start rounded-full transition-[opacity,transform] duration-150
+								outline-none select-none
+								focus-visible:ring-3 focus-visible:ring-ring/50
+								active:-translate-x-0.5 active:scale-90 active:opacity-45
+								motion-reduce:transition-none
+								motion-reduce:active:translate-x-0 motion-reduce:active:scale-100
+							`}>
 								<ArrowLeftIcon className="size-6" aria-hidden="true" />
 							</button>
 						}
 					/>
 
-					<div>
+					<div className="flex items-center justify-between">
 						<Logo />
+						<ThemeToggle />
 					</div>
 
 					{user == null ? (
@@ -80,8 +89,6 @@ export function AccountDrawer() {
 							</Button>
 						</div>
 					)}
-
-					<ThemeToggle />
 				</div>
 			</DrawerContent>
 		</Drawer>
