@@ -1,7 +1,4 @@
-import { Skeleton } from '@repo/core'
-import { Suspense } from 'react'
-
-import { BottomNav, ProfileTabSlot } from '#/components/bottom-nav'
+import { BottomNav } from '#/components/bottom-nav'
 import { Header } from '#/components/header'
 import { PwaInstallBanner } from '#/components/pwa-install'
 
@@ -17,13 +14,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
 			<PwaInstallBanner />
 
-			<BottomNav
-				profile={
-					<Suspense fallback={<Skeleton className="size-6 rounded-full" />}>
-						<ProfileTabSlot />
-					</Suspense>
-				}
-			/>
+			<BottomNav />
 		</div>
 	)
 }

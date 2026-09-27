@@ -6,7 +6,7 @@ import { useGetSkills } from '@repo/api'
 import Link from 'next/link'
 
 import { DIFFICULTY_OPTIONS } from '#/constants/difficulty-options'
-import { computeCatalogStats } from '@/(home)/_utils/compute-catalog-stats'
+import { computeCatalogStats } from '@/(main)/(home)/_utils/compute-catalog-stats'
 
 import { DashboardEmpty } from './dashboard-empty'
 import { DashboardError } from './dashboard-error'

@@ -8,7 +8,7 @@ import {
 	BackButton,
 	SkillDetailContent,
 	SkillDetailError,
-} from '@/catalog/[id]/_components/skill-detail'
+} from '@/(main)/catalog/[id]/_components/skill-detail'
 
 interface CatalogSkillPageProps {
 	params: Promise<{ id: string }>

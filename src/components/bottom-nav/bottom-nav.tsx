@@ -1,19 +1,15 @@
 'use client'
 
-import type { ReactNode } from 'react'
-
 import { cn } from '@repo/core'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
 import { isActiveRoute } from '#/components/navigation/is-active-route'
-import { NAV_LINKS } from '#/components/navigation/nav-links'
+import { BOTTOM_NAV_ACCOUNT_LINK, NAV_LINKS } from '#/components/navigation/nav-links'
 
-interface BottomNavProps {
-	profile: ReactNode
-}
+const BOTTOM_NAV_LINKS = [...NAV_LINKS, BOTTOM_NAV_ACCOUNT_LINK]
 
-export function BottomNav({ profile }: BottomNavProps) {
+export function BottomNav() {
 	const pathname = usePathname()
 
 	return (
@@ -23,7 +19,7 @@ export function BottomNav({ profile }: BottomNavProps) {
 			text-card-foreground
 			lg:hidden
 		`}>
-			{NAV_LINKS.map((link) => {
+			{BOTTOM_NAV_LINKS.map((link) => {
 				const isActive = isActiveRoute(pathname, link.href)
 				const Icon = link.icon
 
@@ -43,10 +39,6 @@ export function BottomNav({ profile }: BottomNavProps) {
 					</Link>
 				)
 			})}
-
-			<div className="v-stack min-h-14 min-w-16 flex-1 items-center justify-start gap-1.5 py-1">
-				{profile}
-			</div>
 		</nav>
 	)
 }

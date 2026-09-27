@@ -3,10 +3,9 @@ import { dehydrate, HydrationBoundary } from '@tanstack/react-query'
 
 import { getCurrentUser } from '#/lib/auth/get-session'
 import { getQueryClient } from '#/utils/get-query-client'
+import { ProfileView } from '@/(main)/profile/_components/profile-view'
 
-import { ProfileTab } from './profile-tab'
-
-export async function ProfileTabSlot() {
+export default async function ProfilePage() {
 	const user = await getCurrentUser()
 	const queryClient = getQueryClient()
 
@@ -15,8 +14,10 @@ export async function ProfileTabSlot() {
 	}
 
 	return (
-		<HydrationBoundary state={dehydrate(queryClient)}>
-			<ProfileTab initialUser={user} />
-		</HydrationBoundary>
+		<div className="page-wrapper flex flex-1 items-center justify-center">
+			<HydrationBoundary state={dehydrate(queryClient)}>
+				<ProfileView />
+			</HydrationBoundary>
+		</div>
 	)
 }

@@ -4,7 +4,6 @@ import type { ReactNode } from 'react'
 import { headers } from 'next/headers'
 import { NuqsAdapter } from 'nuqs/adapters/next/app'
 
-import { Layout } from '#/components/layout'
 import { QueryProvider } from '#/components/providers/query-provider'
 import { Toaster } from '#/components/toaster'
 import { ttFors } from '#/fonts/ttFors'
@@ -53,7 +52,7 @@ export default async function RootLayout({
 				<SsrWidthProvider value={ssrWidth}>
 					<NuqsAdapter>
 						<QueryProvider>
-							<Layout>{children}</Layout>
+							{children}
 							<Toaster />
 						</QueryProvider>
 					</NuqsAdapter>

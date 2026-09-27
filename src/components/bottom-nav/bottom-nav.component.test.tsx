@@ -10,8 +10,8 @@ describe('<BottomNav />', () => {
 		resetNextNavigationMock()
 	})
 
-	it('содержит ссылки на / и /catalog и слот профиля', async () => {
-		const view = await render(<BottomNav profile={<span>Профиль</span>} />)
+	it('содержит ссылки на /, /catalog и /profile', async () => {
+		const view = await render(<BottomNav />)
 
 		await expect
 			.element(view.getByRole('link', { name: 'Главная' }))
@@ -19,13 +19,15 @@ describe('<BottomNav />', () => {
 		await expect
 			.element(view.getByRole('link', { name: 'Каталог' }))
 			.toHaveAttribute('href', '/catalog')
-		await expect.element(view.getByText('Профиль')).toBeVisible()
+		await expect
+			.element(view.getByRole('link', { name: 'Аккаунт' }))
+			.toHaveAttribute('href', '/profile')
 	})
 
 	it('подсвечивает активный раздел', async () => {
 		nextNavigationMock.pathname = '/catalog/js-closures'
 
-		const view = await render(<BottomNav profile={null} />)
+		const view = await render(<BottomNav />)
 
 		await expect
 			.element(view.getByRole('link', { name: 'Каталог' }))
@@ -33,18 +35,40 @@ describe('<BottomNav />', () => {
 		await expect
 			.element(view.getByRole('link', { name: 'Главная' }))
 			.not.toHaveAttribute('aria-current')
+		await expect
+			.element(view.getByRole('link', { name: 'Аккаунт' }))
+			.not.toHaveAttribute('aria-current')
+	})
+
+	it('подсвечивает вкладку «Аккаунт» на /profile', async () => {
+		nextNavigationMock.pathname = '/profile'
+
+		const view = await render(<BottomNav />)
+
+		await expect
+			.element(view.getByRole('link', { name: 'Аккаунт' }))
+			.toHaveAttribute('aria-current', 'page')
+		await expect
+			.element(view.getByRole('link', { name: 'Главная' }))
+			.not.toHaveAttribute('aria-current')
+		await expect
+			.element(view.getByRole('link', { name: 'Каталог' }))
+			.not.toHaveAttribute('aria-current')
 	})
 
 	it('не подсвечивает ничего вне разделов навигации', async () => {
 		nextNavigationMock.pathname = '/sign-in'
 
-		const view = await render(<BottomNav profile={null} />)
+		const view = await render(<BottomNav />)
 
 		await expect
 			.element(view.getByRole('link', { name: 'Главная' }))
 			.not.toHaveAttribute('aria-current')
 		await expect
 			.element(view.getByRole('link', { name: 'Каталог' }))
+			.not.toHaveAttribute('aria-current')
+		await expect
+			.element(view.getByRole('link', { name: 'Аккаунт' }))
 			.not.toHaveAttribute('aria-current')
 	})
 })

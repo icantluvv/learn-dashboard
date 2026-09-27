@@ -12,7 +12,7 @@ import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
 import { signUpFormSchema } from '#/modules/auth/schemas'
-import { GENDER_OPTIONS } from '@/sign-up/_constants/gender-options'
+import { GENDER_OPTIONS } from '@/(auth)/sign-up/_constants/gender-options'
 
 interface SignUpFormProps {
 	action: AuthAction

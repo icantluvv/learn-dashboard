@@ -3,9 +3,10 @@ import { dehydrate, HydrationBoundary } from '@tanstack/react-query'
 
 import { getSkills } from '#/modules/skills/server/skills-repository'
 import { getQueryClient } from '#/utils/get-query-client'
-import { Dashboard } from '@/(home)/_components/dashboard'
+import { Catalog } from '@/(main)/catalog/_components/catalog'
+import { SidebarFilters } from '@/(main)/catalog/_components/sidebar-filters'
 
-export default async function Home() {
+export default async function CatalogPage() {
 	const queryClient = getQueryClient()
 
 	try {
@@ -17,8 +18,12 @@ export default async function Home() {
 
 	return (
 		<HydrationBoundary state={dehydrate(queryClient)}>
-			<div className="page-wrapper">
-				<Dashboard />
+			<div className={`
+				page-wrapper v-stack gap-4
+				md:flex-row md:gap-12
+			`}>
+				<SidebarFilters />
+				<Catalog />
 			</div>
 		</HydrationBoundary>
 	)
