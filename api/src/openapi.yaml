@@ -17,6 +17,8 @@ tags:
     description: Current user
   - name: Skills
     description: Skill catalog operations
+  - name: Dashboard
+    description: Aggregated dashboard statistics
 paths:
   /api/example:
     $ref: paths/api_example.yaml
@@ -26,6 +28,8 @@ paths:
     $ref: paths/api_skills.yaml
   /api/skills/{id}:
     $ref: paths/api_skills_id.yaml
+  /api/dashboard-stats:
+    $ref: paths/api_dashboard_stats.yaml
 
 components:
   securitySchemes:
@@ -36,3 +40,5 @@ components:
       $ref: components/schemas/AuthMe.yaml
     Skill:
       $ref: components/schemas/Skill.yaml
+    DashboardStats:
+      $ref: components/schemas/DashboardStats.yaml

@@ -7,12 +7,12 @@ test('каталог доступен по /catalog и показывает ка
 	await expect(page.getByRole('link', { name: /вопросов/ }).first()).toBeVisible()
 })
 
-test('главная не содержит сетку карточек и ведёт в каталог', async ({ page }) => {
+test('главная не содержит сетку карточек каталога', async ({ page }) => {
 	await page.goto('/')
 
 	await expect(page.getByRole('link', { name: /вопросов/ })).toHaveCount(0)
 
-	await page.getByRole('link', { name: 'Перейти в каталог' }).click()
+	await page.getByRole('link', { name: 'Каталог' }).click()
 
 	await expect(page).toHaveURL('/catalog')
 	await expect(page.getByRole('link', { name: /вопросов/ }).first()).toBeVisible()
@@ -36,7 +36,7 @@ test('параметры фильтров на главной не влияют 
 	await page.goto('/?search=java')
 
 	await expect(page.getByRole('link', { name: /вопросов/ })).toHaveCount(0)
-	await expect(page.getByRole('heading', { name: 'Learn Frontend' })).toBeVisible()
+	await expect(page.getByRole('heading', { name: 'Добро пожаловать' })).toBeVisible()
 })
 
 test('гидратация /catalog не делает повторный запрос списка навыков', async ({ page }) => {

@@ -9,6 +9,7 @@ import 'server-only'
 
 export interface CurrentUser {
 	age: number
+	completedSkillsCount?: number
 	email: string
 	gender: Gender
 	id: string
@@ -31,6 +32,7 @@ export const getCurrentUser = cache(async (): Promise<CurrentUser | null> => {
 		email: user.email,
 		gender: user.gender,
 		age: user.age,
+		completedSkillsCount: user.completedSkillsCount ?? 0,
 		...(user.image == null ? {} : { image: user.image }),
 	}
 })

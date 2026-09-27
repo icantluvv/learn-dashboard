@@ -1,45 +1,31 @@
-import type { GetSkills200 } from '@repo/api'
+import type { GetDashboardStats200 } from '@repo/api'
 
 import { describe, expect, it, vi } from 'vitest'
 
 import { renderWithProviders } from '#/tests/render'
 
-const { useGetSkills } = vi.hoisted(() => ({ useGetSkills: vi.fn() }))
+const { useGetAuthMe, useGetDashboardStats } = vi.hoisted(() => ({
+	useGetAuthMe: vi.fn(),
+	useGetDashboardStats: vi.fn(),
+}))
 
-vi.mock('@repo/api', () => ({ useGetSkills }))
+vi.mock('@repo/api', () => ({ useGetDashboardStats, useGetAuthMe }))
 
 const { Dashboard } = await import('./dashboard')
 
-const skills: GetSkills200 = [
-	{
-		id: 'js-closures',
-		title: 'Замыкания в JavaScript',
-		topic: 'JavaScript',
-		difficulty: 'medium',
-		questionsCount: 12,
-	},
-	{
-		id: 'js-events',
-		title: 'События в JavaScript',
-		topic: 'JavaScript',
-		difficulty: 'easy',
-		questionsCount: 8,
-	},
-	{
-		id: 'ts-generics',
-		title: 'Дженерики в TypeScript',
-		topic: 'TypeScript',
-		difficulty: 'easy',
-		questionsCount: 20,
-	},
-]
+const stats: GetDashboardStats200 = {
+	skillsCount: 3,
+	topicsCount: 2,
+	questionsCount: 40,
+}
 
 const errorText = 'Не удалось загрузить статистику каталога. Попробуйте обновить страницу.'
 const emptyText = 'В каталоге пока нет навыков.'
 
 describe('<Dashboard />', () => {
 	it('показывает сводные показатели по непустому каталогу', async () => {
-		useGetSkills.mockReturnValue({ data: skills, isError: false, isLoading: false })
+		useGetDashboardStats.mockReturnValue({ data: stats, isError: false, isLoading: false })
+		useGetAuthMe.mockReturnValue({ data: null, isError: true, isPending: false })
 
 		const view = await renderWithProviders(<Dashboard />)
 
@@ -54,24 +40,20 @@ describe('<Dashboard />', () => {
 			.toBeVisible()
 	})
 
-	it('показывает распределение по сложности с русскими подписями', async () => {
-		useGetSkills.mockReturnValue({ data: skills, isError: false, isLoading: false })
+	it('не показывает карточки распределения по сложности', async () => {
+		useGetDashboardStats.mockReturnValue({ data: stats, isError: false, isLoading: false })
+		useGetAuthMe.mockReturnValue({ data: null, isError: true, isPending: false })
 
 		const view = await renderWithProviders(<Dashboard />)
 
-		await expect
-			.element(view.getByRole('group', { name: 'Лёгкий' }).getByText('2', { exact: true }))
-			.toBeVisible()
-		await expect
-			.element(view.getByRole('group', { name: 'Средний' }).getByText('1', { exact: true }))
-			.toBeVisible()
-		await expect
-			.element(view.getByRole('group', { name: 'Сложный' }).getByText('0', { exact: true }))
-			.toBeVisible()
+		await expect.element(view.getByRole('group', { name: 'Лёгкий' })).not.toBeInTheDocument()
+		await expect.element(view.getByRole('group', { name: 'Средний' })).not.toBeInTheDocument()
+		await expect.element(view.getByRole('group', { name: 'Сложный' })).not.toBeInTheDocument()
 	})
 
 	it('не показывает ошибку во время загрузки', async () => {
-		useGetSkills.mockReturnValue({ data: undefined, isError: false, isLoading: true })
+		useGetDashboardStats.mockReturnValue({ data: undefined, isError: false, isLoading: true })
+		useGetAuthMe.mockReturnValue({ data: null, isError: true, isPending: false })
 
 		const view = await renderWithProviders(<Dashboard />)
 
@@ -80,7 +62,8 @@ describe('<Dashboard />', () => {
 	})
 
 	it('показывает сообщение об ошибке без значений показателей', async () => {
-		useGetSkills.mockReturnValue({ data: undefined, isError: true, isLoading: false })
+		useGetDashboardStats.mockReturnValue({ data: undefined, isError: true, isLoading: false })
+		useGetAuthMe.mockReturnValue({ data: null, isError: true, isPending: false })
 
 		const view = await renderWithProviders(<Dashboard />)
 
@@ -89,7 +72,12 @@ describe('<Dashboard />', () => {
 	})
 
 	it('показывает сообщение вместо нулей при пустом каталоге', async () => {
-		useGetSkills.mockReturnValue({ data: [], isError: false, isLoading: false })
+		useGetDashboardStats.mockReturnValue({
+			data: { skillsCount: 0, topicsCount: 0, questionsCount: 0 },
+			isError: false,
+			isLoading: false,
+		})
+		useGetAuthMe.mockReturnValue({ data: null, isError: true, isPending: false })
 
 		const view = await renderWithProviders(<Dashboard />)
 
@@ -97,14 +85,46 @@ describe('<Dashboard />', () => {
 		await expect.element(view.getByRole('group', { name: 'Навыков' })).not.toBeInTheDocument()
 	})
 
-	it('содержит вводный блок со ссылкой на каталог', async () => {
-		useGetSkills.mockReturnValue({ data: skills, isError: false, isLoading: false })
+	it('содержит подзаголовок-призыв к действию', async () => {
+		useGetDashboardStats.mockReturnValue({ data: stats, isError: false, isLoading: false })
+		useGetAuthMe.mockReturnValue({ data: null, isError: true, isPending: false })
 
 		const view = await renderWithProviders(<Dashboard />)
 
-		await expect.element(view.getByRole('heading', { name: 'Learn Frontend' })).toBeVisible()
+		await expect.element(view.getByText('К чему приступим сегодня?')).toBeVisible()
+	})
+
+	it('показывает нейтральное приветствие для неавторизованного пользователя и без прогресса', async () => {
+		useGetDashboardStats.mockReturnValue({ data: stats, isError: false, isLoading: false })
+		useGetAuthMe.mockReturnValue({ data: null, isError: true, isPending: false })
+
+		const view = await renderWithProviders(<Dashboard />)
+
+		await expect.element(view.getByRole('heading', { name: 'Добро пожаловать' })).toBeVisible()
 		await expect
-			.element(view.getByRole('link', { name: 'Перейти в каталог' }))
-			.toHaveAttribute('href', '/catalog')
+			.element(view.getByRole('group', { name: 'Навыков' }).getByRole('progressbar'))
+			.not.toBeInTheDocument()
+	})
+
+	it('показывает персональное приветствие и прогресс для авторизованного пользователя', async () => {
+		useGetDashboardStats.mockReturnValue({
+			data: { ...stats, completedSkillsCount: 1 },
+			isError: false,
+			isLoading: false,
+		})
+		useGetAuthMe.mockReturnValue({
+			data: { id: 'u1', name: 'Анна', email: 'a@a.com', gender: 'female', age: 20 },
+			isError: false,
+			isPending: false,
+		})
+
+		const view = await renderWithProviders(<Dashboard />)
+
+		await expect
+			.element(view.getByRole('heading', { name: 'С возвращением, Анна' }))
+			.toBeVisible()
+		await expect
+			.element(view.getByRole('group', { name: 'Навыков' }).getByRole('progressbar'))
+			.toBeVisible()
 	})
 })

@@ -32,6 +32,12 @@ export const auth = betterAuth({
 		additionalFields: {
 			gender: { type: [...GENDER_VALUES], required: true, input: true },
 			age: { type: 'number', required: true, input: true },
+			completedSkillsCount: {
+				type: 'number',
+				required: false,
+				input: false,
+				defaultValue: 0,
+			},
 		},
 	},
 	advanced: {

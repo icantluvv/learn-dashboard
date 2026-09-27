@@ -1,3 +1,5 @@
+export type { GetDashboardStatsQueryKey } from './hooks/dashboardController/useGetDashboardStats'
+export type { GetDashboardStatsSuspenseQueryKey } from './hooks/dashboardController/useGetDashboardStatsSuspense'
 export type { GetExampleQueryKey } from './hooks/exampleController/useGetExample'
 export type { GetExampleSuspenseQueryKey } from './hooks/exampleController/useGetExampleSuspense'
 export type { GetAuthMeQueryKey } from './hooks/meController/useGetAuthMe'
@@ -7,7 +9,13 @@ export type { GetSkillByIdSuspenseQueryKey } from './hooks/skillsController/useG
 export type { GetSkillsQueryKey } from './hooks/skillsController/useGetSkills'
 export type { GetSkillsSuspenseQueryKey } from './hooks/skillsController/useGetSkillsSuspense'
 export type { AuthMe } from './types/AuthMe'
+export type { DashboardStats } from './types/DashboardStats'
 export type { Skill } from './types/Skill'
+export type {
+	GetDashboardStats200,
+	GetDashboardStatsQuery,
+	GetDashboardStatsQueryResponse,
+} from './types/dashboardController/GetDashboardStats'
 export type {
 	GetExample200,
 	GetExample404,
@@ -33,10 +41,17 @@ export type {
 	GetSkillsQueryParams,
 	GetSkillsQueryResponse,
 } from './types/skillsController/GetSkills'
+export { getDashboardStats } from './clients/dashboardController/getDashboardStats'
 export { getExample } from './clients/exampleController/getExample'
 export { getAuthMe } from './clients/meController/getAuthMe'
 export { getSkillById } from './clients/skillsController/getSkillById'
 export { getSkills } from './clients/skillsController/getSkills'
+export { getDashboardStatsQueryKey } from './hooks/dashboardController/useGetDashboardStats'
+export { getDashboardStatsQueryOptions } from './hooks/dashboardController/useGetDashboardStats'
+export { useGetDashboardStats } from './hooks/dashboardController/useGetDashboardStats'
+export { getDashboardStatsSuspenseQueryKey } from './hooks/dashboardController/useGetDashboardStatsSuspense'
+export { getDashboardStatsSuspenseQueryOptions } from './hooks/dashboardController/useGetDashboardStatsSuspense'
+export { useGetDashboardStatsSuspense } from './hooks/dashboardController/useGetDashboardStatsSuspense'
 export { getExampleQueryKey } from './hooks/exampleController/useGetExample'
 export { getExampleQueryOptions } from './hooks/exampleController/useGetExample'
 export { useGetExample } from './hooks/exampleController/useGetExample'
@@ -62,6 +77,11 @@ export { getSkillsSuspenseQueryKey } from './hooks/skillsController/useGetSkills
 export { getSkillsSuspenseQueryOptions } from './hooks/skillsController/useGetSkillsSuspense'
 export { useGetSkillsSuspense } from './hooks/skillsController/useGetSkillsSuspense'
 export { authMeSchema } from './zod/authMeSchema'
+export {
+	getDashboardStats200Schema,
+	getDashboardStatsQueryResponseSchema,
+} from './zod/dashboardController/getDashboardStatsSchema'
+export { dashboardStatsSchema } from './zod/dashboardStatsSchema'
 export {
 	getExample200Schema,
 	getExample404Schema,

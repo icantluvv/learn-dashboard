@@ -1,0 +1,15 @@
+get:
+  summary: Get aggregated catalog and personal progress statistics for the home dashboard
+  operationId: getDashboardStats
+  tags:
+    - Dashboard
+  security:
+    - auth_cookie: []
+    - {}
+  responses:
+    "200":
+      description: Success
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/DashboardStats.yaml

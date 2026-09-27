@@ -8,6 +8,7 @@ export {
 	CardHeader,
 	CardTitle,
 } from './src/ui/card'
+export { CircularProgress } from './src/ui/circular-progress'
 export {
 	Drawer,
 	DrawerClose,
