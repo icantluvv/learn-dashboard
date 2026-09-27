@@ -61,6 +61,7 @@ export {
 } from './src/ui/select'
 export { Skeleton } from './src/ui/skeleton'
 export { Slider } from './src/ui/slider'
+export { Spinner } from './src/ui/spinner'
 export { Switch } from './src/ui/switch'
 export { Textarea } from './src/ui/textarea'
 export {
