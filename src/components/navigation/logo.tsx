@@ -3,7 +3,11 @@ import Link from 'next/link'
 
 export function Logo() {
 	return (
-		<Link href="/" aria-label="Learn Frontend — на главную" className="flex items-center gap-2">
+		<Link
+			href="/"
+			aria-label="Learn Frontend — на главную"
+			className="inline-flex items-center gap-2"
+		>
 			<Image
 				src="/icon.svg"
 				alt=""

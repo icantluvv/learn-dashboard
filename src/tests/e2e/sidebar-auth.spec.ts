@@ -20,14 +20,13 @@ test('вход показывает кнопку-аватар, выход воз
 	await page.getByRole('button', { name: 'Зарегистрироваться' }).click()
 	await page.waitForURL('/')
 
-	const avatar = page.getByRole('button', { name: 'Профиль: Сергей' })
-	await expect(avatar).toBeVisible()
+	const trigger = page.getByRole('button', { name: /Сергей/ })
+	await expect(trigger).toBeVisible()
+	await expect(trigger.getByText(email, { exact: true })).toBeVisible()
 
-	await avatar.click()
-	await expect(page.getByText(email, { exact: true })).toBeVisible()
-
+	await trigger.click()
 	await page.getByRole('button', { name: 'Выйти' }).click()
 
 	await expect(page.getByRole('link', { name: 'Войти' })).toBeVisible()
-	await expect(avatar).toBeHidden()
+	await expect(trigger).toBeHidden()
 })

@@ -22,6 +22,13 @@ export {
 	DrawerTitle,
 	DrawerTrigger,
 } from './src/ui/drawer'
+export {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuPortal,
+	DropdownMenuTrigger,
+} from './src/ui/dropdown-menu'
 export { Input } from './src/ui/input'
 export {
 	InputGroup,
@@ -54,6 +61,7 @@ export {
 } from './src/ui/select'
 export { Skeleton } from './src/ui/skeleton'
 export { Slider } from './src/ui/slider'
+export { Switch } from './src/ui/switch'
 export { Textarea } from './src/ui/textarea'
 export {
 	createToastManager,

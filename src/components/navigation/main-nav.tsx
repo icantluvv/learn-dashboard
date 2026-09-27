@@ -20,6 +20,7 @@ export function MainNav({ className, linkClassName, onNavigate }: MainNavProps) 
 		<nav aria-label="Основная навигация" className={cn('flex items-center gap-6', className)}>
 			{NAV_LINKS.map((link) => {
 				const isActive = isActiveRoute(pathname, link.href)
+				const Icon = link.icon
 
 				return (
 					<Link
@@ -27,12 +28,14 @@ export function MainNav({ className, linkClassName, onNavigate }: MainNavProps) 
 						href={link.href}
 						aria-current={isActive ? 'page' : undefined}
 						className={cn(`
-							text-base transition-colors
-							hover:text-heading
-							aria-[current=page]:font-semibold aria-[current=page]:text-heading
+							flex w-full items-center gap-3 rounded-full px-4 py-3 text-base
+							transition-colors
+							hover:bg-brand-secondary hover:text-heading
+							aria-[current=page]:bg-brand-primary aria-[current=page]:text-white
 						`, linkClassName)}
 						onClick={onNavigate}
 					>
+						<Icon className="size-5 shrink-0" aria-hidden="true" />
 						{link.label}
 					</Link>
 				)

@@ -51,7 +51,7 @@ describe('<AuthStatus />', () => {
 		await expect
 			.element(view.getByRole('link', { name: 'Регистрация' }))
 			.not.toBeInTheDocument()
-		await expect.element(view.getByRole('button', { name: /Профиль/ })).not.toBeInTheDocument()
+		await expect.element(view.getByRole('button', { name: /@/ })).not.toBeInTheDocument()
 	})
 
 	it('показывает авторизованному пользователю кнопку-аватар вместо входа', async () => {
@@ -59,7 +59,7 @@ describe('<AuthStatus />', () => {
 
 		const view = await render(withQueryClient(<AuthStatus initialUser={null} />))
 
-		await expect.element(view.getByRole('button', { name: 'Профиль: Сергей' })).toBeVisible()
+		await expect.element(view.getByRole('button', { name: /Сергей/ })).toBeVisible()
 		await expect.element(view.getByRole('link', { name: 'Войти' })).not.toBeInTheDocument()
 	})
 
@@ -68,9 +68,7 @@ describe('<AuthStatus />', () => {
 
 		const view = await render(withQueryClient(<AuthStatus initialUser={null} />))
 
-		await expect
-			.element(view.getByRole('button', { name: 'Профиль: Сергей' }))
-			.toHaveTextContent('С')
+		await expect.element(view.getByRole('button', { name: /Сергей/ })).toHaveTextContent('С')
 	})
 
 	it('показывает аватар, когда он задан', async () => {
@@ -88,7 +86,7 @@ describe('<AuthStatus />', () => {
 
 		const view = await render(withQueryClient(<AuthStatus initialUser={user} />))
 
-		await expect.element(view.getByRole('button', { name: 'Профиль: Сергей' })).toBeVisible()
+		await expect.element(view.getByRole('button', { name: /Сергей/ })).toBeVisible()
 	})
 
 	it('сразу показывает гостевое состояние, когда сервер не нашёл сессии', async () => {
@@ -112,7 +110,7 @@ describe('<AuthStatus />', () => {
 
 		const view = await render(withQueryClient(<AuthStatus initialUser={null} />))
 
-		await view.getByRole('button', { name: 'Профиль: Сергей' }).click()
+		await view.getByRole('button', { name: /Сергей/ }).click()
 		await view.getByRole('button', { name: 'Выйти' }).click()
 
 		await vi.waitFor(() => {

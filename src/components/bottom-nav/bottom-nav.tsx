@@ -4,10 +4,9 @@ import { cn } from '@repo/core'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
+import { AccountDrawer } from '#/components/account-drawer'
 import { isActiveRoute } from '#/components/navigation/is-active-route'
-import { BOTTOM_NAV_ACCOUNT_LINK, NAV_LINKS } from '#/components/navigation/nav-links'
-
-const BOTTOM_NAV_LINKS = [...NAV_LINKS, BOTTOM_NAV_ACCOUNT_LINK]
+import { NAV_LINKS } from '#/components/navigation/nav-links'
 
 export function BottomNav() {
 	const pathname = usePathname()
@@ -19,7 +18,7 @@ export function BottomNav() {
 			text-card-foreground
 			lg:hidden
 		`}>
-			{BOTTOM_NAV_LINKS.map((link) => {
+			{NAV_LINKS.map((link) => {
 				const isActive = isActiveRoute(pathname, link.href)
 				const Icon = link.icon
 
@@ -31,7 +30,7 @@ export function BottomNav() {
 						className={cn(`
 							v-stack min-h-14 min-w-16 flex-1 items-center justify-start gap-1.5
 							py-1.5 text-xs text-heading/45 transition-colors
-							aria-[current=page]:font-semibold aria-[current=page]:text-heading
+							aria-[current=page]:text-brand-primary
 						`)}
 					>
 						<Icon className="size-7" aria-hidden="true" />
@@ -39,6 +38,8 @@ export function BottomNav() {
 					</Link>
 				)
 			})}
+
+			<AccountDrawer />
 		</nav>
 	)
 }

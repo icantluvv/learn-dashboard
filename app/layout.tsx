@@ -5,6 +5,7 @@ import { headers } from 'next/headers'
 import { NuqsAdapter } from 'nuqs/adapters/next/app'
 
 import { QueryProvider } from '#/components/providers/query-provider'
+import { ThemeProvider } from '#/components/providers/theme-provider'
 import { Toaster } from '#/components/toaster'
 import { ttFors } from '#/fonts/ttFors'
 import { SsrWidthProvider } from '#/hooks/use-ssr-width'
@@ -47,16 +48,23 @@ export default async function RootLayout({
 	const ssrWidth = getSsrWidthFromUserAgent(requestHeaders.get('user-agent') ?? '')
 
 	return (
-		<html lang="en" data-scroll-behavior="smooth" className={ttFors.variable}>
+		<html
+			lang="en"
+			data-scroll-behavior="smooth"
+			className={ttFors.variable}
+			suppressHydrationWarning
+		>
 			<body className="v-stack min-h-full">
-				<SsrWidthProvider value={ssrWidth}>
-					<NuqsAdapter>
-						<QueryProvider>
-							{children}
-							<Toaster />
-						</QueryProvider>
-					</NuqsAdapter>
-				</SsrWidthProvider>
+				<ThemeProvider>
+					<SsrWidthProvider value={ssrWidth}>
+						<NuqsAdapter>
+							<QueryProvider>
+								{children}
+								<Toaster />
+							</QueryProvider>
+						</NuqsAdapter>
+					</SsrWidthProvider>
+				</ThemeProvider>
 			</body>
 		</html>
 	)

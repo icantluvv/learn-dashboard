@@ -50,7 +50,7 @@ export function StatCard({ icon: Icon, label, progress, value }: StatCardProps) 
 							strokeWidth={5}
 							aria-label={`Выполнено: ${label}`}
 						/>
-						<span className="absolute text-xs font-semibold text-brand-ink">
+						<span className="absolute text-xs font-semibold text-card-foreground">
 							{progressPercent}%
 						</span>
 					</div>
