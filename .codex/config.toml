@@ -1,0 +1,33 @@
+# Codex CLI project config.
+#
+# Mirrors the read-deny list from ../.claude/settings.json (permissions.deny)
+# so Codex gets the same protection against reading secrets and noisy build
+# output. Update both files together when the protected paths change.
+
+default_permissions = "secure-workspace"
+
+[permissions.secure-workspace]
+description = "Workspace editing with denied read access to secrets, IDE config and build output"
+extends = ":workspace"
+
+[permissions.secure-workspace.filesystem.":workspace_roots"]
+".env" = "deny"
+".env.*" = "deny"
+"**/.env" = "deny"
+"**/.env.*" = "deny"
+".env.example" = "read"
+".env.test" = "read"
+".idea" = "deny"
+".vscode" = "deny"
+".zed" = "deny"
+"mise.toml" = "deny"
+"**/node_modules" = "deny"
+"apps/frontend/.next" = "deny"
+"apps/frontend/out" = "deny"
+"apps/frontend/dist" = "deny"
+"apps/frontend/coverage" = "deny"
+"api/dist" = "deny"
+"api/coverage" = "deny"
+"infra/.docker/data" = "deny"
+"**/*.log" = "deny"
+"**/*.tmp" = "deny"

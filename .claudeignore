@@ -15,15 +15,6 @@ mise.toml
 
 # Dependencies
 **/node_modules/
-apps/backend/vendor/
-
-# Backend runtime and generated files
-apps/backend/var/
-apps/backend/public/bundles/
-apps/backend/config/reference.php
-apps/backend/.phpunit.cache/
-apps/backend/.phpunit.result.cache
-apps/backend/.php-cs-fixer.cache
 
 # Frontend build and test output
 apps/frontend/.next/
