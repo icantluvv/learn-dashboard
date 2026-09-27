@@ -109,6 +109,22 @@ bun run --filter @packages/api kubb generate
 Браузерному `authClient` базовый URL не нужен — Better Auth берёт `window.location.origin`, а
 handler висит на том же origin.
 
+## PWA
+
+Приложение устанавливается на домашний экран телефона и компьютера.
+
+- `app/manifest.ts` — web app manifest (`name`, иконки, `display: standalone`, цвета темы).
+- `public/icon.svg` и `public/icon-maskable.svg` — исходники иконки; `npm run icons` растрирует их
+  через `sharp` в `public/icon-192.png`, `icon-512.png`, `icon-maskable-512.png` и
+  `apple-touch-icon.png`. При замене марки достаточно перерисовать SVG и перезапустить команду.
+- `app/layout.tsx` — метаданные для iOS (`appleWebApp`, `apple-touch-icon`) и `themeColor` для
+  светлой/тёмной схемы; без них iOS не запускает сайт в standalone-режиме.
+- `src/components/pwa-install/` — баннер установки: показывает кнопку там, где браузер поддерживает
+  `beforeinstallprompt` (Chrome/Edge/Android), и инструкцию «Поделиться → На экран „Домой"» в iOS
+  Safari, где такого события нет. Отказ пользователя запоминается в `localStorage`.
+- Service worker и офлайн-режим сознательно не добавлялись — это отдельная тема со своими рисками
+  (устаревший кэш), а установка работает и без них.
+
 ## Скрипты
 
 ```bash

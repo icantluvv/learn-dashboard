@@ -13,6 +13,7 @@
 		"dev": "next dev --turbo",
 		"fmt": "oxfmt",
 		"fmt:check": "oxfmt --check",
+		"icons": "node scripts/generate-icons.ts",
 		"jscpd": "jscpd",
 		"knip": "knip --strict",
 		"lint": "oxlint",
