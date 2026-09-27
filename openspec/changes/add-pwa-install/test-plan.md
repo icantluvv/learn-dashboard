@@ -26,6 +26,7 @@ P2 — существующие сценарии не затрагиваются
 | Баннер установки    | Баннер предлагает установку при поддержке браузера     |   P1 | Component  | `src/components/pwa-install/pwa-install-banner.component.test.tsx`   | done    |
 | Баннер установки    | Закрытие баннера запоминается                          |   P1 | Component  | `src/components/pwa-install/pwa-install-banner.component.test.tsx`   | done    |
 | Баннер установки    | Баннер скрыт в установленном приложении                |   P1 | Unit       | `src/components/pwa-install/should-show-install-banner.unit.test.ts` | done    |
+| Баннер установки    | Баннер не показывается на десктопной ширине            |   P1 | Component  | `src/components/pwa-install/pwa-install-banner.component.test.tsx`   | done    |
 | Баннер установки    | Баннер исчезает после установки                        |   P2 | Component  | `src/components/pwa-install/pwa-install-banner.component.test.tsx`   | done    |
 | Установка через API | Кнопка вызывает системный диалог установки             |   P1 | Component  | `src/components/pwa-install/pwa-install-banner.component.test.tsx`   | done    |
 | Установка через API | Отклонённый диалог не открывается повторно             |   P2 | Component  | `src/components/pwa-install/pwa-install-banner.component.test.tsx`   | done    |
@@ -47,7 +48,7 @@ P2 — существующие сценарии не затрагиваются
 - [x] `pwa-install-banner.component.test.tsx` — кнопка установки вызывает сохранённый промпт;
       закрытие скрывает баннер и пишет отметку в `localStorage`; в режиме iOS видна инструкция и
       нет кнопки установки; отклонение диалога скрывает баннер; в standalone компонент не рендерит
-      ничего
+      ничего; на десктопной ширине баннер несёт класс `lg:hidden`
 
 ### Integration
 

@@ -110,4 +110,12 @@ describe('<PwaInstallBanner />', () => {
 
 		await expect.element(view.getByRole('dialog')).not.toBeInTheDocument()
 	})
+
+	it('скрыт на десктопной ширине через lg:hidden', async () => {
+		const view = await render(<PwaInstallBanner />)
+
+		globalThis.dispatchEvent(new FakeBeforeInstallPromptEvent())
+
+		await expect.element(view.getByRole('dialog')).toHaveClass(/lg:hidden/)
+	})
 })

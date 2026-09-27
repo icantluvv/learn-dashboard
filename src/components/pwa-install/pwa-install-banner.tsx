@@ -14,12 +14,22 @@ export function PwaInstallBanner() {
 
 	return (
 		<div role="dialog" aria-label="Установка приложения" className={`
-			fixed inset-x-3 bottom-[max(4.75rem,calc(4.125rem+env(safe-area-inset-bottom)))] z-30
-			flex items-center gap-3 rounded-xl border border-border bg-card p-4 text-card-foreground
+			fixed inset-x-3 top-[max(0.75rem,env(safe-area-inset-top))] z-30 rounded-xl border
+			border-border bg-card p-4 pt-[max(1rem,env(safe-area-inset-top))] text-card-foreground
 			shadow-lg
-			lg:inset-x-auto lg:right-6 lg:bottom-6 lg:w-80
+			lg:hidden
 		`}>
-			<div className="v-stack min-w-0 flex-1 gap-1">
+			<Button
+				variant="ghost"
+				size="icon-sm"
+				aria-label="Закрыть"
+				className="absolute top-3 right-3"
+				onClick={dismiss}
+			>
+				<XIcon />
+			</Button>
+
+			<div className="v-stack gap-1 pr-8">
 				<p className="text-sm font-semibold text-heading">Установите приложение</p>
 
 				{mode === 'prompt' ? (
@@ -31,28 +41,18 @@ export function PwaInstallBanner() {
 						Нажмите «Поделиться», затем «На экран Домой», чтобы добавить приложение.
 					</p>
 				)}
-
-				{mode === 'prompt' ? (
-					<Button
-						className="mt-2 w-fit"
-						onClick={() => {
-							void install()
-						}}
-					>
-						Установить
-					</Button>
-				) : null}
 			</div>
 
-			<Button
-				variant="ghost"
-				size="icon-sm"
-				aria-label="Закрыть"
-				className="shrink-0"
-				onClick={dismiss}
-			>
-				<XIcon />
-			</Button>
+			{mode === 'prompt' ? (
+				<Button
+					className="mt-3 w-full"
+					onClick={() => {
+						void install()
+					}}
+				>
+					Установить
+				</Button>
+			) : null}
 		</div>
 	)
 }
