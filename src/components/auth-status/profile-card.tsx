@@ -9,21 +9,22 @@ import { useTransition } from 'react'
 import { AccountSummary } from './account-summary'
 import { useSignOut } from './use-sign-out'
 
-interface ProfilePopoverProps {
+interface ProfileCardProps {
 	user: CurrentUser
 }
 
-export function ProfilePopover({ user }: ProfilePopoverProps) {
+export function ProfileCard({ user }: ProfileCardProps) {
 	const signOut = useSignOut()
 	const [isSigningOut, startSignOutTransition] = useTransition()
 
 	return (
 		<div className="flex items-center justify-between gap-2">
-			<AccountSummary user={user} />
+			<AccountSummary user={user} className="min-w-0" />
 
 			<Button
 				variant="ghost"
 				size="icon-lg"
+				className="shrink-0"
 				aria-label="Выйти"
 				disabled={isSigningOut}
 				onClick={() => {

@@ -3,7 +3,7 @@
 import type { CurrentUser } from '#/lib/auth/get-session'
 
 import { GuestLinks } from './guest-links'
-import { ProfilePopover } from './profile-popover'
+import { ProfileCard } from './profile-card'
 import { useCurrentUser } from './use-current-user'
 
 interface AuthStatusProps {
@@ -17,5 +17,5 @@ export function AuthStatus({ initialUser }: AuthStatusProps) {
 		return <GuestLinks />
 	}
 
-	return <ProfilePopover user={user} />
+	return <ProfileCard user={user} />
 }

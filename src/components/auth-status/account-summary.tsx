@@ -1,14 +1,17 @@
 import type { CurrentUser } from '#/lib/auth/get-session'
 
+import { cn } from '@repo/core'
+
 import { Avatar } from './avatar'
 
 interface AccountSummaryProps {
+	className?: string
 	user: CurrentUser
 }
 
-export function AccountSummary({ user }: AccountSummaryProps) {
+export function AccountSummary({ className, user }: AccountSummaryProps) {
 	return (
-		<div className="flex items-center gap-3">
+		<div className={cn('flex min-w-0 items-center gap-3', className)}>
 			<span className="size-10 shrink-0 overflow-hidden rounded-full bg-heading/10 border-shaded">
 				<Avatar user={user} />
 			</span>

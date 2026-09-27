@@ -8,9 +8,9 @@ import { ThemeToggle } from '#/components/theme-toggle'
 export function Sidebar() {
 	return (
 		<aside className={`
-			sticky top-0 hidden h-screen w-full flex-col gap-8 overflow-y-auto rounded-r-4xl
-			bg-sidebar p-6
-			lg:flex
+			sticky top-0 hidden h-screen w-full flex-col gap-8 overflow-hidden overflow-y-auto
+			rounded-r-4xl bg-sidebar p-6
+			lg:flex lg:min-w-69
 		`}>
 			<div className="flex items-center justify-between">
 				<Logo />

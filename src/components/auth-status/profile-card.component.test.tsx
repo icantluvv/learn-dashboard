@@ -12,7 +12,7 @@ vi.mock('#/lib/auth/client', () => ({
 	authClient: { signOut: async () => signOut() },
 }))
 
-const { ProfilePopover } = await import('./profile-popover')
+const { ProfileCard } = await import('./profile-card')
 
 const user: CurrentUser = {
 	id: 'user-1',
@@ -30,13 +30,13 @@ function withQueryClient(children: ReactNode) {
 	return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
 }
 
-describe('<ProfilePopover />', () => {
+describe('<ProfileCard />', () => {
 	beforeEach(() => {
 		signOut.mockClear()
 	})
 
 	it('сразу показывает имя, email и кнопку выхода без предварительного клика', async () => {
-		const view = await render(withQueryClient(<ProfilePopover user={user} />))
+		const view = await render(withQueryClient(<ProfileCard user={user} />))
 
 		await expect.element(view.getByText('Сергей')).toBeVisible()
 		await expect.element(view.getByText('user@example.com', { exact: true })).toBeVisible()
@@ -44,7 +44,7 @@ describe('<ProfilePopover />', () => {
 	})
 
 	it('вызывает выход по клику на кнопку выхода', async () => {
-		const view = await render(withQueryClient(<ProfilePopover user={user} />))
+		const view = await render(withQueryClient(<ProfileCard user={user} />))
 
 		await view.getByRole('button', { name: 'Выйти' }).click()
 
@@ -63,7 +63,7 @@ describe('<ProfilePopover />', () => {
 				}),
 		)
 
-		const view = await render(withQueryClient(<ProfilePopover user={user} />))
+		const view = await render(withQueryClient(<ProfileCard user={user} />))
 		const trigger = view.getByRole('button', { name: 'Выйти' })
 
 		await trigger.click()
