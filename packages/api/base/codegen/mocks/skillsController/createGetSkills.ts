@@ -18,6 +18,12 @@ export function createGetSkillsQueryParams(
 			difficulty: faker.helpers.arrayElement<NonNullable<GetSkillsQueryParams>['difficulty']>(
 				['easy', 'medium', 'hard'],
 			),
+			core: faker.helpers.arrayElement<NonNullable<GetSkillsQueryParams>['core']>([
+				'frontend',
+				'backend',
+				'devops',
+				'design',
+			]),
 			minQuestionsCount: faker.number.int({ min: 0 }),
 			maxQuestionsCount: faker.number.int({ min: 0 }),
 		},
@@ -36,6 +42,9 @@ export function createGetSkills200(data?: GetSkills200): GetSkills200 {
 				NonNullable<NonNullable<GetSkills200>[number]>['difficulty']
 			>(['easy', 'medium', 'hard']),
 			topic: faker.string.alpha(),
+			core: faker.helpers.arrayElement<
+				NonNullable<NonNullable<GetSkills200>[number]>['core']
+			>(['frontend', 'backend', 'devops', 'design']),
 		})),
 		...(data || []),
 	]

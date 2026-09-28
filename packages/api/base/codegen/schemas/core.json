@@ -1,0 +1,24 @@
+{
+	"type": "object",
+	"required": ["type", "name", "description", "icon", "isAvailable"],
+	"properties": {
+		"type": {
+			"type": "string",
+			"enum": ["frontend", "backend", "devops", "design"],
+			"example": "frontend"
+		},
+		"name": { "type": "string", "minLength": 1, "example": "Frontend" },
+		"description": {
+			"type": "string",
+			"minLength": 1,
+			"example": "Вёрстка, JavaScript, фреймворки и браузерная платформа"
+		},
+		"icon": {
+			"type": "string",
+			"enum": ["code", "server", "ship", "palette"],
+			"example": "code"
+		},
+		"isAvailable": { "type": "boolean", "example": true }
+	},
+	"x-readme-ref-name": "Core"
+}

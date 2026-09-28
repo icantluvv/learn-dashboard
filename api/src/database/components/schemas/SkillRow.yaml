@@ -31,3 +31,11 @@ properties:
     type: integer
     minimum: 0
     example: 12
+  core:
+    type: string
+    enum:
+      - frontend
+      - backend
+      - devops
+      - design
+    example: frontend

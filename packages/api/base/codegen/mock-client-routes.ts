@@ -2,6 +2,7 @@
 
 import type { MockRoute } from '../mock-client'
 
+import { createGetCoresQueryResponse } from './mocks/coresController/createGetCores'
 import { createGetDashboardStatsQueryResponse } from './mocks/dashboardController/createGetDashboardStats'
 import { createGetExampleQueryResponse } from './mocks/exampleController/createGetExample'
 import { createGetAuthMeQueryResponse } from './mocks/meController/createGetAuthMe'
@@ -16,6 +17,7 @@ export const mockRoutes = [
 	},
 	{ method: 'GET', pattern: /^\/api\/example$/, create: createGetExampleQueryResponse },
 	{ method: 'GET', pattern: /^\/api\/skills$/, create: createGetSkillsQueryResponse },
+	{ method: 'GET', pattern: /^\/api\/cores$/, create: createGetCoresQueryResponse },
 	{ method: 'GET', pattern: /^\/api\/me$/, create: createGetAuthMeQueryResponse },
 	{ method: 'GET', pattern: /^\/api\/skills\/[^/]+$/, create: createGetSkillByIdQueryResponse },
 ] as MockRoute[]

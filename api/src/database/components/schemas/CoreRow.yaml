@@ -1,0 +1,31 @@
+type: object
+properties:
+  type:
+    type: string
+    enum:
+      - frontend
+      - backend
+      - devops
+      - design
+    example: frontend
+  name:
+    type: string
+    example: Frontend
+  description:
+    type: string
+    example: Вёрстка, JavaScript, фреймворки и браузерная платформа
+  icon:
+    type: string
+    enum:
+      - code
+      - server
+      - ship
+      - palette
+    example: code
+  is_available:
+    type: boolean
+    example: true
+  display_order:
+    type: integer
+    minimum: 0
+    example: 0

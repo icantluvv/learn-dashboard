@@ -16,4 +16,6 @@ export interface SkillRow {
 	 * @minLength 0
 	 */
 	questions_count?: number
+	/** @type string | undefined */
+	core?: 'frontend' | 'backend' | 'devops' | 'design'
 }

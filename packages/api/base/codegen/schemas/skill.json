@@ -1,12 +1,17 @@
 {
 	"type": "object",
-	"required": ["title", "questions"],
+	"required": ["title", "questions", "core"],
 	"properties": {
 		"title": { "type": "string", "example": "Замыкания в JavaScript" },
 		"questions": {
 			"type": "array",
 			"items": { "type": "string" },
 			"example": ["Что такое замыкание?", "Как замыкания используются для мемоизации?"]
+		},
+		"core": {
+			"type": "string",
+			"enum": ["frontend", "backend", "devops", "design"],
+			"example": "frontend"
 		}
 	},
 	"x-readme-ref-name": "Skill"

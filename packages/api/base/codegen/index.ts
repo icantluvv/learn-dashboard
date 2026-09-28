@@ -1,3 +1,5 @@
+export type { GetCoresQueryKey } from './hooks/coresController/useGetCores'
+export type { GetCoresSuspenseQueryKey } from './hooks/coresController/useGetCoresSuspense'
 export type { GetDashboardStatsQueryKey } from './hooks/dashboardController/useGetDashboardStats'
 export type { GetDashboardStatsSuspenseQueryKey } from './hooks/dashboardController/useGetDashboardStatsSuspense'
 export type { GetExampleQueryKey } from './hooks/exampleController/useGetExample'
@@ -9,8 +11,14 @@ export type { GetSkillByIdSuspenseQueryKey } from './hooks/skillsController/useG
 export type { GetSkillsQueryKey } from './hooks/skillsController/useGetSkills'
 export type { GetSkillsSuspenseQueryKey } from './hooks/skillsController/useGetSkillsSuspense'
 export type { AuthMe } from './types/AuthMe'
+export type { Core } from './types/Core'
 export type { DashboardStats } from './types/DashboardStats'
 export type { Skill } from './types/Skill'
+export type {
+	GetCores200,
+	GetCoresQuery,
+	GetCoresQueryResponse,
+} from './types/coresController/GetCores'
 export type {
 	GetDashboardStats200,
 	GetDashboardStatsQuery,
@@ -41,11 +49,18 @@ export type {
 	GetSkillsQueryParams,
 	GetSkillsQueryResponse,
 } from './types/skillsController/GetSkills'
+export { getCores } from './clients/coresController/getCores'
 export { getDashboardStats } from './clients/dashboardController/getDashboardStats'
 export { getExample } from './clients/exampleController/getExample'
 export { getAuthMe } from './clients/meController/getAuthMe'
 export { getSkillById } from './clients/skillsController/getSkillById'
 export { getSkills } from './clients/skillsController/getSkills'
+export { getCoresQueryKey } from './hooks/coresController/useGetCores'
+export { getCoresQueryOptions } from './hooks/coresController/useGetCores'
+export { useGetCores } from './hooks/coresController/useGetCores'
+export { getCoresSuspenseQueryKey } from './hooks/coresController/useGetCoresSuspense'
+export { getCoresSuspenseQueryOptions } from './hooks/coresController/useGetCoresSuspense'
+export { useGetCoresSuspense } from './hooks/coresController/useGetCoresSuspense'
 export { getDashboardStatsQueryKey } from './hooks/dashboardController/useGetDashboardStats'
 export { getDashboardStatsQueryOptions } from './hooks/dashboardController/useGetDashboardStats'
 export { useGetDashboardStats } from './hooks/dashboardController/useGetDashboardStats'
@@ -77,6 +92,11 @@ export { getSkillsSuspenseQueryKey } from './hooks/skillsController/useGetSkills
 export { getSkillsSuspenseQueryOptions } from './hooks/skillsController/useGetSkillsSuspense'
 export { useGetSkillsSuspense } from './hooks/skillsController/useGetSkillsSuspense'
 export { authMeSchema } from './zod/authMeSchema'
+export { coreSchema } from './zod/coreSchema'
+export {
+	getCores200Schema,
+	getCoresQueryResponseSchema,
+} from './zod/coresController/getCoresSchema'
 export {
 	getDashboardStats200Schema,
 	getDashboardStatsQueryResponseSchema,

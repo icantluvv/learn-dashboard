@@ -5,4 +5,6 @@ export interface Skill {
 	title: string
 	/** @type array */
 	questions: string[]
+	/** @type string */
+	core: 'frontend' | 'backend' | 'devops' | 'design'
 }

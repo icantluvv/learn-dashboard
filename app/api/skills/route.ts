@@ -14,6 +14,7 @@ function parseFilters(searchParams: URLSearchParams) {
 		search: searchParams.get('search') ?? undefined,
 		topic: searchParams.get('topic') ?? undefined,
 		difficulty: searchParams.get('difficulty') ?? undefined,
+		core: searchParams.get('core') ?? undefined,
 		minQuestionsCount: minQuestionsCount == null ? undefined : Number(minQuestionsCount),
 		maxQuestionsCount: maxQuestionsCount == null ? undefined : Number(maxQuestionsCount),
 	})

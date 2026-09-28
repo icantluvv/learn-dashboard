@@ -13,12 +13,18 @@ info:
 tags:
   - name: Skills
     description: Direct PostgREST access to the skills table
+  - name: Cores
+    description: Direct PostgREST access to the cores table
 
 paths:
   /skills:
     $ref: paths/skills.yaml
+  /cores:
+    $ref: paths/cores.yaml
 
 components:
   schemas:
     SkillRow:
       $ref: components/schemas/SkillRow.yaml
+    CoreRow:
+      $ref: components/schemas/CoreRow.yaml

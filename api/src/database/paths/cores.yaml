@@ -1,0 +1,42 @@
+get:
+  summary: Query the cores table directly via PostgREST
+  operationId: getCoreRows
+  tags:
+    - Cores
+  parameters:
+    - name: type
+      in: query
+      required: false
+      description: PostgREST filter expression, e.g. "eq.frontend"
+      schema:
+        type: string
+      example: "eq.frontend"
+    - name: select
+      in: query
+      required: false
+      description: PostgREST column projection
+      schema:
+        type: string
+      example: "type,name,description,icon,is_available,display_order"
+    - name: order
+      in: query
+      required: false
+      schema:
+        type: string
+      example: "display_order.asc"
+    - name: limit
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 0
+      example: 20
+  responses:
+    "200":
+      description: Success
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: ../components/schemas/CoreRow.yaml

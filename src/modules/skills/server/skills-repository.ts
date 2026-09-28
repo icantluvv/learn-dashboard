@@ -9,8 +9,9 @@ import 'server-only'
 
 // `SkillRow` fields are all optional because they mirror a raw PostgREST
 // projection (present fields depend on `select`). `getSkills` always selects
-// id/title/topic/difficulty/questions_count, so these are guaranteed present
-// here; `getSkills200Schema.parse` below still guards against a bad response.
+// id/title/topic/difficulty/questions_count/core, so these are guaranteed
+// present here; `getSkills200Schema.parse` below still guards against a bad
+// response.
 function toSkillCard(row: SkillRow): GetSkills200[number] {
 	return {
 		id: row.id!,
@@ -18,6 +19,7 @@ function toSkillCard(row: SkillRow): GetSkills200[number] {
 		questionsCount: row.questions_count!,
 		difficulty: row.difficulty!,
 		topic: row.topic!,
+		core: row.core!,
 	}
 }
 
@@ -48,6 +50,7 @@ export async function getSkills(filters: GetSkillsQueryParams = {}): Promise<Get
 				? { topic: `eq.${filters.topic}` }
 				: {}),
 			...(filters.difficulty != null ? { difficulty: `eq.${filters.difficulty}` } : {}),
+			...(filters.core != null ? { core: `eq.${filters.core}` } : {}),
 			...(() => {
 				const questionsCount = buildQuestionsCountFilter(
 					filters.minQuestionsCount,
@@ -55,7 +58,7 @@ export async function getSkills(filters: GetSkillsQueryParams = {}): Promise<Get
 				)
 				return questionsCount ? { questions_count: questionsCount } : {}
 			})(),
-			select: 'id,title,topic,difficulty,questions_count',
+			select: 'id,title,topic,difficulty,questions_count,core',
 			order: 'title.asc',
 		},
 	})
@@ -65,7 +68,7 @@ export async function getSkills(filters: GetSkillsQueryParams = {}): Promise<Get
 
 export async function getSkillById(id: string): Promise<GetSkillById200 | null> {
 	const rows = await getSkillRows({
-		params: { id: `eq.${id}`, select: 'title,questions', limit: 1 },
+		params: { id: `eq.${id}`, select: 'title,questions,core', limit: 1 },
 	})
 	const row = rows[0]
 
@@ -73,5 +76,9 @@ export async function getSkillById(id: string): Promise<GetSkillById200 | null> 
 		return null
 	}
 
-	return getSkillById200Schema.parse({ title: row.title, questions: row.questions ?? [] })
+	return getSkillById200Schema.parse({
+		title: row.title,
+		questions: row.questions ?? [],
+		core: row.core,
+	})
 }

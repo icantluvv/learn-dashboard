@@ -28,6 +28,12 @@ export interface GetSkillRowsQueryParams {
 	 */
 	difficulty?: string
 	/**
+	 * PostgREST filter expression, e.g. "eq.frontend"
+	 *
+	 * @type string | undefined
+	 */
+	core?: string
+	/**
 	 * One or two PostgREST filter expressions for a range, e.g. "gte.5" and "lte.20"
 	 *
 	 * @type array | undefined

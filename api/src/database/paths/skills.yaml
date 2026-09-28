@@ -32,6 +32,13 @@ get:
       schema:
         type: string
       example: "eq.medium"
+    - name: core
+      in: query
+      required: false
+      description: PostgREST filter expression, e.g. "eq.frontend"
+      schema:
+        type: string
+      example: "eq.frontend"
     - name: questions_count
       in: query
       required: false
@@ -51,7 +58,7 @@ get:
       description: PostgREST column projection
       schema:
         type: string
-      example: "id,title,topic,difficulty,questions,questions_count"
+      example: "id,title,topic,difficulty,questions,questions_count,core"
     - name: order
       in: query
       required: false

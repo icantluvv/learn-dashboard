@@ -11,6 +11,7 @@ function skill(overrides: Partial<GetSkills200[number]> = {}): GetSkills200[numb
 		topic: 'React',
 		difficulty: 'easy',
 		questionsCount: 10,
+		core: 'frontend',
 		...overrides,
 	}
 }

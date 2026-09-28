@@ -10,7 +10,12 @@
 			"items": { "type": "string" },
 			"example": ["Что такое замыкание?", "Как замыкания используются для мемоизации?"]
 		},
-		"questions_count": { "type": "integer", "minimum": 0, "example": 12 }
+		"questions_count": { "type": "integer", "minimum": 0, "example": 12 },
+		"core": {
+			"type": "string",
+			"enum": ["frontend", "backend", "devops", "design"],
+			"example": "frontend"
+		}
 	},
 	"x-readme-ref-name": "SkillRow"
 }

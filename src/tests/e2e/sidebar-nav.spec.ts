@@ -1,6 +1,6 @@
 import { expect, test } from './fixtures'
 
-test('навигация в Sidebar ведёт между главной и каталогом', async ({ page }) => {
+test('навигация в Sidebar ведёт между главной и витриной каталога', async ({ page }) => {
 	await page.goto('/')
 
 	const nav = page.getByRole('navigation', { name: 'Основная навигация' }).first()

@@ -10,6 +10,7 @@ export const getSkillRowsQueryParamsSchema = z.optional(
 		title: z.optional(z.string()),
 		topic: z.optional(z.string()),
 		difficulty: z.optional(z.string()),
+		core: z.optional(z.string()),
 		questions_count: z.optional(z.array(z.string())),
 		select: z.optional(z.string()),
 		order: z.optional(z.string()),

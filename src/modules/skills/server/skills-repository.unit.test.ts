@@ -18,6 +18,7 @@ function makeRow(overrides: Partial<SkillRow> = {}): SkillRow {
 		difficulty: 'medium',
 		questions: ['Что такое замыкание?'],
 		questions_count: 1,
+		core: 'frontend',
 		...overrides,
 	}
 }
@@ -34,7 +35,10 @@ describe('skills-repository', () => {
 			const result = await getSkills()
 
 			expect(getSkillRows).toHaveBeenCalledWith({
-				params: { select: 'id,title,topic,difficulty,questions_count', order: 'title.asc' },
+				params: {
+					select: 'id,title,topic,difficulty,questions_count,core',
+					order: 'title.asc',
+				},
 			})
 			expect(result).toStrictEqual([
 				{
@@ -43,6 +47,7 @@ describe('skills-repository', () => {
 					questionsCount: 1,
 					difficulty: 'medium',
 					topic: 'JavaScript',
+					core: 'frontend',
 				},
 			])
 		})
@@ -55,7 +60,7 @@ describe('skills-repository', () => {
 			expect(getSkillRows).toHaveBeenCalledWith({
 				params: {
 					title: 'ilike.*Замыкания*',
-					select: 'id,title,topic,difficulty,questions_count',
+					select: 'id,title,topic,difficulty,questions_count,core',
 					order: 'title.asc',
 				},
 			})
@@ -70,7 +75,7 @@ describe('skills-repository', () => {
 				params: {
 					topic: 'eq.JavaScript',
 					difficulty: 'eq.medium',
-					select: 'id,title,topic,difficulty,questions_count',
+					select: 'id,title,topic,difficulty,questions_count,core',
 					order: 'title.asc',
 				},
 			})
@@ -84,7 +89,7 @@ describe('skills-repository', () => {
 			expect(getSkillRows).toHaveBeenCalledWith({
 				params: {
 					questions_count: ['gte.5', 'lte.20'],
-					select: 'id,title,topic,difficulty,questions_count',
+					select: 'id,title,topic,difficulty,questions_count,core',
 					order: 'title.asc',
 				},
 			})
@@ -98,7 +103,7 @@ describe('skills-repository', () => {
 			expect(getSkillRows).toHaveBeenCalledWith({
 				params: {
 					questions_count: ['gte.5'],
-					select: 'id,title,topic,difficulty,questions_count',
+					select: 'id,title,topic,difficulty,questions_count,core',
 					order: 'title.asc',
 				},
 			})
@@ -112,7 +117,60 @@ describe('skills-repository', () => {
 			expect(getSkillRows).toHaveBeenCalledWith({
 				params: {
 					questions_count: ['lte.20'],
-					select: 'id,title,topic,difficulty,questions_count',
+					select: 'id,title,topic,difficulty,questions_count,core',
+					order: 'title.asc',
+				},
+			})
+		})
+
+		it('translates core into an eq filter', async () => {
+			getSkillRows.mockResolvedValue([])
+
+			await getSkills({ core: 'frontend' })
+
+			expect(getSkillRows).toHaveBeenCalledWith({
+				params: {
+					core: 'eq.frontend',
+					select: 'id,title,topic,difficulty,questions_count,core',
+					order: 'title.asc',
+				},
+			})
+		})
+
+		it('combines core with the other filters', async () => {
+			getSkillRows.mockResolvedValue([])
+
+			await getSkills({
+				core: 'frontend',
+				search: 'Замыкания',
+				topic: 'JavaScript',
+				difficulty: 'medium',
+				minQuestionsCount: 5,
+				maxQuestionsCount: 20,
+			})
+
+			expect(getSkillRows).toHaveBeenCalledWith({
+				params: {
+					title: 'ilike.*Замыкания*',
+					topic: 'eq.JavaScript',
+					difficulty: 'eq.medium',
+					core: 'eq.frontend',
+					questions_count: ['gte.5', 'lte.20'],
+					select: 'id,title,topic,difficulty,questions_count,core',
+					order: 'title.asc',
+				},
+			})
+		})
+
+		it('does not send a core filter when the core is absent', async () => {
+			getSkillRows.mockResolvedValue([])
+
+			await getSkills({ topic: 'JavaScript' })
+
+			expect(getSkillRows).toHaveBeenCalledWith({
+				params: {
+					topic: 'eq.JavaScript',
+					select: 'id,title,topic,difficulty,questions_count,core',
 					order: 'title.asc',
 				},
 			})
@@ -134,11 +192,11 @@ describe('skills-repository', () => {
 			await getSkillById('js-closures')
 
 			expect(getSkillRows).toHaveBeenCalledWith({
-				params: { id: 'eq.js-closures', select: 'title,questions', limit: 1 },
+				params: { id: 'eq.js-closures', select: 'title,questions,core', limit: 1 },
 			})
 		})
 
-		it('maps the row to title and questions', async () => {
+		it('maps the row to title, questions and core', async () => {
 			getSkillRows.mockResolvedValue([
 				makeRow({ title: 'Замыкания в JavaScript', questions: ['Q1', 'Q2'] }),
 			])
@@ -148,6 +206,7 @@ describe('skills-repository', () => {
 			expect(result).toStrictEqual({
 				title: 'Замыкания в JavaScript',
 				questions: ['Q1', 'Q2'],
+				core: 'frontend',
 			})
 		})
 

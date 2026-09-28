@@ -7,6 +7,8 @@ export interface GetSkillsQueryParams {
 	topic?: string
 	/** @type string | undefined */
 	difficulty?: 'easy' | 'medium' | 'hard'
+	/** @type string | undefined */
+	core?: 'frontend' | 'backend' | 'devops' | 'design'
 	/**
 	 * @type integer | undefined
 	 * @minLength 0
@@ -34,6 +36,8 @@ export type GetSkills200 = {
 	difficulty: 'easy' | 'medium' | 'hard'
 	/** @type string */
 	topic: string
+	/** @type string */
+	core: 'frontend' | 'backend' | 'devops' | 'design'
 }[]
 
 export type GetSkillsQueryResponse = GetSkills200

@@ -24,6 +24,7 @@ describe('get /api/skills', () => {
 				questionsCount: 5,
 				difficulty: 'medium',
 				topic: 'JS',
+				core: 'frontend',
 			},
 		]
 		getSkills.mockResolvedValue(skills)
@@ -36,6 +37,7 @@ describe('get /api/skills', () => {
 			search: undefined,
 			topic: undefined,
 			difficulty: undefined,
+			core: undefined,
 			minQuestionsCount: undefined,
 			maxQuestionsCount: undefined,
 		})
@@ -46,7 +48,7 @@ describe('get /api/skills', () => {
 
 		await GET(
 			new NextRequest(
-				'http://localhost/api/skills?search=Замыкания&topic=JavaScript&difficulty=medium&minQuestionsCount=5&maxQuestionsCount=20',
+				'http://localhost/api/skills?search=Замыкания&topic=JavaScript&difficulty=medium&core=frontend&minQuestionsCount=5&maxQuestionsCount=20',
 			),
 		)
 
@@ -54,6 +56,7 @@ describe('get /api/skills', () => {
 			search: 'Замыкания',
 			topic: 'JavaScript',
 			difficulty: 'medium',
+			core: 'frontend',
 			minQuestionsCount: 5,
 			maxQuestionsCount: 20,
 		})
@@ -72,6 +75,13 @@ describe('get /api/skills', () => {
 		const response = await GET(
 			new NextRequest('http://localhost/api/skills?difficulty=impossible'),
 		)
+
+		expect(response.status).toBe(400)
+		expect(getSkills).not.toHaveBeenCalled()
+	})
+
+	it('returns 400 for an unknown core value', async () => {
+		const response = await GET(new NextRequest('http://localhost/api/skills?core=mobile'))
 
 		expect(response.status).toBe(400)
 		expect(getSkills).not.toHaveBeenCalled()

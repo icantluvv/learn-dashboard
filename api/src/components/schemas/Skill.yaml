@@ -2,6 +2,7 @@ type: object
 required:
   - title
   - questions
+  - core
 properties:
   title:
     type: string
@@ -13,3 +14,11 @@ properties:
     example:
       - "Что такое замыкание?"
       - "Как замыкания используются для мемоизации?"
+  core:
+    type: string
+    enum:
+      - frontend
+      - backend
+      - devops
+      - design
+    example: frontend

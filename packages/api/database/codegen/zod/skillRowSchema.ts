@@ -9,4 +9,5 @@ export const skillRowSchema = z.object({
 	difficulty: z.optional(z.enum(['easy', 'medium', 'hard'])),
 	questions: z.optional(z.array(z.string())),
 	questions_count: z.optional(z.int().check(z.minimum(0))),
+	core: z.optional(z.enum(['frontend', 'backend', 'devops', 'design'])),
 })

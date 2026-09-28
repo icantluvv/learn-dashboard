@@ -26,6 +26,17 @@ get:
           - medium
           - hard
       example: medium
+    - name: core
+      in: query
+      required: false
+      schema:
+        type: string
+        enum:
+          - frontend
+          - backend
+          - devops
+          - design
+      example: frontend
     - name: minQuestionsCount
       in: query
       required: false
@@ -55,6 +66,7 @@ get:
                 - questionsCount
                 - difficulty
                 - topic
+                - core
               properties:
                 id:
                   type: string
@@ -76,3 +88,11 @@ get:
                 topic:
                   type: string
                   example: "JavaScript"
+                core:
+                  type: string
+                  enum:
+                    - frontend
+                    - backend
+                    - devops
+                    - design
+                  example: frontend

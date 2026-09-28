@@ -7,6 +7,7 @@ export const getSkillsQueryParamsSchema = z.optional(
 		search: z.optional(z.string()),
 		topic: z.optional(z.string()),
 		difficulty: z.optional(z.enum(['easy', 'medium', 'hard'])),
+		core: z.optional(z.enum(['frontend', 'backend', 'devops', 'design'])),
 		minQuestionsCount: z.optional(z.int().check(z.minimum(0))),
 		maxQuestionsCount: z.optional(z.int().check(z.minimum(0))),
 	}),
@@ -20,6 +21,7 @@ export const getSkills200Schema = z.array(
 		questionsCount: z.int().check(z.minimum(0)),
 		difficulty: z.enum(['easy', 'medium', 'hard']),
 		topic: z.string(),
+		core: z.enum(['frontend', 'backend', 'devops', 'design']),
 	}),
 )
 

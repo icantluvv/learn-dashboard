@@ -1,5 +1,6 @@
 import type { RequestConfig } from './client'
 import type {
+	GetCoresQueryResponse,
 	GetSkillByIdQueryResponse,
 	GetSkillsQueryParams,
 	GetSkillsQueryResponse,
@@ -11,7 +12,43 @@ export type BaseMockScenarioName = 'default'
 export const activeBaseMockScenario: BaseMockScenarioName = 'default'
 export const notificationsMockScenario: BaseMockScenarioName = 'default'
 
-const skillCards: GetSkillsQueryResponse = [
+const catalogCores: GetCoresQueryResponse = [
+	{
+		type: 'frontend',
+		name: 'Frontend',
+		description: 'Вёрстка, JavaScript, фреймворки и браузерная платформа',
+		icon: 'code',
+		isAvailable: true,
+	},
+	{
+		type: 'backend',
+		name: 'Backend',
+		description: 'Серверная логика, базы данных, API и интеграции',
+		icon: 'server',
+		isAvailable: false,
+	},
+	{
+		type: 'devops',
+		name: 'DevOps',
+		description: 'Контейнеры, CI/CD, инфраструктура и наблюдаемость',
+		icon: 'ship',
+		isAvailable: false,
+	},
+	{
+		type: 'design',
+		name: 'Design',
+		description: 'Интерфейсы, дизайн-системы и пользовательские сценарии',
+		icon: 'palette',
+		isAvailable: false,
+	},
+]
+
+// Mock-каталог пока состоит только из фронтенд-навыков — как и реальная БД после миграции,
+// проставившей `core = 'frontend'` всем существующим строкам. Направление добавляется одним
+// местом, чтобы seed ниже не повторял его 97 раз.
+type SkillCardSeed = Omit<GetSkillsQueryResponse[number], 'core'>
+
+const frontendSkillCards: SkillCardSeed[] = [
 	{
 		id: 'skill-01',
 		title: 'Авторизация и аутентификация',
@@ -693,6 +730,11 @@ const skillCards: GetSkillsQueryResponse = [
 	},
 ]
 
+const skillCards: GetSkillsQueryResponse = frontendSkillCards.map((skill) => ({
+	...skill,
+	core: 'frontend',
+}))
+
 function createSkillQuestions(skill: GetSkillsQueryResponse[number]): string[] {
 	return Array.from(
 		{ length: skill.questionsCount },
@@ -703,7 +745,7 @@ function createSkillQuestions(skill: GetSkillsQueryResponse[number]): string[] {
 const skillQuestions: Record<string, GetSkillByIdQueryResponse> = Object.fromEntries(
 	skillCards.map((skill) => [
 		skill.id,
-		{ title: skill.title, questions: createSkillQuestions(skill) },
+		{ title: skill.title, questions: createSkillQuestions(skill), core: skill.core },
 	]),
 )
 
@@ -740,6 +782,10 @@ function filterSkillCards(params: GetSkillsQueryParams | undefined): GetSkillsQu
 			return false
 		}
 
+		if (params.core != null && skill.core !== params.core) {
+			return false
+		}
+
 		if (params.minQuestionsCount != null && skill.questionsCount < params.minQuestionsCount) {
 			return false
 		}
@@ -756,6 +802,11 @@ function filterSkillCards(params: GetSkillsQueryParams | undefined): GetSkillsQu
 // Each route matches a method + URL pattern and returns stubbed data via `create`.
 const mockScenarios = {
 	default: [
+		{
+			method: 'GET',
+			pattern: /^\/api\/cores$/,
+			create: () => catalogCores,
+		},
 		{
 			method: 'GET',
 			pattern: /^\/api\/skills$/,

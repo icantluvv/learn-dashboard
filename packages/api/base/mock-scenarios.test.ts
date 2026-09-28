@@ -73,6 +73,37 @@ describe('mock filtering for GET /api/skills', () => {
 		).toBe(true)
 	})
 
+	it('returns every skill with a core', () => {
+		const skills = getSkills()
+
+		expect(skills.every((skill) => skill.core === 'frontend')).toBe(true)
+	})
+
+	it('filters by exact core match', () => {
+		const skills = getSkills({ core: 'frontend' })
+
+		expect(skills.length).toBeGreaterThan(0)
+		expect(skills.every((skill) => skill.core === 'frontend')).toBe(true)
+	})
+
+	it('returns an empty list for a core without skills', () => {
+		expect(getSkills({ core: 'backend' })).toStrictEqual([])
+	})
+
+	it('combines core with the other filters', () => {
+		const skills = getSkills({ core: 'frontend', topic: 'JavaScript', difficulty: 'easy' })
+
+		expect(skills.length).toBeGreaterThan(0)
+		expect(
+			skills.every(
+				(skill) =>
+					skill.core === 'frontend' &&
+					skill.topic === 'JavaScript' &&
+					skill.difficulty === 'easy',
+			),
+		).toBe(true)
+	})
+
 	it('returns an empty list when nothing matches', () => {
 		const skills = getSkills({ search: 'no such skill exists' })
 
@@ -88,6 +119,7 @@ describe('mock detail for GET /api/skills/:id', () => {
 		expect(skill.questions).toHaveLength(14)
 		expect(skill.questions[0]).toBe('Вопрос 1 по теме «Авторизация и аутентификация»')
 		expect(skill.questions[13]).toBe('Вопрос 14 по теме «Авторизация и аутентификация»')
+		expect(skill.core).toBe('frontend')
 	})
 
 	it('throws a 404-shaped error for an unknown skill id', () => {

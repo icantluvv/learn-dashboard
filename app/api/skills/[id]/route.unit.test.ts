@@ -16,7 +16,11 @@ describe('get /api/skills/[id]', () => {
 	})
 
 	it('returns the skill as json', async () => {
-		const skill: GetSkillById200 = { title: 'Замыкания', questions: ['Q1', 'Q2'] }
+		const skill: GetSkillById200 = {
+			title: 'Замыкания',
+			questions: ['Q1', 'Q2'],
+			core: 'frontend',
+		}
 		getSkillById.mockResolvedValue(skill)
 
 		const response = await GET(new Request('http://localhost/api/skills/js-closures'), {

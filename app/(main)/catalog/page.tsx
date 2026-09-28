@@ -1,30 +1,14 @@
-import { getSkillsQueryOptions } from '@repo/api'
-import { dehydrate, HydrationBoundary } from '@tanstack/react-query'
+import { CoreBanners } from '@/(main)/catalog/_components/core-banners'
 
-import { getSkills } from '#/modules/skills/server/skills-repository'
-import { getQueryClient } from '#/utils/get-query-client'
-import { Catalog } from '@/(main)/catalog/_components/catalog'
-import { SidebarFilters } from '@/(main)/catalog/_components/sidebar-filters'
-
-export default async function CatalogPage() {
-	const queryClient = getQueryClient()
-
-	try {
-		const skills = await getSkills()
-		queryClient.setQueryData(getSkillsQueryOptions().queryKey, skills)
-	} catch {
-		// SSR warm-up is best-effort — the client hook fetches on hydration if this fails.
-	}
-
+export default function CatalogPage() {
 	return (
-		<HydrationBoundary state={dehydrate(queryClient)}>
-			<div className={`
-				page-wrapper v-stack gap-4
-				md:flex-row md:gap-12
-			`}>
-				<SidebarFilters />
-				<Catalog />
-			</div>
-		</HydrationBoundary>
+		<div className="page-wrapper v-stack gap-6">
+			<section className="v-stack gap-2">
+				<h1 className="text-3xl font-semibold text-heading">Направление</h1>
+				<p className="text-base text-muted-foreground">Выбери из списка для изучения</p>
+			</section>
+
+			<CoreBanners />
+		</div>
 	)
 }

@@ -76,7 +76,11 @@ export function isAuthPath(url: string | undefined) {
 
 export function isSameOriginPath(url: string | undefined) {
 	return (
-		url != null && (url === '/api/skills' || url.startsWith('/api/skills/') || isAuthPath(url))
+		url != null &&
+		(url === '/api/cores' ||
+			url === '/api/skills' ||
+			url.startsWith('/api/skills/') ||
+			isAuthPath(url))
 	)
 }
 
