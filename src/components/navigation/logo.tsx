@@ -1,11 +1,13 @@
 import Image from 'next/image'
 import Link from 'next/link'
 
+import { BRAND_NAME } from '#/seo'
+
 export function Logo() {
 	return (
 		<Link
 			href="/"
-			aria-label="Learn Frontend — на главную"
+			aria-label={`${BRAND_NAME} — на главную`}
 			className="inline-flex items-center gap-2"
 		>
 			<Image

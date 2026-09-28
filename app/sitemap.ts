@@ -1,22 +1,37 @@
 import type { MetadataRoute } from 'next'
 
-import { clientEnvironment } from '#/env/client'
+import type { RoutePath } from '#/seo'
 
-type PublicSitemapPath = `/${string}`
+import { SKILL_CORES } from '#/constants/skill-cores'
+import { absoluteUrl } from '#/seo'
 
-export const PUBLIC_SITEMAP_PATHS = [
-	'/',
-	'/login',
-	'/registration',
-] as const satisfies readonly PublicSitemapPath[]
+interface PublicSitemapEntry {
+	path: RoutePath
+	priority: number
+}
+
+/**
+ * Публичные адреса приложения. Приватные маршруты (`/profile`) сюда не попадают — они закрыты
+ * `noindex` и не должны предлагаться поисковику.
+ *
+ * Направления выводятся из `SKILL_CORES`, поэтому новое направление попадает в карту сайта без
+ * правки этого файла.
+ */
+export const PUBLIC_SITEMAP_ENTRIES: readonly PublicSitemapEntry[] = [
+	{ path: '/', priority: 1 },
+	{ path: '/catalog', priority: 0.8 },
+	...SKILL_CORES.map((core) => ({ path: `/catalog/${core}` as RoutePath, priority: 0.8 })),
+	{ path: '/sign-in', priority: 0.5 },
+	{ path: '/sign-up', priority: 0.5 },
+]
 
 export default function sitemap(): MetadataRoute.Sitemap {
 	const lastModified = new Date()
 
-	return PUBLIC_SITEMAP_PATHS.map((path) => ({
+	return PUBLIC_SITEMAP_ENTRIES.map(({ path, priority }) => ({
 		changeFrequency: 'yearly',
 		lastModified,
-		priority: path === '/' ? 1 : 0.7,
-		url: new URL(path, clientEnvironment.NEXT_PUBLIC_FRONT_URL).toString(),
+		priority,
+		url: absoluteUrl(path),
 	}))
 }

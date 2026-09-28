@@ -3,6 +3,7 @@ import { render } from 'vitest-browser-react'
 import { page } from 'vitest/browser'
 
 import { ThemeProvider } from '#/components/providers/theme-provider'
+import { BRAND_NAME } from '#/seo'
 import { nextNavigationMock, resetNextNavigationMock } from '#/tests/mocks/next-navigation'
 
 vi.mock('#/components/auth-status', () => ({
@@ -27,7 +28,9 @@ describe('<Sidebar />', () => {
 			</ThemeProvider>,
 		)
 
-		await expect.element(view.getByRole('link', { name: /Learn Frontend/ })).toBeVisible()
+		await expect
+			.element(view.getByRole('link', { name: `${BRAND_NAME} — на главную` }))
+			.toBeVisible()
 		await expect
 			.element(view.getByRole('link', { name: 'Главная' }))
 			.toHaveAttribute('href', '/')

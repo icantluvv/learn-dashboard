@@ -4,6 +4,7 @@ import type { SkillRow } from '@repo/api/database'
 import { getSkillById200Schema } from '@repo/api/base/codegen/zod/skillsController/getSkillByIdSchema'
 import { getSkills200Schema } from '@repo/api/base/codegen/zod/skillsController/getSkillsSchema'
 import { getSkillRows } from '@repo/api/database'
+import { cache } from 'react'
 
 import 'server-only'
 
@@ -66,7 +67,11 @@ export async function getSkills(filters: GetSkillsQueryParams = {}): Promise<Get
 	return getSkills200Schema.parse(rows.map((row) => toSkillCard(row)))
 }
 
-export async function getSkillById(id: string): Promise<GetSkillById200 | null> {
+/**
+ * Обёрнут в `cache()`: навык нужен и `generateMetadata`, и самой странице, а это два независимых
+ * входа фреймворка. Без мемоизации один запрос страницы давал бы два обращения к бэкенду.
+ */
+export const getSkillById = cache(async (id: string): Promise<GetSkillById200 | null> => {
 	const rows = await getSkillRows({
 		params: { id: `eq.${id}`, select: 'title,questions,core', limit: 1 },
 	})
@@ -81,4 +86,4 @@ export async function getSkillById(id: string): Promise<GetSkillById200 | null> 
 		questions: row.questions ?? [],
 		core: row.core,
 	})
-}
+})

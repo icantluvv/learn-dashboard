@@ -1,9 +1,12 @@
+import type { Metadata } from 'next'
+
 import { getSkillByIdQueryOptions } from '@repo/api'
 import { dehydrate, HydrationBoundary } from '@tanstack/react-query'
 import { notFound } from 'next/navigation'
 
 import { resolveSkillCore } from '#/constants/skill-cores'
 import { getSkillById } from '#/modules/skills/server/skills-repository'
+import { buildPageMetadata, getCoreSeoCopy } from '#/seo'
 import { getQueryClient } from '#/utils/get-query-client'
 import {
 	BackButton,
@@ -15,6 +18,51 @@ import { isSkillInCore } from './skill-route'
 
 interface CatalogSkillPageProps {
 	params: Promise<{ core: string; id: string }>
+}
+
+function buildSkillDescription(title: string, questionsCount: number): string {
+	return questionsCount > 0
+		? `Навык «${title}»: ${questionsCount} вопросов для самопроверки перед собеседованием.`
+		: `Навык «${title}»: темы и материалы для подготовки к собеседованию.`
+}
+
+export async function generateMetadata({ params }: CatalogSkillPageProps): Promise<Metadata> {
+	const { core: coreSegment, id } = await params
+	const core = resolveSkillCore(coreSegment)
+
+	if (core == null) {
+		notFound()
+	}
+
+	const corePath = `/catalog/${core}` as const
+	const coreCopy = getCoreSeoCopy(core)
+
+	let skill: Awaited<ReturnType<typeof getSkillById>>
+
+	try {
+		// `getSkillById` мемоизирован через `cache()`, поэтому этот вызов не добавляет запрос
+		// к тому, который делает сама страница.
+		skill = await getSkillById(id)
+	} catch {
+		// Страница в этом случае рендерит `SkillDetailError`; метаданные не должны ронять рендер,
+		// поэтому отдаём валидный fallback направления.
+		return buildPageMetadata({
+			title: coreCopy.title,
+			description: coreCopy.description,
+			path: corePath,
+			noIndex: true,
+		})
+	}
+
+	if (skill == null || !isSkillInCore(skill.core, core)) {
+		notFound()
+	}
+
+	return buildPageMetadata({
+		title: skill.title,
+		description: buildSkillDescription(skill.title, skill.questions.length),
+		path: `${corePath}/${id}`,
+	})
 }
 
 export default async function CatalogSkillPage({ params }: CatalogSkillPageProps) {

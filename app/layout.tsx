@@ -7,9 +7,18 @@ import { NuqsAdapter } from 'nuqs/adapters/next/app'
 import { QueryProvider } from '#/components/providers/query-provider'
 import { ThemeProvider } from '#/components/providers/theme-provider'
 import { Toaster } from '#/components/toaster'
+import { clientEnvironment } from '#/env/client'
 import { ttFors } from '#/fonts/ttFors'
 import { SsrWidthProvider } from '#/hooks/use-ssr-width'
 import { getSsrWidthFromUserAgent } from '#/lib/get-ssr-width-from-user-agent'
+import {
+	BRAND_NAME,
+	CONTENT_LANGUAGE,
+	DEFAULT_TITLE,
+	OG_LOCALE,
+	SITE_DESCRIPTION,
+	TITLE_TEMPLATE,
+} from '#/seo'
 
 import './globals.css'
 
@@ -22,11 +31,32 @@ export const viewport: Viewport = {
 }
 
 export const metadata: Metadata = {
-	title: 'Learn Frontend',
-	description: 'Service for learning frontend development',
+	// Базовый адрес, от которого Next.js разворачивает относительные `canonical` и `og:url`
+	// страниц, собранные `buildPageMetadata`.
+	metadataBase: new URL(clientEnvironment.NEXT_PUBLIC_FRONT_URL),
+	// `template` не применяется к сегменту, который его объявил, поэтому `default` обязателен.
+	title: {
+		default: DEFAULT_TITLE,
+		template: TITLE_TEMPLATE,
+	},
+	description: SITE_DESCRIPTION,
+	applicationName: BRAND_NAME,
+	openGraph: {
+		type: 'website',
+		siteName: BRAND_NAME,
+		locale: OG_LOCALE,
+		title: DEFAULT_TITLE,
+		description: SITE_DESCRIPTION,
+		url: '/',
+	},
+	twitter: {
+		card: 'summary',
+		title: DEFAULT_TITLE,
+		description: SITE_DESCRIPTION,
+	},
 	appleWebApp: {
 		capable: true,
-		title: 'Learn Frontend',
+		title: BRAND_NAME,
 		statusBarStyle: 'black-translucent',
 	},
 	icons: {
@@ -49,7 +79,7 @@ export default async function RootLayout({
 
 	return (
 		<html
-			lang="en"
+			lang={CONTENT_LANGUAGE}
 			data-scroll-behavior="smooth"
 			className={ttFors.variable}
 			suppressHydrationWarning

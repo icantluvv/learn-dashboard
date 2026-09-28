@@ -1,4 +1,13 @@
+import { buildPageMetadata } from '#/seo'
 import { CoreBanners } from '@/(main)/catalog/_components/core-banners'
+
+export const metadata = buildPageMetadata({
+	title: 'Направления обучения',
+	description:
+		'Выберите направление подготовки — Frontend, Backend, DevOps или Design — и переходите ' +
+		'к навыкам, темам и вопросам для самопроверки.',
+	path: '/catalog',
+})
 
 export default function CatalogPage() {
 	return (

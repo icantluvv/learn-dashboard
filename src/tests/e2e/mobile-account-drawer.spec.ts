@@ -1,3 +1,7 @@
+// Импорт напрямую из `brand`, а не из барреля `#/seo`: баррель тянет `urls.ts` с валидацией
+// client-env, а Playwright-спеки выполняются вне окружения Next.js и переменные не загружают.
+import { BRAND_NAME } from '#/seo/brand'
+
 import { expect, test } from './fixtures'
 
 test.beforeEach(async ({ page }) => {
@@ -40,7 +44,7 @@ test('гость видит в Drawer логотип, кнопку входа и
 		.getByRole('button', { name: 'Меню' })
 		.click()
 
-	await expect(page.getByRole('link', { name: /Learn Frontend/ })).toBeVisible()
+	await expect(page.getByRole('link', { name: `${BRAND_NAME} — на главную` })).toBeVisible()
 
 	const signInLink = page.getByRole('link', { name: 'Войти' })
 	await expect(signInLink).toHaveAttribute('href', '/sign-in')

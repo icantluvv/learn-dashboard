@@ -1,3 +1,7 @@
+// Импорт напрямую из `brand`, а не из барреля `#/seo`: баррель тянет `urls.ts` с валидацией
+// client-env, а Playwright-спеки выполняются вне окружения Next.js и переменные не загружают.
+import { BRAND_NAME } from '#/seo/brand'
+
 import { expect, test } from './fixtures'
 
 test('навигация в Sidebar ведёт между главной и витриной каталога', async ({ page }) => {
@@ -21,7 +25,7 @@ test('серверная разметка содержит десктопный 
 	const html = await response.text()
 
 	expect(html).toContain('Основная навигация')
-	expect(html).toContain('Learn Frontend — на главную')
+	expect(html).toContain(`${BRAND_NAME} — на главную`)
 	expect(html.match(/Основная навигация/g)).toHaveLength(2)
 	expect(html).not.toContain('<header')
 })

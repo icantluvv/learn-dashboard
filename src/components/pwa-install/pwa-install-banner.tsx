@@ -3,6 +3,8 @@
 import { Button } from '@repo/core'
 import { XIcon } from 'lucide-react'
 
+import { BRAND_NAME } from '#/seo'
+
 import { useInstallPrompt } from './use-install-prompt'
 
 export function PwaInstallBanner() {
@@ -34,7 +36,7 @@ export function PwaInstallBanner() {
 
 				{mode === 'prompt' ? (
 					<p className="text-sm text-muted-foreground">
-						Добавьте Learn Frontend на домашний экран для быстрого доступа.
+						Добавьте {BRAND_NAME} на домашний экран для быстрого доступа.
 					</p>
 				) : (
 					<p className="text-sm text-muted-foreground">

@@ -1,9 +1,11 @@
 import type { MetadataRoute } from 'next'
 
+import { BRAND_NAME, BRAND_SHORT_NAME, CONTENT_LANGUAGE, SITE_DESCRIPTION } from '#/seo'
+
 export default function manifest(): MetadataRoute.Manifest {
 	return {
 		background_color: '#1c2637',
-		description: 'Сервис для подготовки по фронтенду: навыки, темы и вопросы для самопроверки',
+		description: SITE_DESCRIPTION,
 		display: 'standalone',
 		icons: [
 			{
@@ -26,11 +28,11 @@ export default function manifest(): MetadataRoute.Manifest {
 			},
 		],
 		id: '/',
-		lang: 'ru',
-		name: 'Learn Frontend',
+		lang: CONTENT_LANGUAGE,
+		name: BRAND_NAME,
 		orientation: 'portrait',
 		scope: '/',
-		short_name: 'Learn FE',
+		short_name: BRAND_SHORT_NAME,
 		start_url: '/',
 		theme_color: '#1c2637',
 	}

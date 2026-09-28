@@ -3,6 +3,7 @@ import type { CoreRow } from '@repo/api/database'
 
 import { getCores200Schema } from '@repo/api'
 import { getCoreRows } from '@repo/api/database'
+import { cache } from 'react'
 
 import 'server-only'
 
@@ -29,7 +30,8 @@ export async function getCores(): Promise<GetCores200> {
 	return getCores200Schema.parse(rows.map((row) => toCore(row)))
 }
 
-export async function getCoreByType(type: GetCores200[number]['type']) {
+/** Обёрнут в `cache()` по той же причине, что и `getSkillById`: см. комментарий там. */
+export const getCoreByType = cache(async (type: GetCores200[number]['type']) => {
 	const rows = await getCoreRows({
 		params: {
 			type: `eq.${type}`,
@@ -44,4 +46,4 @@ export async function getCoreByType(type: GetCores200[number]['type']) {
 	}
 
 	return getCores200Schema.parse([toCore(row)])[0]!
-}
+})
