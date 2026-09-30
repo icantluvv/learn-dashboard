@@ -2,22 +2,18 @@
 
 import type { CurrentUser } from '#/lib/auth/get-session'
 
-import { getAuthMeQueryKey } from '@repo/api'
 import { Button } from '@repo/core'
-import { useQueryClient } from '@tanstack/react-query'
 import Image from 'next/image'
-import { useRouter } from 'next/navigation'
 
+import { useSignOut } from '#/components/auth-status/use-sign-out'
 import { getAvatarDisplayUrl } from '#/lib/auth/avatar-url'
-import { authClient } from '#/lib/auth/client'
 
 interface ProfileAuthenticatedProps {
 	user: CurrentUser
 }
 
 export function ProfileAuthenticated({ user }: ProfileAuthenticatedProps) {
-	const queryClient = useQueryClient()
-	const router = useRouter()
+	const signOut = useSignOut()
 
 	return (
 		<div className="v-stack items-center gap-6 text-center">
@@ -33,11 +29,7 @@ export function ProfileAuthenticated({ user }: ProfileAuthenticatedProps) {
 			<Button
 				variant="outline"
 				onClick={() => {
-					void (async () => {
-						await authClient.signOut()
-						queryClient.removeQueries({ queryKey: getAuthMeQueryKey() })
-						router.refresh()
-					})()
+					void signOut()
 				}}
 			>
 				Выйти

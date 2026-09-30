@@ -37,6 +37,9 @@ describe('<Sidebar />', () => {
 		await expect
 			.element(view.getByRole('link', { name: 'Каталог' }))
 			.toHaveAttribute('href', '/catalog')
+		await expect
+			.element(view.getByRole('link', { name: 'Профиль' }))
+			.toHaveAttribute('href', '/profile')
 		await expect.element(view.getByTestId('account-slot')).toBeVisible()
 		await expect.element(view.getByRole('button', { name: 'Переключить тему' })).toBeVisible()
 	})
@@ -56,5 +59,15 @@ describe('<Sidebar />', () => {
 		await expect
 			.element(view.getByRole('link', { name: 'Главная' }))
 			.not.toHaveAttribute('aria-current')
+	})
+
+	it('не содержит кнопки выхода из аккаунта', async () => {
+		const view = await render(
+			<ThemeProvider>
+				<Sidebar />
+			</ThemeProvider>,
+		)
+
+		await expect.element(view.getByRole('button', { name: 'Выйти' })).not.toBeInTheDocument()
 	})
 })

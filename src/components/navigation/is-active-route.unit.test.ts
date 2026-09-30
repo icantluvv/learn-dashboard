@@ -13,6 +13,10 @@ describe('isActiveRoute', () => {
 		['/catalog/abc/def', '/catalog', true],
 		['/catalogue', '/catalog', false],
 		['/sign-in', '/catalog', false],
+		['/profile', '/profile', true],
+		['/profile', '/', false],
+		['/', '/profile', false],
+		['/catalog', '/profile', false],
 	])('isActiveRoute(%s, %s) === %s', (pathname, href, expected) => {
 		expect(isActiveRoute(pathname, href)).toBe(expected)
 	})

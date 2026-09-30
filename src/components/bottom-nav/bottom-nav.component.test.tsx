@@ -19,7 +19,7 @@ describe('<BottomNav />', () => {
 		getAuthMe.mockRejectedValue(new Error('Unauthorized', { cause: { status: 401 } }))
 	})
 
-	it('содержит ссылки на / и /catalog, и кнопку «Меню»', async () => {
+	it('содержит ссылки на /, /catalog и /profile, и кнопку «Меню»', async () => {
 		const view = await renderWithProviders(<BottomNav />)
 
 		await expect
@@ -28,7 +28,21 @@ describe('<BottomNav />', () => {
 		await expect
 			.element(view.getByRole('link', { name: 'Каталог' }))
 			.toHaveAttribute('href', '/catalog')
+		await expect
+			.element(view.getByRole('link', { name: 'Профиль' }))
+			.toHaveAttribute('href', '/profile')
 		await expect.element(view.getByRole('button', { name: 'Меню' })).toBeVisible()
+	})
+
+	it('подсвечивает «Профиль» на /profile, не затрагивая кнопку «Меню»', async () => {
+		nextNavigationMock.pathname = '/profile'
+
+		const view = await renderWithProviders(<BottomNav />)
+
+		await expect
+			.element(view.getByRole('link', { name: 'Профиль' }))
+			.toHaveAttribute('aria-current', 'page')
+		await expect.element(view.getByRole('button', { name: 'Меню' })).not.toHaveAttribute('href')
 	})
 
 	it('подсвечивает активный раздел', async () => {
@@ -41,6 +55,9 @@ describe('<BottomNav />', () => {
 			.toHaveAttribute('aria-current', 'page')
 		await expect
 			.element(view.getByRole('link', { name: 'Главная' }))
+			.not.toHaveAttribute('aria-current')
+		await expect
+			.element(view.getByRole('link', { name: 'Профиль' }))
 			.not.toHaveAttribute('aria-current')
 	})
 
@@ -55,6 +72,23 @@ describe('<BottomNav />', () => {
 		await expect
 			.element(view.getByRole('link', { name: 'Каталог' }))
 			.not.toHaveAttribute('aria-current')
+	})
+
+	it('не показывает кнопку выхода из аккаунта', async () => {
+		getAuthMe.mockResolvedValue({
+			id: 'user-1',
+			name: 'Сергей',
+			email: 'user@example.com',
+			gender: 'male',
+			age: 28,
+		})
+
+		const view = await renderWithProviders(<BottomNav />)
+
+		await view.getByRole('button', { name: 'Меню' }).click()
+
+		await expect.element(view.getByText('Сергей', { exact: true })).toBeVisible()
+		await expect.element(view.getByRole('button', { name: 'Выйти' })).not.toBeInTheDocument()
 	})
 
 	it('кнопка «Меню» открывает AccountDrawer вместо перехода по ссылке', async () => {

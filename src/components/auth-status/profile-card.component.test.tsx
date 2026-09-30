@@ -1,18 +1,9 @@
-import type { ReactNode } from 'react'
-
 import type { CurrentUser } from '#/lib/auth/get-session'
 
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import { render } from 'vitest-browser-react'
 
-const signOut = vi.fn(async () => {})
-
-vi.mock('#/lib/auth/client', () => ({
-	authClient: { signOut: async () => signOut() },
-}))
-
-const { ProfileCard } = await import('./profile-card')
+import { ProfileCard } from './profile-card'
 
 const user: CurrentUser = {
 	id: 'user-1',
@@ -22,58 +13,17 @@ const user: CurrentUser = {
 	age: 28,
 }
 
-function withQueryClient(children: ReactNode) {
-	const queryClient = new QueryClient({
-		defaultOptions: { queries: { retry: false, gcTime: 0 } },
-	})
-
-	return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-}
-
 describe('<ProfileCard />', () => {
-	beforeEach(() => {
-		signOut.mockClear()
-	})
-
-	it('сразу показывает имя, email и кнопку выхода без предварительного клика', async () => {
-		const view = await render(withQueryClient(<ProfileCard user={user} />))
+	it('показывает имя и email пользователя', async () => {
+		const view = await render(<ProfileCard user={user} />)
 
 		await expect.element(view.getByText('Сергей')).toBeVisible()
 		await expect.element(view.getByText('user@example.com', { exact: true })).toBeVisible()
-		await expect.element(view.getByRole('button', { name: 'Выйти' })).toBeVisible()
 	})
 
-	it('вызывает выход по клику на кнопку выхода', async () => {
-		const view = await render(withQueryClient(<ProfileCard user={user} />))
+	it('не содержит действия выхода из аккаунта', async () => {
+		const view = await render(<ProfileCard user={user} />)
 
-		await view.getByRole('button', { name: 'Выйти' }).click()
-
-		await vi.waitFor(() => {
-			expect(signOut).toHaveBeenCalledTimes(1)
-		})
-	})
-
-	it('показывает лоадер на месте иконки и блокирует кнопку, пока запрос выхода не завершён', async () => {
-		let resolveSignOut: () => void = () => {}
-
-		signOut.mockImplementationOnce(
-			async () =>
-				new Promise<void>((resolve) => {
-					resolveSignOut = resolve
-				}),
-		)
-
-		const view = await render(withQueryClient(<ProfileCard user={user} />))
-		const trigger = view.getByRole('button', { name: 'Выйти' })
-
-		await trigger.click()
-
-		await expect.element(view.getByRole('status', { name: 'Загрузка' })).toBeVisible()
-		await expect.element(trigger).toBeDisabled()
-
-		resolveSignOut()
-
-		await expect.element(view.getByRole('status', { name: 'Загрузка' })).not.toBeInTheDocument()
-		await expect.element(trigger).toBeEnabled()
+		await expect.element(view.getByRole('button', { name: 'Выйти' })).not.toBeInTheDocument()
 	})
 })

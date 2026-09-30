@@ -18,6 +18,28 @@ test('навигация в Sidebar ведёт между главной и ви
 	await expect(nav.getByRole('link', { name: 'Главная' })).not.toHaveAttribute('aria-current')
 })
 
+test('навигация в Sidebar ведёт на страницу профиля', async ({ page }) => {
+	await page.setViewportSize({ width: 1280, height: 800 })
+	await page.goto('/')
+
+	const nav = page.getByRole('navigation', { name: 'Основная навигация' }).first()
+
+	await nav.getByRole('link', { name: 'Профиль' }).click()
+
+	await expect(page).toHaveURL('/profile')
+	await expect(nav.getByRole('link', { name: 'Профиль' })).toHaveAttribute('aria-current', 'page')
+	await expect(nav.getByRole('link', { name: 'Главная' })).not.toHaveAttribute('aria-current')
+})
+
+test('оболочка приложения не предлагает выход из аккаунта', async ({ page }) => {
+	await page.setViewportSize({ width: 1280, height: 800 })
+	await page.goto('/')
+
+	await expect(page.locator('aside').first().getByRole('button', { name: 'Выйти' })).toHaveCount(
+		0,
+	)
+})
+
 test('серверная разметка содержит десктопный Sidebar и нижнюю навигацию, но не Header', async ({
 	request,
 }) => {

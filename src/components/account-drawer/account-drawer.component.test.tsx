@@ -6,14 +6,9 @@ import { resetNextNavigationMock } from '#/tests/mocks/next-navigation'
 import { renderWithProviders } from '#/tests/render'
 
 const getAuthMe = vi.fn<() => Promise<GetAuthMe200>>()
-const signOut = vi.fn(async () => {})
 
 vi.mock('@repo/api/base/codegen/clients/meController/getAuthMe', () => ({
 	getAuthMe: async () => getAuthMe(),
-}))
-
-vi.mock('#/lib/auth/client', () => ({
-	authClient: { signOut: async () => signOut() },
 }))
 
 const { AccountDrawer } = await import('./account-drawer')
@@ -29,7 +24,6 @@ const user: GetAuthMe200 = {
 describe('<AccountDrawer />', () => {
 	beforeEach(() => {
 		resetNextNavigationMock()
-		signOut.mockClear()
 	})
 
 	it('гостю показывает кнопку входа', async () => {
@@ -45,7 +39,7 @@ describe('<AccountDrawer />', () => {
 		await expect.element(view.getByRole('button', { name: 'Выйти' })).not.toBeInTheDocument()
 	})
 
-	it('авторизованному пользователю показывает профиль и кнопку выхода', async () => {
+	it('авторизованному пользователю показывает профиль без кнопки выхода', async () => {
 		getAuthMe.mockResolvedValue(user)
 
 		const view = await renderWithProviders(<AccountDrawer />)
@@ -53,7 +47,8 @@ describe('<AccountDrawer />', () => {
 		await view.getByRole('button', { name: 'Меню' }).click()
 
 		await expect.element(view.getByText('Сергей', { exact: true })).toBeVisible()
-		await expect.element(view.getByRole('button', { name: 'Выйти' })).toBeVisible()
+		await expect.element(view.getByText('user@example.com', { exact: true })).toBeVisible()
+		await expect.element(view.getByRole('button', { name: 'Выйти' })).not.toBeInTheDocument()
 		await expect.element(view.getByRole('link', { name: 'Войти' })).not.toBeInTheDocument()
 	})
 
@@ -65,18 +60,5 @@ describe('<AccountDrawer />', () => {
 		await view.getByRole('button', { name: 'Меню' }).click()
 
 		await expect.element(view.getByRole('button', { name: 'Переключить тему' })).toBeVisible()
-	})
-
-	it('выполняет выход из аккаунта', async () => {
-		getAuthMe.mockResolvedValue(user)
-
-		const view = await renderWithProviders(<AccountDrawer />)
-
-		await view.getByRole('button', { name: 'Меню' }).click()
-		await view.getByRole('button', { name: 'Выйти' }).click()
-
-		await vi.waitFor(() => {
-			expect(signOut).toHaveBeenCalledTimes(1)
-		})
 	})
 })

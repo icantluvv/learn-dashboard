@@ -1,28 +1,19 @@
 'use client'
 
-import {
-	Button,
-	buttonVariants,
-	Drawer,
-	DrawerClose,
-	DrawerContent,
-	DrawerTrigger,
-} from '@repo/core'
-import { ArrowLeftIcon, LogOutIcon } from 'lucide-react'
+import { buttonVariants, Drawer, DrawerClose, DrawerContent, DrawerTrigger } from '@repo/core'
+import { ArrowLeftIcon } from 'lucide-react'
 import Link from 'next/link'
 
 import { AccountSummary } from '#/components/auth-status/account-summary'
 import { useCurrentUser } from '#/components/auth-status/use-current-user'
-import { useSignOut } from '#/components/auth-status/use-sign-out'
 import { Logo } from '#/components/navigation'
-import { BOTTOM_NAV_MENU_LINK } from '#/components/navigation/nav-links'
+import { BOTTOM_NAV_MENU_ACTION } from '#/components/navigation/nav-links'
 import { ThemeToggle } from '#/components/theme-toggle'
 
-const MenuIcon = BOTTOM_NAV_MENU_LINK.icon
+const MenuIcon = BOTTOM_NAV_MENU_ACTION.icon
 
 export function AccountDrawer() {
 	const user = useCurrentUser(null)
-	const signOut = useSignOut()
 
 	return (
 		<Drawer swipeDirection="right">
@@ -33,7 +24,7 @@ export function AccountDrawer() {
 						text-xs text-heading/45 transition-colors
 					`}>
 						<MenuIcon className="size-7" aria-hidden="true" />
-						{BOTTOM_NAV_MENU_LINK.label}
+						{BOTTOM_NAV_MENU_ACTION.label}
 					</button>
 				}
 			/>
@@ -73,21 +64,7 @@ export function AccountDrawer() {
 							Войти
 						</Link>
 					) : (
-						<div className="flex items-center justify-between gap-4">
-							<AccountSummary user={user} />
-
-							<Button
-								variant="outline"
-								size="icon-lg"
-								aria-label="Выйти"
-								className="size-12 min-w-12"
-								onClick={() => {
-									void signOut()
-								}}
-							>
-								<LogOutIcon className="size-5" />
-							</Button>
-						</div>
+						<AccountSummary user={user} />
 					)}
 				</div>
 			</DrawerContent>

@@ -1,7 +1,7 @@
 import type { LucideIcon } from 'lucide-react'
 import type { Route } from 'next'
 
-import { HouseIcon, LayoutGridIcon, MenuIcon } from 'lucide-react'
+import { HouseIcon, LayoutGridIcon, MenuIcon, UserRoundIcon } from 'lucide-react'
 
 export interface NavLink {
 	href: Route
@@ -12,10 +12,11 @@ export interface NavLink {
 export const NAV_LINKS: readonly NavLink[] = [
 	{ href: '/', icon: HouseIcon, label: 'Главная' },
 	{ href: '/catalog', icon: LayoutGridIcon, label: 'Каталог' },
+	{ href: '/profile', icon: UserRoundIcon, label: 'Профиль' },
 ]
 
-export const BOTTOM_NAV_MENU_LINK: NavLink = {
-	href: '/profile',
+// Кнопка «Меню» открывает AccountDrawer и не ведёт на маршрут, поэтому у неё нет `href`.
+export const BOTTOM_NAV_MENU_ACTION: Omit<NavLink, 'href'> = {
 	icon: MenuIcon,
 	label: 'Меню',
 }
