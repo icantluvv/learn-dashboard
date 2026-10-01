@@ -1,6 +1,7 @@
 'use client'
 
 import type { AuthAction } from '#/modules/auth/types'
+import type { RoutePath } from '#/seo'
 
 import { getAuthMeQueryKey } from '@repo/api'
 import { Button, Spinner } from '@repo/core'
@@ -14,9 +15,11 @@ import { signInSchema } from '#/modules/auth/schemas'
 
 interface SignInFormProps {
 	action: AuthAction
+	/** Уже провалидированный серверной страницей внутренний путь возврата. */
+	redirectPath: RoutePath
 }
 
-export function SignInForm({ action }: SignInFormProps) {
+export function SignInForm({ action, redirectPath }: SignInFormProps) {
 	const [formError, setFormError] = useState<string | undefined>(undefined)
 	const queryClient = useQueryClient()
 	const router = useRouter()
@@ -46,7 +49,7 @@ export function SignInForm({ action }: SignInFormProps) {
 
 			if (result.ok) {
 				await queryClient.invalidateQueries({ queryKey: getAuthMeQueryKey() })
-				router.replace('/')
+				router.replace(redirectPath)
 			}
 		},
 	})

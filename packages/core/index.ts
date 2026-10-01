@@ -79,4 +79,5 @@ export {
 	ToastViewport,
 	useToastManager,
 } from './src/ui/toast'
+export { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './src/ui/tooltip'
 export { cn } from './src/utils/cn'

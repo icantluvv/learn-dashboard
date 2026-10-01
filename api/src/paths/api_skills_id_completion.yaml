@@ -1,0 +1,40 @@
+put:
+  summary: Set skill completion for the current user
+  operationId: setSkillCompletion
+  tags:
+    - Skills
+  security:
+    - auth_cookie: []
+  parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+      example: "js-closures"
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - completed
+          properties:
+            completed:
+              type: boolean
+              description: Target completion mark. The operation is idempotent.
+              example: true
+  responses:
+    "200":
+      description: Success
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/SkillCompletion.yaml
+    "400":
+      description: Invalid request body
+    "401":
+      description: Not authenticated
+    "404":
+      description: Skill not found

@@ -8,6 +8,7 @@ import { createGetExampleQueryResponse } from './mocks/exampleController/createG
 import { createGetAuthMeQueryResponse } from './mocks/meController/createGetAuthMe'
 import { createGetSkillByIdQueryResponse } from './mocks/skillsController/createGetSkillById'
 import { createGetSkillsQueryResponse } from './mocks/skillsController/createGetSkills'
+import { createSetSkillCompletionMutationResponse } from './mocks/skillsController/createSetSkillCompletion'
 
 export const mockRoutes = [
 	{
@@ -19,5 +20,10 @@ export const mockRoutes = [
 	{ method: 'GET', pattern: /^\/api\/skills$/, create: createGetSkillsQueryResponse },
 	{ method: 'GET', pattern: /^\/api\/cores$/, create: createGetCoresQueryResponse },
 	{ method: 'GET', pattern: /^\/api\/me$/, create: createGetAuthMeQueryResponse },
+	{
+		method: 'PUT',
+		pattern: /^\/api\/skills\/[^/]+\/completion$/,
+		create: createSetSkillCompletionMutationResponse,
+	},
 	{ method: 'GET', pattern: /^\/api\/skills\/[^/]+$/, create: createGetSkillByIdQueryResponse },
 ] as MockRoute[]

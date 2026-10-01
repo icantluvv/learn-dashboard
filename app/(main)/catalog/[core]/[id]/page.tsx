@@ -5,6 +5,8 @@ import { dehydrate, HydrationBoundary } from '@tanstack/react-query'
 import { notFound } from 'next/navigation'
 
 import { resolveSkillCore } from '#/constants/skill-cores'
+import { getCurrentUser } from '#/lib/auth/get-session'
+import { isSkillCompleted } from '#/modules/skills/server/skill-completion-repository.server'
 import { getSkillById } from '#/modules/skills/server/skills-repository'
 import { buildPageMetadata, getCoreSeoCopy } from '#/seo'
 import { getQueryClient } from '#/utils/get-query-client'
@@ -98,7 +100,15 @@ export default async function CatalogSkillPage({ params }: CatalogSkillPageProps
 		notFound()
 	}
 
-	queryClient.setQueryData(getSkillByIdQueryOptions({ id }).queryKey, skill)
+	// Кэш прогревается вместе с отметкой об изучении: кнопка «Изучен» читает состояние из этого же
+	// ключа и должна показать его правильно с первого рендера, без промежуточного состояния.
+	// `getSkillById` намеренно остаётся независимым от сессии — его вызывает и `generateMetadata`.
+	const user = await getCurrentUser()
+
+	queryClient.setQueryData(
+		getSkillByIdQueryOptions({ id }).queryKey,
+		user == null ? skill : { ...skill, completed: await isSkillCompleted(user.id, id) },
+	)
 
 	return (
 		<HydrationBoundary state={dehydrate(queryClient)}>
@@ -108,7 +118,7 @@ export default async function CatalogSkillPage({ params }: CatalogSkillPageProps
 			`}>
 				<div className="v-stack min-w-0 flex-1 gap-4">
 					<BackButton />
-					<SkillDetailContent skill={skill} />
+					<SkillDetailContent skill={skill} skillId={id} isAuthenticated={user != null} />
 				</div>
 			</div>
 		</HydrationBoundary>

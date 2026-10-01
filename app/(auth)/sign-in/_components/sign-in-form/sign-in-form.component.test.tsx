@@ -1,19 +1,22 @@
 import type { AuthActionResult } from '#/modules/auth/types'
+import type { RoutePath } from '#/seo'
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { render } from 'vitest-browser-react'
 
+import { nextRouterMock, resetNextNavigationMock } from '#/tests/mocks/next-navigation'
+
 import { SignInForm } from './sign-in-form'
 
 const signInAction = vi.fn<(values: unknown) => Promise<AuthActionResult>>()
 
-async function renderForm(action: typeof signInAction) {
+async function renderForm(action: typeof signInAction, redirectPath: RoutePath = '/') {
 	const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } })
 
 	return render(
 		<QueryClientProvider client={queryClient}>
-			<SignInForm action={action} />
+			<SignInForm action={action} redirectPath={redirectPath} />
 		</QueryClientProvider>,
 	)
 }
@@ -24,6 +27,7 @@ describe('<SignInForm />', () => {
 	beforeEach(() => {
 		signInAction.mockReset()
 		signInAction.mockResolvedValue({ ok: true })
+		resetNextNavigationMock()
 	})
 
 	it('показывает поля входа и ссылку на регистрацию', async () => {
@@ -97,6 +101,30 @@ describe('<SignInForm />', () => {
 
 		await vi.waitFor(() => {
 			expect(signInAction).toHaveBeenCalledTimes(1)
+		})
+	})
+
+	it('после успешного входа уводит на переданный путь возврата', async () => {
+		const view = await renderForm(signInAction, '/catalog/frontend/js-closures')
+
+		await view.getByRole('textbox', { name: 'Email' }).fill('user@example.com')
+		await view.getByLabelText('Пароль').fill('12345678')
+		await view.getByRole('button', { name: 'Войти' }).click()
+
+		await vi.waitFor(() => {
+			expect(nextRouterMock.replace).toHaveBeenCalledWith('/catalog/frontend/js-closures')
+		})
+	})
+
+	it('после успешного входа без пути возврата уводит на главную', async () => {
+		const view = await renderForm(signInAction)
+
+		await view.getByRole('textbox', { name: 'Email' }).fill('user@example.com')
+		await view.getByLabelText('Пароль').fill('12345678')
+		await view.getByRole('button', { name: 'Войти' }).click()
+
+		await vi.waitFor(() => {
+			expect(nextRouterMock.replace).toHaveBeenCalledWith('/')
 		})
 	})
 })

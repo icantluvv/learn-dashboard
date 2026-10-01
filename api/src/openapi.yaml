@@ -30,6 +30,8 @@ paths:
     $ref: paths/api_skills.yaml
   /api/skills/{id}:
     $ref: paths/api_skills_id.yaml
+  /api/skills/{id}/completion:
+    $ref: paths/api_skills_id_completion.yaml
   /api/cores:
     $ref: paths/api_cores.yaml
   /api/dashboard-stats:
@@ -44,6 +46,8 @@ components:
       $ref: components/schemas/AuthMe.yaml
     Skill:
       $ref: components/schemas/Skill.yaml
+    SkillCompletion:
+      $ref: components/schemas/SkillCompletion.yaml
     Core:
       $ref: components/schemas/Core.yaml
     DashboardStats:

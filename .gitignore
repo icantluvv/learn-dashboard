@@ -24,7 +24,7 @@ __screenshots__
 .vitest-attachments
 
 # dependencies
-/node_modules
+node_modules/
 /.pnp
 .pnp.js
 

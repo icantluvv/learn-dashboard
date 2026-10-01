@@ -9,6 +9,7 @@ export function createSkill(data?: Partial<Skill>): Skill {
 		...{
 			title: faker.string.alpha(),
 			questions: faker.helpers.multiple(() => faker.string.alpha()),
+			completed: faker.datatype.boolean(),
 			core: faker.helpers.arrayElement<NonNullable<Skill>['core']>([
 				'frontend',
 				'backend',

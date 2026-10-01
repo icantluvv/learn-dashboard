@@ -1,0 +1,14 @@
+type: object
+required:
+  - completed
+  - completedSkillsCount
+properties:
+  completed:
+    type: boolean
+    description: Resulting completion mark of the current user for the requested skill.
+    example: true
+  completedSkillsCount:
+    type: integer
+    minimum: 0
+    description: Total number of skills the current user has marked as completed.
+    example: 13

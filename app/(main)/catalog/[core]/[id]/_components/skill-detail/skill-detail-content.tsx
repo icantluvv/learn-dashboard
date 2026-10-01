@@ -1,14 +1,24 @@
 import type { GetSkillById200 } from '@repo/api'
 
+import { CopyQuestionButton } from './copy-question-button'
+import { SkillCompletionButton } from './skill-completion-button'
+
 interface SkillDetailContentProps {
+	isAuthenticated: boolean
 	skill: GetSkillById200
+	skillId: string
 }
 
-export function SkillDetailContent({ skill }: SkillDetailContentProps) {
+export function SkillDetailContent({ isAuthenticated, skill, skillId }: SkillDetailContentProps) {
 	return (
 		<div className="v-stack gap-4">
-			<section className="rounded-2xl bg-card p-6 text-card-foreground">
-				<h1 className="text-3xl font-semibold">{skill.title}</h1>
+			<section className={`
+				flex flex-col items-start gap-4 rounded-2xl bg-card p-6 text-card-foreground
+				sm:flex-row sm:items-center sm:justify-between
+			`}>
+				<h1 className="min-w-0 text-3xl font-semibold break-words">{skill.title}</h1>
+
+				<SkillCompletionButton isAuthenticated={isAuthenticated} skillId={skillId} />
 			</section>
 
 			<section className="rounded-2xl bg-card p-6 text-card-foreground">
@@ -17,13 +27,12 @@ export function SkillDetailContent({ skill }: SkillDetailContentProps) {
 						У этого навыка пока нет вопросов.
 					</p>
 				) : (
-					<ol className="v-stack list-none gap-2">
+					<ol className="v-stack list-none gap-8">
 						{skill.questions.map((question, index) => (
-							<li key={question} className="flex gap-2">
-								<span className="font-semibold text-muted-foreground">
-									{index + 1}.
-								</span>
-								<span>{question}</span>
+							<li key={question} className="flex items-start gap-2">
+								<span className="font-semibold">{index + 1}.</span>
+								<span className="min-w-0 flex-1">{question}</span>
+								<CopyQuestionButton question={question} />
 							</li>
 						))}
 					</ol>

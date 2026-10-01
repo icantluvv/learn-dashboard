@@ -5,6 +5,13 @@ export interface Skill {
 	title: string
 	/** @type array */
 	questions: string[]
+	/**
+	 * Completion mark of the current user. Present only when the request is made by an
+	 * authenticated user.
+	 *
+	 * @type boolean | undefined
+	 */
+	completed?: boolean
 	/** @type string */
 	core: 'frontend' | 'backend' | 'devops' | 'design'
 }

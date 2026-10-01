@@ -5,5 +5,6 @@ import * as z from 'zod/mini'
 export const skillSchema = z.object({
 	title: z.string(),
 	questions: z.array(z.string()),
+	completed: z.optional(z.boolean()),
 	core: z.enum(['frontend', 'backend', 'devops', 'design']),
 })

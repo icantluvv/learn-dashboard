@@ -8,6 +8,11 @@
 			"items": { "type": "string" },
 			"example": ["Что такое замыкание?", "Как замыкания используются для мемоизации?"]
 		},
+		"completed": {
+			"type": "boolean",
+			"description": "Completion mark of the current user. Present only when the request is made by an authenticated user.",
+			"example": false
+		},
 		"core": {
 			"type": "string",
 			"enum": ["frontend", "backend", "devops", "design"],

@@ -19,6 +19,9 @@ describe('getBaseUrl', () => {
 		expect(getBaseUrl('/api/cores')).toBe('')
 		expect(getBaseUrl('/api/skills')).toBe('')
 		expect(getBaseUrl('/api/skills/js-closures')).toBe('')
+		// Вложенная операция отметки обслуживается тем же Route Handler-слоем, поэтому запрос
+		// обязан остаться same-origin, а не уйти на внешний бэкенд.
+		expect(getBaseUrl('/api/skills/js-closures/completion')).toBe('')
 	})
 
 	it('does not treat unrelated paths as same-origin', async () => {
