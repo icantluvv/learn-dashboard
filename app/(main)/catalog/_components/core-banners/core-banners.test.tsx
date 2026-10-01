@@ -88,7 +88,6 @@ describe('<CoreBanners />', () => {
 		const view = await renderWithProviders(<CoreBanners />)
 
 		await expect.element(view.getByText('Frontend from database')).toBeVisible()
-		await expect.element(view.getByText('Backend database description')).toBeVisible()
 		expect(view.getByRole('link').all()).toHaveLength(cores.length)
 	})
 

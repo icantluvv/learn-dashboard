@@ -1,40 +1,16 @@
 import type { GetCores200 } from '@repo/api'
-import type { LucideIcon } from 'lucide-react'
 
-import { cn } from '@repo/core'
-import { ArrowRightIcon, CodeIcon, PaletteIcon, ServerIcon, ShipIcon } from 'lucide-react'
+import Image from 'next/image'
 import Link from 'next/link'
-
-interface CoreBannerVisuals {
-	icon: LucideIcon
-	iconSurface: string
-	/** Заливка баннера. Классы заданы литералами, иначе Tailwind не увидит их при сборке. */
-	surface: string
-}
 
 type CatalogCore = GetCores200[number]
 
-const CORE_BANNER_VISUALS: Record<CatalogCore['icon'], CoreBannerVisuals> = {
-	code: {
-		icon: CodeIcon,
-		surface: 'from-brand-secondary to-brand-soft',
-		iconSurface: 'bg-brand-primary text-white',
-	},
-	server: {
-		icon: ServerIcon,
-		surface: 'from-emerald-100 to-teal-100',
-		iconSurface: 'bg-emerald-500 text-white',
-	},
-	ship: {
-		icon: ShipIcon,
-		surface: 'from-sky-100 to-indigo-100',
-		iconSurface: 'bg-sky-500 text-white',
-	},
-	palette: {
-		icon: PaletteIcon,
-		surface: 'from-rose-100 to-orange-100',
-		iconSurface: 'bg-rose-500 text-white',
-	},
+/** Пути заданы литералами: static image imports отключены в next.config.ts. */
+const CORE_BANNER_IMAGES: Record<CatalogCore['type'], string> = {
+	frontend: '/banners/front-end.webp',
+	backend: '/banners/back-end-2.webp',
+	devops: '/banners/devops-2.webp',
+	design: '/banners/design.webp',
 }
 
 interface CoreBannerProps {
@@ -42,44 +18,38 @@ interface CoreBannerProps {
 }
 
 export function CoreBanner({ core }: CoreBannerProps) {
-	const visuals = CORE_BANNER_VISUALS[core.icon]
-	const Icon = visuals.icon
-
 	return (
-		<Link href={`/catalog/${core.type}`} className={cn(`
-			group flex w-full items-center gap-4 rounded-2xl bg-linear-to-br p-6
+		<Link href={`/catalog/${core.type}`} className={`
+			group relative flex h-40 w-full items-end overflow-hidden rounded-2xl p-6
 			transition-transform border-shaded
 			hover:scale-[1.01]
 			active:scale-[0.99]
-			md:gap-6 md:p-8
-		`, visuals.surface)}>
-			<span className={cn(`
-				flex size-12 shrink-0 items-center justify-center rounded-xl
-				md:size-14
-			`, visuals.iconSurface)}>
-				<Icon className="size-6" aria-hidden />
+			md:h-64 md:p-8
+			lg:h-70
+		`}>
+			<Image
+				src={CORE_BANNER_IMAGES[core.type]}
+				alt=""
+				sizes="(max-width: 768px) 100vw, (max-width: 1024px) 840px, 1400px"
+				quality={100}
+				className={`
+					object-cover transition-transform duration-300
+					group-hover:scale-105
+				`}
+				fill
+				aria-hidden
+			/>
+
+			<span className="relative v-stack flex-col-reverse items-start gap-2">
+				{!core.isAvailable && <span className={`
+					rounded-full bg-white/70 px-2 py-0.5 text-xs font-medium text-brand-ink
+				`}>Раздел в разработке</span>}
+
+				<span className={`
+					text-2xl font-semibold text-brand-ink
+					md:text-4xl
+				`}>{core.name}</span>
 			</span>
-
-			<span className="v-stack min-w-0 flex-1 gap-1">
-				<span className="flex flex-wrap items-center gap-2">
-					<span className={`
-						text-xl font-semibold text-brand-ink
-						md:text-2xl
-					`}>{core.name}</span>
-
-					{!core.isAvailable && <span className={`
-							rounded-full bg-white/70 px-2 py-0.5 text-xs font-medium
-							text-brand-ink
-						`}>Раздел в разработке</span>}
-				</span>
-
-				<span className="text-sm text-brand-ink/70">{core.description}</span>
-			</span>
-
-			<ArrowRightIcon className={`
-				size-5 shrink-0 text-brand-ink transition-transform
-				group-hover:translate-x-1
-			`} aria-hidden />
 		</Link>
 	)
 }
