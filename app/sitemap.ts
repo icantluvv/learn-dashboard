@@ -10,13 +10,6 @@ interface PublicSitemapEntry {
 	priority: number
 }
 
-/**
- * Публичные адреса приложения. Приватные маршруты (`/profile`) сюда не попадают — они закрыты
- * `noindex` и не должны предлагаться поисковику.
- *
- * Направления выводятся из `SKILL_CORES`, поэтому новое направление попадает в карту сайта без
- * правки этого файла.
- */
 export const PUBLIC_SITEMAP_ENTRIES: readonly PublicSitemapEntry[] = [
 	{ path: '/', priority: 1 },
 	{ path: '/catalog', priority: 0.8 },

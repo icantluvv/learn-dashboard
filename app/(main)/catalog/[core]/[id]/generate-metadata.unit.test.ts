@@ -4,11 +4,6 @@ const getSkillById = vi.fn()
 
 vi.mock('#/modules/skills/server/skills-repository', () => ({ getSkillById }))
 
-/**
- * Общий тестовый alias `next/navigation` делает `notFound()` no-op, поэтому поток выполнения в нём
- * не прерывается. Здесь важен именно обрыв, поэтому alias перекрывается бросающей заглушкой — она
- * воспроизводит поведение фреймворка.
- */
 const NOT_FOUND = 'NEXT_NOT_FOUND'
 
 vi.mock('next/navigation', () => ({

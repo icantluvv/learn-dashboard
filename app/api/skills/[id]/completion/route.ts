@@ -23,8 +23,6 @@ async function parseCompleted(request: Request): Promise<boolean | null> {
 }
 
 export async function PUT(request: Request, { params }: RouteContext) {
-	// Пользователь берётся только из серверной сессии: идентификатор из тела или query
-	// проигнорирован бы даже при его наличии.
 	const user = await getCurrentUser()
 
 	if (user == null) {

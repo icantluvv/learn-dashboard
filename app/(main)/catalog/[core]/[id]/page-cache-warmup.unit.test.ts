@@ -13,7 +13,6 @@ vi.mock('#/modules/skills/server/skill-completion-repository.server', () => ({
 	isSkillCompleted: async (userId: string, skillId: string) => isSkillCompleted(userId, skillId),
 }))
 
-/** Один и тот же клиент на весь тест, чтобы проверить, чем страница прогрела кэш. */
 let queryClient: QueryClient
 
 vi.mock('#/utils/get-query-client', () => ({ getQueryClient: () => queryClient }))

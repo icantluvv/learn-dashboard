@@ -42,12 +42,8 @@ export async function generateMetadata({ params }: CatalogSkillPageProps): Promi
 	let skill: Awaited<ReturnType<typeof getSkillById>>
 
 	try {
-		// `getSkillById` мемоизирован через `cache()`, поэтому этот вызов не добавляет запрос
-		// к тому, который делает сама страница.
 		skill = await getSkillById(id)
 	} catch {
-		// Страница в этом случае рендерит `SkillDetailError`; метаданные не должны ронять рендер,
-		// поэтому отдаём валидный fallback направления.
 		return buildPageMetadata({
 			title: coreCopy.title,
 			description: coreCopy.description,
@@ -94,15 +90,10 @@ export default async function CatalogSkillPage({ params }: CatalogSkillPageProps
 		)
 	}
 
-	// Навык доступен только по адресу собственного направления: иначе один и тот же навык
-	// открывался бы по четырём адресам, а чужой раздел показывал бы чужие навыки.
 	if (skill == null || !isSkillInCore(skill.core, core)) {
 		notFound()
 	}
 
-	// Кэш прогревается вместе с отметкой об изучении: кнопка «Изучен» читает состояние из этого же
-	// ключа и должна показать его правильно с первого рендера, без промежуточного состояния.
-	// `getSkillById` намеренно остаётся независимым от сессии — его вызывает и `generateMetadata`.
 	const user = await getCurrentUser()
 
 	queryClient.setQueryData(

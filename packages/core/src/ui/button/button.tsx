@@ -59,17 +59,17 @@ const buttonVariants = cva(`
 				has-data-[icon=inline-end]:pr-2
 				has-data-[icon=inline-start]:pl-2
 			`,
-			icon: 'size-8',
+			icon: 'size-8 min-h-0',
 			'icon-xs': `
-				size-6 rounded-[min(var(--radius-md),10px)]
+				size-6 min-h-0 rounded-[min(var(--radius-md),10px)]
 				in-data-[slot=button-group]:rounded-lg
 				[&_svg:not([class*='size-'])]:size-3
 			`,
 			'icon-sm': `
-				size-7 rounded-[min(var(--radius-md),12px)]
+				size-7 min-h-0 rounded-[min(var(--radius-md),12px)]
 				in-data-[slot=button-group]:rounded-lg
 			`,
-			'icon-lg': 'size-9',
+			'icon-lg': 'size-9 min-h-0',
 		},
 	},
 	defaultVariants: {

@@ -6,7 +6,6 @@ const getCoreByType = vi.fn()
 
 vi.mock('#/modules/cores/server/cores-repository', () => ({ getCoreByType }))
 
-// См. комментарий в `[id]/generate-metadata.unit.test.ts`: общий alias делает `notFound()` no-op.
 const NOT_FOUND = 'NEXT_NOT_FOUND'
 
 vi.mock('next/navigation', () => ({

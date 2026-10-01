@@ -2,7 +2,6 @@
 
 import { useGetDashboardStats } from '@repo/api'
 
-// Deep import instead of the barrel: the barrel also re-exports a server-only component.
 import { useCurrentUser } from '#/components/auth-status/use-current-user'
 import { useIsHydrated } from '#/hooks/use-is-hydrated'
 
@@ -15,8 +14,6 @@ import { DashboardStats } from './dashboard-stats'
 export function Dashboard() {
 	const { data: stats, isError, isLoading } = useGetDashboardStats()
 	const resolvedCurrentUser = useCurrentUser(null)
-	// Same hydration gate as `DashboardGreeting` — the progress bar's presence must match between
-	// server and first client render too, not just the greeting text.
 	const isHydrated = useIsHydrated()
 	const isAuthenticated = isHydrated && resolvedCurrentUser != null
 

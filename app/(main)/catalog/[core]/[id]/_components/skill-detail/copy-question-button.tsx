@@ -19,8 +19,6 @@ export function CopyQuestionButton({ question }: CopyQuestionButtonProps) {
 			setIsCopied(true)
 			toast.add({ title: 'Вопрос скопирован' })
 		} catch {
-			// Доступ к буферу обмена может быть запрещён браузером (небезопасный контекст или
-			// отказ пользователя).
 			toast.add({ title: 'Не удалось скопировать вопрос' })
 		}
 	}

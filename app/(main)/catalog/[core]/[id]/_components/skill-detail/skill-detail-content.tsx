@@ -16,7 +16,7 @@ export function SkillDetailContent({ isAuthenticated, skill, skillId }: SkillDet
 				flex flex-col items-start gap-4 rounded-2xl bg-card p-6 text-card-foreground
 				sm:flex-row sm:items-center sm:justify-between
 			`}>
-				<h1 className="min-w-0 text-3xl font-semibold break-words">{skill.title}</h1>
+				<h1 className="min-w-0 text-3xl font-semibold wrap-break-word">{skill.title}</h1>
 
 				<SkillCompletionButton isAuthenticated={isAuthenticated} skillId={skillId} />
 			</section>
@@ -27,7 +27,7 @@ export function SkillDetailContent({ isAuthenticated, skill, skillId }: SkillDet
 						У этого навыка пока нет вопросов.
 					</p>
 				) : (
-					<ol className="v-stack list-none gap-8">
+					<ol className="v-stack list-none gap-7">
 						{skill.questions.map((question, index) => (
 							<li key={question} className="flex items-start gap-2">
 								<span className="font-semibold">{index + 1}.</span>

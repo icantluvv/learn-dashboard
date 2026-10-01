@@ -31,10 +31,7 @@ export const viewport: Viewport = {
 }
 
 export const metadata: Metadata = {
-	// Базовый адрес, от которого Next.js разворачивает относительные `canonical` и `og:url`
-	// страниц, собранные `buildPageMetadata`.
 	metadataBase: new URL(clientEnvironment.NEXT_PUBLIC_FRONT_URL),
-	// `template` не применяется к сегменту, который его объявил, поэтому `default` обязателен.
 	title: {
 		default: DEFAULT_TITLE,
 		template: TITLE_TEMPLATE,

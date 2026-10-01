@@ -17,8 +17,6 @@ interface CatalogCorePageProps {
 	params: Promise<{ core: string }>
 }
 
-// Строки берутся из статического SEO-реестра, а не из `getCoreByType`: метаданные не должны
-// зависеть от доступности БД, а частый маршрут каталога — делать лишний запрос ради `<title>`.
 export async function generateMetadata({ params }: CatalogCorePageProps): Promise<Metadata> {
 	const { core: coreSegment } = await params
 	const core = resolveSkillCore(coreSegment)
@@ -59,9 +57,7 @@ export default async function CatalogCorePage({ params }: CatalogCorePageProps) 
 	try {
 		const skills = await getSkills({ core })
 		queryClient.setQueryData(getSkillsQueryOptions({ params: { core } }).queryKey, skills)
-	} catch {
-		// SSR warm-up is best-effort — the client hook fetches on hydration if this fails.
-	}
+	} catch {}
 
 	return (
 		<HydrationBoundary state={dehydrate(queryClient)}>

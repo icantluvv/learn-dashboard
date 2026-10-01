@@ -67,7 +67,7 @@ describe('<SkillCompletionButton />', () => {
 		const { view } = await renderButton({ completed: false })
 
 		await expect
-			.element(view.getByRole('button', { name: 'Изучен' }))
+			.element(view.getByRole('button', { name: 'Не изучен' }))
 			.toHaveAttribute('aria-pressed', 'false')
 	})
 
@@ -82,7 +82,7 @@ describe('<SkillCompletionButton />', () => {
 	it('отмечает навык изученным', async () => {
 		const { view } = await renderButton({ completed: false })
 
-		await view.getByRole('button', { name: 'Изучен' }).click()
+		await view.getByRole('button', { name: 'Не изучен' }).click()
 
 		await vi.waitFor(() => {
 			expect(setSkillCompletion).toHaveBeenCalledWith(
@@ -112,7 +112,7 @@ describe('<SkillCompletionButton />', () => {
 			)
 		})
 		await expect
-			.element(view.getByRole('button', { name: 'Изучен' }))
+			.element(view.getByRole('button', { name: 'Не изучен' }))
 			.toHaveAttribute('aria-pressed', 'false')
 	})
 
@@ -127,7 +127,7 @@ describe('<SkillCompletionButton />', () => {
 				}),
 		)
 		const { view } = await renderButton({ completed: false })
-		const button = view.getByRole('button', { name: 'Изучен' })
+		const button = view.getByRole('button', { name: 'Не изучен' })
 
 		await button.click()
 		await expect.element(button).toBeDisabled()
@@ -143,11 +143,11 @@ describe('<SkillCompletionButton />', () => {
 		setSkillCompletion.mockRejectedValue(new Error('network'))
 		const { view } = await renderButton({ completed: false })
 
-		await view.getByRole('button', { name: 'Изучен' }).click()
+		await view.getByRole('button', { name: 'Не изучен' }).click()
 
 		await expect.element(view.getByText('Не удалось сохранить отметку')).toBeVisible()
 		await expect
-			.element(view.getByRole('button', { name: 'Изучен' }))
+			.element(view.getByRole('button', { name: 'Не изучен' }))
 			.toHaveAttribute('aria-pressed', 'false')
 	})
 
@@ -161,15 +161,12 @@ describe('<SkillCompletionButton />', () => {
 			</QueryClientProvider>,
 		)
 
-		// Клик здесь не воспроизводится: настоящая навигация уводит тестовый iframe со страницы.
-		// Переход проверяется E2E-сценарием, а тут важно, что это ссылка на вход, а не кнопка
-		// мутации: у элемента роль `link` и адрес возврата, обработчика отметки нет.
-		const link = view.getByRole('link', { name: 'Изучен' })
+		const link = view.getByRole('link', { name: 'Не изучен' })
 
 		await expect
 			.element(link)
 			.toHaveAttribute('href', '/sign-in?next=%2Fcatalog%2Ffrontend%2Fjs-closures')
-		expect(view.getByRole('button', { name: 'Изучен' }).elements()).toHaveLength(0)
+		expect(view.getByRole('button', { name: 'Не изучен' }).elements()).toHaveLength(0)
 		expect(setSkillCompletion).not.toHaveBeenCalled()
 	})
 })

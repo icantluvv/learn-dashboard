@@ -20,9 +20,7 @@ export default async function Home() {
 	try {
 		const stats = await getDashboardStats()
 		queryClient.setQueryData(getDashboardStatsQueryOptions().queryKey, stats)
-	} catch {
-		// SSR warm-up is best-effort — the client hook fetches on hydration if this fails.
-	}
+	} catch {}
 
 	return (
 		<HydrationBoundary state={dehydrate(queryClient)}>

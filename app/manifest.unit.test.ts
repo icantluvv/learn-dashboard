@@ -17,8 +17,6 @@ describe('web app manifest', () => {
 	it('сохраняет обязательные для установки поля непустыми', () => {
 		const { description, display, name, short_name, start_url } = manifest()
 
-		// Поля манифеста опциональны в типе `MetadataRoute.Manifest`, поэтому проверяем через
-		// подстановку пустой строки: непустое значение — это и есть требование.
 		expect(name ?? '').not.toHaveLength(0)
 		expect(short_name ?? '').not.toHaveLength(0)
 		expect(description ?? '').not.toHaveLength(0)

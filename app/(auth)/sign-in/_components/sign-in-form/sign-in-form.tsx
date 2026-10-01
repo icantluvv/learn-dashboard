@@ -15,7 +15,6 @@ import { signInSchema } from '#/modules/auth/schemas'
 
 interface SignInFormProps {
 	action: AuthAction
-	/** Уже провалидированный серверной страницей внутренний путь возврата. */
 	redirectPath: RoutePath
 }
 

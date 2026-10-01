@@ -16,8 +16,6 @@ export async function GET(_request: Request, { params }: RouteContext) {
 		return NextResponse.json({ error: 'not_found' }, { status: 404 })
 	}
 
-	// Отметка добавляется только авторизованному запросу, поэтому ответ зависит от пользователя и
-	// не может кэшироваться: иначе отметка одного пользователя досталась бы другому.
 	return NextResponse.json(
 		user == null ? skill : { ...skill, completed: await isSkillCompleted(user.id, id) },
 		{ headers: { 'Cache-Control': 'no-store' } },

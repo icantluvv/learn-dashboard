@@ -3,8 +3,6 @@ import type { Metadata } from 'next'
 import { buttonVariants, cn } from '@repo/core'
 import Link from 'next/link'
 
-// Без `canonical`: у страницы 404 нет собственного адреса — она отвечает на произвольный
-// несуществующий путь, и канонизировать его нельзя.
 export const metadata: Metadata = {
 	title: 'Страница не найдена',
 	description: 'Запрошенная страница не существует или была перемещена.',

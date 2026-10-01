@@ -23,8 +23,6 @@ describe('<CopyQuestionButton />', () => {
 	beforeEach(() => {
 		writeText.mockReset()
 		writeText.mockResolvedValue(undefined)
-		// Реальный буфер обмена в headless-браузере требует отдельных разрешений, а проверяется
-		// здесь именно то, что копируется ровно текст вопроса.
 		vi.stubGlobal(
 			'navigator',
 			new Proxy(navigator, {

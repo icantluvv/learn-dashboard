@@ -5,7 +5,6 @@ import Link from 'next/link'
 
 type CatalogCore = GetCores200[number]
 
-/** Пути заданы литералами: static image imports отключены в next.config.ts. */
 const CORE_BANNER_IMAGES: Record<CatalogCore['type'], string> = {
 	frontend: '/banners/front-end.webp',
 	backend: '/banners/back-end-2.webp',
