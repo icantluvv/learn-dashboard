@@ -13,8 +13,8 @@ export function SkillDetailContent({ isAuthenticated, skill, skillId }: SkillDet
 	return (
 		<div className="v-stack gap-4">
 			<section className={`
-				flex flex-col items-start gap-4 rounded-2xl bg-card p-6 text-card-foreground
-				sm:flex-row sm:items-center sm:justify-between
+				flex flex-col items-start gap-6 rounded-2xl bg-card p-6 text-card-foreground
+				sm:flex-row sm:items-center sm:justify-between sm:gap-4
 			`}>
 				<h1 className="min-w-0 text-3xl font-semibold wrap-break-word">{skill.title}</h1>
 

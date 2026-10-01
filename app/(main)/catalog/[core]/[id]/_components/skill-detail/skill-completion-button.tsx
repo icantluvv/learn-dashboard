@@ -17,6 +17,11 @@ interface SkillCompletionButtonProps {
 	skillId: string
 }
 
+const buttonWidthClassName = `
+	w-full gap-2
+	md:w-fit
+`
+
 export function SkillCompletionButton({ isAuthenticated, skillId }: SkillCompletionButtonProps) {
 	const pathname = usePathname()
 	const queryClient = useQueryClient()
@@ -44,7 +49,7 @@ export function SkillCompletionButton({ isAuthenticated, skillId }: SkillComplet
 	if (!isAuthenticated) {
 		return (
 			<Link
-				className={cn(buttonVariants({ variant: 'outline' }), 'w-fit gap-2')}
+				className={cn(buttonVariants({ variant: 'outline' }), buttonWidthClassName)}
 				href={`/sign-in?next=${encodeURIComponent(pathname)}`}
 			>
 				{label}
@@ -54,7 +59,7 @@ export function SkillCompletionButton({ isAuthenticated, skillId }: SkillComplet
 
 	return (
 		<Button
-			className="w-fit gap-2"
+			className={buttonWidthClassName}
 			variant={completed ? 'default' : 'outline'}
 			aria-pressed={completed}
 			disabled={isPending}
