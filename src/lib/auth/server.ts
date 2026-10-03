@@ -4,7 +4,7 @@ import { nextCookies } from 'better-auth/next-js'
 import { isDev } from '#/constants/env'
 import { serverEnvironment } from '#/env/server'
 
-import { GENDER_VALUES } from './constants'
+import { GENDER_VALUES, ROLE_VALUES } from './constants'
 import { getAuthDbPool } from './database.server'
 
 import 'server-only'
@@ -20,7 +20,9 @@ export const auth = betterAuth({
 	user: {
 		additionalFields: {
 			gender: { type: [...GENDER_VALUES], required: true, input: true },
-			age: { type: 'number', required: true, input: true },
+			lastName: { type: 'string', required: false, input: true },
+			age: { type: 'number', required: false, input: true },
+			role: { type: [...ROLE_VALUES], required: true, input: true },
 			completedSkillsCount: {
 				type: 'number',
 				required: false,

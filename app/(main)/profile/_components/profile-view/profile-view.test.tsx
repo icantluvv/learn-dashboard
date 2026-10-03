@@ -19,6 +19,7 @@ const user: CurrentUser = {
 	email: 'user@example.com',
 	gender: 'male',
 	age: 28,
+	role: 'developer',
 }
 
 describe('<ProfileView />', () => {
@@ -84,6 +85,47 @@ describe('<ProfileView />', () => {
 
 		await expect.element(view.getByText('Сергей')).toBeVisible()
 		await expect.element(view.getByText('user@example.com')).toBeVisible()
+		await expect.element(view.getByText('Разработчик')).toBeVisible()
 		await expect.element(view.getByRole('button', { name: 'Выйти' })).toBeVisible()
+	})
+
+	it('показывает фамилию рядом с именем, если она задана', async () => {
+		useGetAuthMe.mockReturnValue({
+			data: { ...user, lastName: 'Пантелеев' },
+			error: null,
+			isError: false,
+			isLoading: false,
+		})
+
+		const view = await renderWithProviders(<ProfileView />)
+
+		await expect.element(view.getByText('Сергей Пантелеев')).toBeVisible()
+	})
+
+	it('показывает только имя, если фамилия не задана', async () => {
+		useGetAuthMe.mockReturnValue({ data: user, error: null, isError: false, isLoading: false })
+
+		const view = await renderWithProviders(<ProfileView />)
+
+		await expect.element(view.getByText('Сергей')).toBeVisible()
+		await expect.element(view.getByText('Сергей Пантелеев')).not.toBeInTheDocument()
+	})
+
+	it.each([
+		['developer', 'Разработчик'],
+		['analyst', 'Аналитик'],
+		['student', 'Студент'],
+		['beginner', 'Начинающий'],
+	] as const)('отображает роль %s как «%s»', async (role, label) => {
+		useGetAuthMe.mockReturnValue({
+			data: { ...user, role },
+			error: null,
+			isError: false,
+			isLoading: false,
+		})
+
+		const view = await renderWithProviders(<ProfileView />)
+
+		await expect.element(view.getByText(label)).toBeVisible()
 	})
 })

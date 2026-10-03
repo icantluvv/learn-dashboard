@@ -8,6 +8,7 @@ const validSignUp = {
 	password: '12345678',
 	gender: 'male',
 	age: 28,
+	role: 'developer',
 }
 
 function firstMessageFor(values: unknown, field: string) {
@@ -56,11 +57,14 @@ describe('signUpSchema', () => {
 		expect(signUpSchema.safeParse({ ...validSignUp, gender: 'other' }).success).toBe(false)
 	})
 
-	it('requires the age', () => {
-		expect(firstMessageFor({ ...validSignUp, age: null }, 'age')).toBeDefined()
+	it('accepts a missing age', () => {
+		const { age, ...rest } = validSignUp
+		void age
+
+		expect(signUpSchema.safeParse(rest).success).toBe(true)
 	})
 
-	it('rejects an age outside the allowed range or not an integer', () => {
+	it('rejects an age outside the allowed range or not an integer, when provided', () => {
 		expect(firstMessageFor({ ...validSignUp, age: 0 }, 'age')).toBeDefined()
 		expect(firstMessageFor({ ...validSignUp, age: 121 }, 'age')).toBeDefined()
 		expect(firstMessageFor({ ...validSignUp, age: 28.5 }, 'age')).toBeDefined()
@@ -69,6 +73,29 @@ describe('signUpSchema', () => {
 	it('accepts the boundary ages', () => {
 		expect(signUpSchema.safeParse({ ...validSignUp, age: 1 }).success).toBe(true)
 		expect(signUpSchema.safeParse({ ...validSignUp, age: 120 }).success).toBe(true)
+	})
+
+	it('accepts a missing last name', () => {
+		expect(signUpSchema.safeParse(validSignUp).success).toBe(true)
+	})
+
+	it('rejects a last name shorter than 3 characters, when provided', () => {
+		expect(firstMessageFor({ ...validSignUp, lastName: 'Ан' }, 'lastName')).toContain('3')
+	})
+
+	it('accepts a last name of exactly 3 characters', () => {
+		expect(signUpSchema.safeParse({ ...validSignUp, lastName: 'Ася' }).success).toBe(true)
+	})
+
+	it('requires the role', () => {
+		expect(firstMessageFor({ ...validSignUp, role: null }, 'role')).toBeDefined()
+		expect(firstMessageFor({ ...validSignUp, role: 'alien' }, 'role')).toBeDefined()
+	})
+
+	it('accepts every role value', () => {
+		for (const role of ['developer', 'analyst', 'student', 'beginner']) {
+			expect(signUpSchema.safeParse({ ...validSignUp, role }).success).toBe(true)
+		}
 	})
 })
 

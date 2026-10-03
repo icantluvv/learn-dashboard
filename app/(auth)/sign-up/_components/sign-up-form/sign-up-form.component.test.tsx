@@ -27,6 +27,8 @@ async function fillValidForm(view: Awaited<ReturnType<typeof render>>) {
 	await view.getByRole('combobox', { name: 'Пол' }).click()
 	await view.getByRole('option', { name: 'Мужской' }).click()
 	await view.getByRole('spinbutton', { name: 'Возраст' }).fill('28')
+	await view.getByRole('combobox', { name: 'Кем вы являетесь' }).click()
+	await view.getByRole('option', { name: 'Разработчик' }).click()
 }
 
 describe('<SignUpForm />', () => {
@@ -39,10 +41,12 @@ describe('<SignUpForm />', () => {
 		const view = await renderForm(signUpAction)
 
 		await expect.element(view.getByRole('textbox', { name: 'Имя' })).toBeVisible()
+		await expect.element(view.getByRole('textbox', { name: 'Фамилия' })).toBeVisible()
 		await expect.element(view.getByRole('textbox', { name: 'Email' })).toBeVisible()
 		await expect.element(view.getByLabelText('Пароль')).toBeVisible()
 		await expect.element(view.getByRole('combobox', { name: 'Пол' })).toBeVisible()
 		await expect.element(view.getByRole('spinbutton', { name: 'Возраст' })).toBeVisible()
+		await expect.element(view.getByRole('combobox', { name: 'Кем вы являетесь' })).toBeVisible()
 		await expect.element(view.getByLabelText('Выбрать изображение')).toBeInTheDocument()
 		await expect.element(view.getByRole('link', { name: 'Войти' })).toBeVisible()
 		expect(document.querySelectorAll('label [aria-hidden="true"]')).toHaveLength(5)
@@ -64,6 +68,18 @@ describe('<SignUpForm />', () => {
 		await expect.element(view.getByRole('option', { name: 'Мужской' })).toBeVisible()
 		await expect.element(view.getByRole('option', { name: 'Женский' })).toBeVisible()
 		expect(document.querySelectorAll('[role="option"]')).toHaveLength(2)
+	})
+
+	it('предлагает варианты роли «Разработчик», «Аналитик», «Студент», «Начинающий»', async () => {
+		const view = await renderForm(signUpAction)
+
+		await view.getByRole('combobox', { name: 'Кем вы являетесь' }).click()
+
+		await expect.element(view.getByRole('option', { name: 'Разработчик' })).toBeVisible()
+		await expect.element(view.getByRole('option', { name: 'Аналитик' })).toBeVisible()
+		await expect.element(view.getByRole('option', { name: 'Студент' })).toBeVisible()
+		await expect.element(view.getByRole('option', { name: 'Начинающий' })).toBeVisible()
+		expect(document.querySelectorAll('[role="option"]')).toHaveLength(4)
 	})
 
 	it('показывает и удаляет предпросмотр выбранного аватара', async () => {
@@ -148,12 +164,14 @@ describe('<SignUpForm />', () => {
 		await expect.element(submit).toBeDisabled()
 		await view.getByRole('combobox', { name: 'Пол' }).click()
 		await view.getByRole('option', { name: 'Мужской' }).click()
-		await view.getByRole('spinbutton', { name: 'Возраст' }).fill('28')
+		await expect.element(submit).toBeDisabled()
+		await view.getByRole('combobox', { name: 'Кем вы являетесь' }).click()
+		await view.getByRole('option', { name: 'Разработчик' }).click()
 
 		await expect.element(submit).toBeEnabled()
 	})
 
-	it('отправляет валидную форму без аватара', async () => {
+	it('отправляет валидную форму без фамилии, возраста и аватара', async () => {
 		const view = await renderForm(signUpAction)
 
 		await fillValidForm(view)
@@ -165,10 +183,12 @@ describe('<SignUpForm />', () => {
 			expect(formData).toBeInstanceOf(FormData)
 			expect(Object.fromEntries((formData as FormData).entries())).toStrictEqual({
 				name: 'Сергей',
+				lastName: '',
 				email: 'user@example.com',
 				password: '12345678',
 				gender: 'male',
 				age: '28',
+				role: 'developer',
 			})
 		})
 	})

@@ -31,12 +31,17 @@ function toFieldErrors(issues: { message: string; path: PropertyKey[] }[]) {
 }
 
 function getSignUpValues(formData: FormData) {
+	const lastName = formData.get('lastName')
+	const age = formData.get('age')
+
 	return {
 		name: formData.get('name'),
+		lastName: typeof lastName === 'string' && lastName.length > 0 ? lastName : undefined,
 		email: formData.get('email'),
 		password: formData.get('password'),
 		gender: formData.get('gender'),
-		age: Number(formData.get('age')),
+		age: typeof age === 'string' && age.length > 0 ? Number(age) : undefined,
+		role: formData.get('role'),
 	}
 }
 
@@ -82,7 +87,7 @@ export async function signUpAction(formData: FormData): Promise<AuthActionResult
 		return { ok: false, fieldErrors: { avatar } }
 	}
 
-	const { age, email, gender, name, password } = parsed.data
+	const { age, email, gender, lastName, name, password, role } = parsed.data
 	const storedAvatar = avatar == null ? undefined : { ...avatar, id: crypto.randomUUID() }
 	const avatarUrl =
 		storedAvatar == null
@@ -100,7 +105,9 @@ export async function signUpAction(formData: FormData): Promise<AuthActionResult
 				email,
 				password,
 				gender,
-				age,
+				role,
+				...(age == null ? {} : { age }),
+				...(lastName == null ? {} : { lastName }),
 				...(avatarUrl == null ? {} : { image: avatarUrl }),
 			},
 		})

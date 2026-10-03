@@ -19,7 +19,7 @@ export default async function SignInPage({ searchParams }: SignInPageProps) {
 	const [user, { next }] = await Promise.all([getCurrentUser(), searchParams])
 
 	if (user != null) {
-		redirect('/')
+		redirect(resolveRedirectPath(next))
 	}
 
 	return (

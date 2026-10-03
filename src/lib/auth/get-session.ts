@@ -1,4 +1,4 @@
-import type { Gender } from './constants'
+import type { Gender, Role } from './constants'
 
 import { headers } from 'next/headers'
 import { cache } from 'react'
@@ -8,13 +8,15 @@ import { auth } from './server'
 import 'server-only'
 
 export interface CurrentUser {
-	age: number
+	age?: number
 	completedSkillsCount?: number
 	email: string
 	gender: Gender
 	id: string
 	image?: string
+	lastName?: string
 	name: string
+	role: Role
 }
 
 export const getCurrentUser = cache(async (): Promise<CurrentUser | null> => {
@@ -31,8 +33,10 @@ export const getCurrentUser = cache(async (): Promise<CurrentUser | null> => {
 		name: user.name,
 		email: user.email,
 		gender: user.gender,
-		age: user.age,
+		role: user.role,
 		completedSkillsCount: user.completedSkillsCount ?? 0,
+		...(user.age == null ? {} : { age: user.age }),
 		...(user.image == null ? {} : { image: user.image }),
+		...(user.lastName == null ? {} : { lastName: user.lastName }),
 	}
 })

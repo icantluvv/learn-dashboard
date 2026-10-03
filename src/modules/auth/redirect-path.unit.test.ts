@@ -24,21 +24,21 @@ describe('resolveRedirectPath', () => {
 		['catalog/frontend', 'относительный путь без ведущего слеша'],
 		['', 'пустая строка'],
 	])('отвергает %s (%s)', (value) => {
-		expect(resolveRedirectPath(value)).toBe('/')
+		expect(resolveRedirectPath(value)).toBe('/profile')
 	})
 
 	it.each(['/sign-in', '/sign-up', '/sign-in?next=/profile'])(
 		'отвергает возврат на страницу аутентификации %s',
 		(value) => {
-			expect(resolveRedirectPath(value)).toBe('/')
+			expect(resolveRedirectPath(value)).toBe('/profile')
 		},
 	)
 
 	it('отвергает отсутствующее значение', () => {
-		expect(resolveRedirectPath(undefined)).toBe('/')
+		expect(resolveRedirectPath(undefined)).toBe('/profile')
 	})
 
 	it('отвергает повторяющийся параметр, пришедший массивом', () => {
-		expect(resolveRedirectPath(['/profile', '//evil.example'])).toBe('/')
+		expect(resolveRedirectPath(['/profile', '//evil.example'])).toBe('/profile')
 	})
 })

@@ -34,6 +34,7 @@ const user: CurrentUser = {
 	email: 'user@example.com',
 	gender: 'male',
 	age: 28,
+	role: 'developer',
 	completedSkillsCount: 3,
 }
 

@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation'
 
 import { getCurrentUser } from '#/lib/auth/get-session'
-import { signUpAction } from '#/modules/auth'
+import { DEFAULT_REDIRECT_PATH, signUpAction } from '#/modules/auth'
 import { buildPageMetadata } from '#/seo'
 import { SignUpForm } from '@/(auth)/sign-up/_components/sign-up-form'
 
@@ -17,7 +17,7 @@ export default async function SignUpPage() {
 	const user = await getCurrentUser()
 
 	if (user != null) {
-		redirect('/')
+		redirect(DEFAULT_REDIRECT_PATH)
 	}
 
 	return (

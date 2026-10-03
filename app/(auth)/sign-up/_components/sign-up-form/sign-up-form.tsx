@@ -1,6 +1,6 @@
 'use client'
 
-import type { SignUpGender } from '#/lib/auth/constants'
+import type { Role, SignUpGender } from '#/lib/auth/constants'
 import type { SignUpAction } from '#/modules/auth/types'
 
 import { getAuthMeQueryKey } from '@repo/api'
@@ -11,9 +11,11 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
+import { DEFAULT_REDIRECT_PATH } from '#/modules/auth/redirect-path'
 import { signUpFormSchema } from '#/modules/auth/schemas'
 import { AvatarDropzone } from '@/(auth)/sign-up/_components/avatar-dropzone'
 import { GENDER_OPTIONS } from '@/(auth)/sign-up/_constants/gender-options'
+import { ROLE_OPTIONS } from '@/(auth)/sign-up/_constants/role-options'
 
 interface SignUpFormProps {
 	action: SignUpAction
@@ -28,10 +30,12 @@ export function SignUpForm({ action }: SignUpFormProps) {
 	const form = useAppForm({
 		defaultValues: {
 			name: '',
+			lastName: '',
 			email: '',
 			password: '',
 			gender: null as SignUpGender | null,
 			age: null as number | null,
+			role: null as Role | null,
 			avatar: null as File | null,
 		},
 		validators: { onSubmit: signUpFormSchema },
@@ -44,10 +48,12 @@ export function SignUpForm({ action }: SignUpFormProps) {
 
 			const formData = new FormData()
 			formData.set('name', value.name)
+			formData.set('lastName', value.lastName)
 			formData.set('email', value.email)
 			formData.set('password', value.password)
 			formData.set('gender', value.gender ?? '')
 			formData.set('age', value.age == null ? '' : String(value.age))
+			formData.set('role', value.role ?? '')
 
 			if (value.avatar != null) {
 				formData.set('avatar', value.avatar)
@@ -63,7 +69,14 @@ export function SignUpForm({ action }: SignUpFormProps) {
 					}
 
 					formApi.setFieldMeta(
-						field as 'age' | 'email' | 'gender' | 'name' | 'password',
+						field as
+							| 'age'
+							| 'email'
+							| 'gender'
+							| 'lastName'
+							| 'name'
+							| 'password'
+							| 'role',
 						(meta) => ({
 							...meta,
 							isTouched: true,
@@ -80,7 +93,7 @@ export function SignUpForm({ action }: SignUpFormProps) {
 
 			if (result.ok) {
 				await queryClient.invalidateQueries({ queryKey: getAuthMeQueryKey() })
-				router.replace('/')
+				router.replace(DEFAULT_REDIRECT_PATH)
 			}
 		},
 	})
@@ -120,6 +133,16 @@ export function SignUpForm({ action }: SignUpFormProps) {
 						placeholder="Как вас зовут"
 						autoComplete="name"
 						required
+					/>
+				)}
+			</form.AppField>
+
+			<form.AppField name="lastName">
+				{(field) => (
+					<field.TextField
+						label="Фамилия"
+						placeholder="Ваша фамилия"
+						autoComplete="family-name"
 					/>
 				)}
 			</form.AppField>
@@ -166,6 +189,16 @@ export function SignUpForm({ action }: SignUpFormProps) {
 						placeholder="Например, 25"
 						min={1}
 						max={120}
+					/>
+				)}
+			</form.AppField>
+
+			<form.AppField name="role">
+				{(field) => (
+					<field.SelectField
+						label="Кем вы являетесь"
+						placeholder="Выберите роль"
+						options={ROLE_OPTIONS}
 						required
 					/>
 				)}
@@ -179,7 +212,7 @@ export function SignUpForm({ action }: SignUpFormProps) {
 						state.values.email.trim() !== '' &&
 						state.values.password !== '' &&
 						state.values.gender != null &&
-						state.values.age != null,
+						state.values.role != null,
 				})}
 			>
 				{({ isSubmitting, requiredFieldsFilled }) => (

@@ -32,6 +32,8 @@ const nextConfig: NextConfig = {
 	devIndicators: { position: 'top-right' },
 	experimental: {
 		optimizePackageImports: [],
+		// Must stay >= AVATAR_MAX_BYTES in src/modules/auth/avatar.ts, the signup form's own limit.
+		serverActions: { bodySizeLimit: '5mb' },
 		serverSourceMaps: true,
 	},
 	generateBuildId: () => `${nanoid()}-${Date.now()}`,

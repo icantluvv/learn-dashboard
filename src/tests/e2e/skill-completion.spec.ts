@@ -22,8 +22,10 @@ async function signUp(page: Page, email: string) {
 	await page.getByRole('combobox', { name: 'Пол' }).click()
 	await page.getByRole('option', { name: 'Мужской' }).click()
 	await page.getByRole('spinbutton', { name: 'Возраст' }).fill('28')
+	await page.getByRole('combobox', { name: 'Кем вы являетесь' }).click()
+	await page.getByRole('option', { name: 'Разработчик' }).click()
 	await page.getByRole('button', { name: 'Зарегистрироваться' }).click()
-	await page.waitForURL('/')
+	await page.waitForURL('/profile')
 
 	const me = await page.request.get('/api/me')
 	expect(me.status()).toBe(200)

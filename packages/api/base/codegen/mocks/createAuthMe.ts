@@ -9,6 +9,7 @@ export function createAuthMe(data?: Partial<AuthMe>): AuthMe {
 		...{
 			id: faker.string.alpha(),
 			name: faker.string.alpha({ length: 3 }),
+			lastName: faker.string.alpha({ length: 3 }),
 			email: faker.internet.email(),
 			gender: faker.helpers.arrayElement<NonNullable<AuthMe>['gender']>([
 				'male',
@@ -16,6 +17,12 @@ export function createAuthMe(data?: Partial<AuthMe>): AuthMe {
 				'other',
 			]),
 			age: faker.number.int({ min: 1, max: 120 }),
+			role: faker.helpers.arrayElement<NonNullable<AuthMe>['role']>([
+				'developer',
+				'analyst',
+				'student',
+				'beginner',
+			]),
 			image: faker.internet.url(),
 		},
 		...(data || {}),

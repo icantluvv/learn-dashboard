@@ -8,16 +8,23 @@ export interface AuthMe {
 	 * @minLength 3
 	 */
 	name: string
+	/**
+	 * @type string | undefined
+	 * @minLength 3
+	 */
+	lastName?: string
 	/** @type string, email */
 	email: string
 	/** @type string */
 	gender: 'male' | 'female' | 'other'
 	/**
-	 * @type integer
+	 * @type integer | undefined
 	 * @minLength 1
 	 * @maxLength 120
 	 */
-	age: number
+	age?: number
+	/** @type string */
+	role: 'developer' | 'analyst' | 'student' | 'beginner'
 	/**
 	 * Same-origin URL of the stored user avatar.
 	 *

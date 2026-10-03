@@ -1,6 +1,6 @@
 import type { RoutePath } from '#/seo'
 
-export const DEFAULT_REDIRECT_PATH: RoutePath = '/'
+export const DEFAULT_REDIRECT_PATH: RoutePath = '/profile'
 
 const BLOCKED_PATHS = new Set(['/sign-in', '/sign-up'])
 

@@ -1,8 +1,10 @@
 export const GENDER_VALUES = ['male', 'female', 'other'] as const
 export const SIGN_UP_GENDER_VALUES = ['male', 'female'] as const
+export const ROLE_VALUES = ['developer', 'analyst', 'student', 'beginner'] as const
 
 export type Gender = (typeof GENDER_VALUES)[number]
 export type SignUpGender = (typeof SIGN_UP_GENDER_VALUES)[number]
+export type Role = (typeof ROLE_VALUES)[number]
 
 export const MIN_NAME_LENGTH = 3
 export const MIN_PASSWORD_LENGTH = 8

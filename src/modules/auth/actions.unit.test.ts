@@ -36,6 +36,7 @@ const validSignUp = {
 	password: '12345678',
 	gender: 'male',
 	age: 28,
+	role: 'developer',
 }
 
 function signUpFormData(values: Record<string, number | string> = validSignUp) {
@@ -92,6 +93,26 @@ describe('signUpAction', () => {
 		await signUpAction(signUpFormData())
 		expect(signUpEmail.mock.calls[0]?.[0]?.body).not.toHaveProperty('image')
 		expect(saveAvatar).not.toHaveBeenCalled()
+	})
+
+	it('omits lastName and age when they are not provided', async () => {
+		signUpEmail.mockResolvedValue({ user: { id: 'user-1' } })
+		const { age, ...rest } = validSignUp
+		void age
+
+		await signUpAction(signUpFormData(rest))
+		expect(signUpEmail.mock.calls[0]?.[0]?.body).not.toHaveProperty('age')
+		expect(signUpEmail.mock.calls[0]?.[0]?.body).not.toHaveProperty('lastName')
+	})
+
+	it('passes lastName and role to Better Auth', async () => {
+		signUpEmail.mockResolvedValue({ user: { id: 'user-1' } })
+
+		await signUpAction(signUpFormData({ ...validSignUp, lastName: 'Пантелеев' }))
+		expect(signUpEmail.mock.calls[0]?.[0]?.body).toMatchObject({
+			lastName: 'Пантелеев',
+			role: 'developer',
+		})
 	})
 
 	it('rejects invalid input without calling Better Auth', async () => {

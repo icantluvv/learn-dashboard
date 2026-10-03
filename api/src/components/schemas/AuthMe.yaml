@@ -4,7 +4,7 @@ required:
   - name
   - email
   - gender
-  - age
+  - role
 properties:
   id:
     type: string
@@ -13,6 +13,10 @@ properties:
     type: string
     minLength: 3
     example: "Сергей"
+  lastName:
+    type: string
+    minLength: 3
+    example: "Иванов"
   email:
     type: string
     format: email
@@ -29,6 +33,14 @@ properties:
     minimum: 1
     maximum: 120
     example: 28
+  role:
+    type: string
+    enum:
+      - developer
+      - analyst
+      - student
+      - beginner
+    example: developer
   image:
     type: string
     format: uri

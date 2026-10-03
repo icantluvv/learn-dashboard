@@ -8,12 +8,20 @@ import Image from 'next/image'
 import { useSignOut } from '#/components/auth-status/use-sign-out'
 import { getAvatarDisplayUrl } from '#/lib/auth/avatar-url'
 
+const ROLE_LABELS = {
+	developer: 'Разработчик',
+	analyst: 'Аналитик',
+	student: 'Студент',
+	beginner: 'Начинающий',
+} as const
+
 interface ProfileAuthenticatedProps {
 	user: CurrentUser
 }
 
 export function ProfileAuthenticated({ user }: ProfileAuthenticatedProps) {
 	const signOut = useSignOut()
+	const fullName = user.lastName == null ? user.name : `${user.name} ${user.lastName}`
 
 	return (
 		<div className="v-stack items-center gap-6 text-center">
@@ -22,8 +30,9 @@ export function ProfileAuthenticated({ user }: ProfileAuthenticatedProps) {
 			</span>
 
 			<div className="v-stack gap-0.5">
-				<span className="text-lg font-medium">{user.name}</span>
+				<span className="text-lg font-medium">{fullName}</span>
 				<span className="text-sm text-muted-foreground">{user.email}</span>
+				<span className="text-sm text-muted-foreground">{ROLE_LABELS[user.role]}</span>
 			</div>
 
 			<Button

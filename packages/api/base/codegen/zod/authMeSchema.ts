@@ -5,8 +5,10 @@ import * as z from 'zod/mini'
 export const authMeSchema = z.object({
 	id: z.string(),
 	name: z.string().check(z.minLength(3)),
+	lastName: z.optional(z.string().check(z.minLength(3))),
 	email: z.email(),
 	gender: z.enum(['male', 'female', 'other']),
-	age: z.int().check(z.minimum(1), z.maximum(120)),
+	age: z.optional(z.int().check(z.minimum(1), z.maximum(120))),
+	role: z.enum(['developer', 'analyst', 'student', 'beginner']),
 	image: z.optional(z.url()),
 })

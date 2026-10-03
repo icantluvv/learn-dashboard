@@ -17,14 +17,17 @@ test('вход показывает кнопку-аватар, выход воз
 	await page.getByRole('combobox', { name: 'Пол' }).click()
 	await page.getByRole('option', { name: 'Мужской' }).click()
 	await page.getByRole('spinbutton', { name: 'Возраст' }).fill('28')
+	await page.getByRole('combobox', { name: 'Кем вы являетесь' }).click()
+	await page.getByRole('option', { name: 'Разработчик' }).click()
 	await page.getByRole('button', { name: 'Зарегистрироваться' }).click()
-	await page.waitForURL('/')
+	await page.waitForURL('/profile')
 
-	await expect(page.getByText('Сергей')).toBeVisible()
-	await expect(page.getByText(email, { exact: true })).toBeVisible()
+	const sidebar = page.getByRole('complementary')
+	await expect(sidebar.getByText('Сергей')).toBeVisible()
+	await expect(sidebar.getByText(email, { exact: true })).toBeVisible()
 
 	await page.getByRole('button', { name: 'Выйти' }).click()
 
-	await expect(page.getByRole('link', { name: 'Войти' })).toBeVisible()
-	await expect(page.getByText(email, { exact: true })).toBeHidden()
+	await expect(sidebar.getByRole('link', { name: 'Войти' })).toBeVisible()
+	await expect(sidebar.getByText(email, { exact: true })).toBeHidden()
 })

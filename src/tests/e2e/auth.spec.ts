@@ -21,6 +21,8 @@ async function signUp(
 	await page.getByRole('combobox', { name: 'Пол' }).click()
 	await page.getByRole('option', { name: 'Мужской' }).click()
 	await page.getByRole('spinbutton', { name: 'Возраст' }).fill('28')
+	await page.getByRole('combobox', { name: 'Кем вы являетесь' }).click()
+	await page.getByRole('option', { name: 'Разработчик' }).click()
 
 	if (options.avatar === true) {
 		await page.getByLabel('Выбрать изображение').setInputFiles({
@@ -32,7 +34,7 @@ async function signUp(
 	}
 
 	await page.getByRole('button', { name: 'Зарегистрироваться' }).click()
-	await page.waitForURL('/')
+	await page.waitForURL('/profile')
 	await expect(page.getByRole('button', { name: /Сергей/ })).toBeVisible()
 }
 
@@ -56,7 +58,7 @@ test('регистрация открывает сессию, выход её з
 
 	const me = await page.request.get('/api/me')
 	expect(me.status()).toBe(200)
-	expect(await me.json()).toMatchObject({ email, gender: 'male', age: 28 })
+	expect(await me.json()).toMatchObject({ email, gender: 'male', age: 28, role: 'developer' })
 
 	await page.reload()
 	await expect(page.getByRole('button', { name: /Сергей/ })).toBeVisible()
@@ -68,6 +70,25 @@ test('регистрация открывает сессию, выход её з
 
 	const meWithoutCookies = await request.get('/api/me')
 	expect(meWithoutCookies.status()).toBe(401)
+})
+
+test('регистрация без фамилии и возраста с выбранной ролью показывает роль в профиле', async ({
+	page,
+}) => {
+	const email = uniqueEmail()
+
+	await page.goto('/sign-up')
+	await page.getByRole('textbox', { name: 'Имя' }).fill('Сергей')
+	await page.getByRole('textbox', { name: 'Email' }).fill(email)
+	await page.getByLabel('Пароль').fill('12345678')
+	await page.getByRole('combobox', { name: 'Пол' }).click()
+	await page.getByRole('option', { name: 'Мужской' }).click()
+	await page.getByRole('combobox', { name: 'Кем вы являетесь' }).click()
+	await page.getByRole('option', { name: 'Разработчик' }).click()
+	await page.getByRole('button', { name: 'Зарегистрироваться' }).click()
+	await page.waitForURL('/profile')
+
+	await expect(page.getByText('Разработчик')).toBeVisible()
 })
 
 test('загруженный аватар сохраняется и отображается после перезагрузки', async ({ page }) => {
@@ -98,6 +119,8 @@ test('файл с поддельным MIME не создаёт аккаунт',
 	await page.getByRole('combobox', { name: 'Пол' }).click()
 	await page.getByRole('option', { name: 'Мужской' }).click()
 	await page.getByRole('spinbutton', { name: 'Возраст' }).fill('28')
+	await page.getByRole('combobox', { name: 'Кем вы являетесь' }).click()
+	await page.getByRole('option', { name: 'Разработчик' }).click()
 	await page.getByLabel('Выбрать изображение').setInputFiles({
 		name: 'avatar.png',
 		mimeType: 'image/png',
@@ -115,7 +138,7 @@ test('файл с поддельным MIME не создаёт аккаунт',
 
 	await page.getByRole('button', { name: 'Удалить изображение' }).click()
 	await page.getByRole('button', { name: 'Зарегистрироваться' }).click()
-	await page.waitForURL('/')
+	await page.waitForURL('/profile')
 	await expect(page.getByRole('button', { name: /Сергей/ })).toBeVisible()
 })
 
@@ -138,10 +161,10 @@ test('авторизованный пользователь не видит ст
 	await signUp(page, uniqueEmail())
 
 	await page.goto('/sign-in')
-	await expect(page).toHaveURL('/')
+	await expect(page).toHaveURL('/profile')
 
 	await page.goto('/sign-up')
-	await expect(page).toHaveURL('/')
+	await expect(page).toHaveURL('/profile')
 })
 
 test('подделанная сессионная cookie не даёт доступа', async ({ context, page }) => {
