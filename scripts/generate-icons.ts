@@ -15,5 +15,4 @@ async function render(svgFile: string, size: number, outFile: string) {
 
 await render('icon.svg', 192, 'icon-192.png')
 await render('icon.svg', 512, 'icon-512.png')
-await render('icon-maskable.svg', 512, 'icon-maskable-512.png')
 await render('icon.svg', 180, 'apple-touch-icon.png')
