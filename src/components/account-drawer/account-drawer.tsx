@@ -30,7 +30,7 @@ export function AccountDrawer() {
 			/>
 
 			<DrawerContent
-				className="rounded-none! border-l-0 bg-white"
+				className="rounded-none! border-l-0 bg-sidebar"
 				style={{
 					['--drawer-content-width' as string]: '100vw',
 					['--drawer-content-max-height' as string]: '100dvh',

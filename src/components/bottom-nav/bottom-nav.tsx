@@ -14,7 +14,7 @@ export function BottomNav() {
 	return (
 		<nav aria-label="Основная навигация" className={`
 			fixed inset-x-0 bottom-0 z-40 flex items-stretch justify-around gap-1 border-t
-			border-border bg-card px-2 pt-2.5 pb-[max(0.625rem,env(safe-area-inset-bottom))]
+			border-border bg-sidebar px-2 pt-2.5 pb-[max(0.625rem,env(safe-area-inset-bottom))]
 			text-card-foreground
 			lg:hidden
 		`}>
