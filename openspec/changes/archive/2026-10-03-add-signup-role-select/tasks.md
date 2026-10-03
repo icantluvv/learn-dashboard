@@ -17,7 +17,7 @@
 - [x] 2.2 Добавить `ROLE_VALUES` (`developer`, `analyst`, `student`, `beginner`) в
       `src/lib/auth/constants.ts`, по аналогии с `GENDER_VALUES`.
 - [x] 2.3 Обновить `user.additionalFields` в `src/lib/auth/server.ts`: `lastName` (`required:
-  false`), `role` (`required: true`, перечисление `ROLE_VALUES`); `age` → `required: false`.
+false`), `role` (`required: true`, перечисление `ROLE_VALUES`); `age` → `required: false`.
 - [x] 2.4 Обновить интерфейс `CurrentUser` и маппинг в `src/lib/auth/get-session.ts`: `lastName?`,
       `age?`, `role` (обязательное).
 
