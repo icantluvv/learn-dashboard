@@ -11,7 +11,7 @@ describe('<ThemeToggle />', () => {
 		document.documentElement.classList.remove('dark', 'light')
 	})
 
-	it('открывает меню с пунктами Светлая/Тёмная/Системная', async () => {
+	it('клик по кнопке переключает тему на тёмную', async () => {
 		const view = await render(
 			<ThemeProvider>
 				<ThemeToggle />
@@ -19,39 +19,23 @@ describe('<ThemeToggle />', () => {
 		)
 
 		await view.getByRole('button', { name: 'Переключить тему' }).click()
-
-		await expect.element(view.getByRole('menuitem', { name: 'Светлая' })).toBeVisible()
-		await expect.element(view.getByRole('menuitem', { name: 'Тёмная' })).toBeVisible()
-		await expect.element(view.getByRole('menuitem', { name: 'Системная' })).toBeVisible()
-	})
-
-	it('выбор «Тёмная» включает класс dark на документе', async () => {
-		const view = await render(
-			<ThemeProvider>
-				<ThemeToggle />
-			</ThemeProvider>,
-		)
-
-		await view.getByRole('button', { name: 'Переключить тему' }).click()
-		await view.getByRole('menuitem', { name: 'Тёмная' }).click()
 
 		await expect.element(document.documentElement).toHaveClass('dark')
 	})
 
-	it('выбор «Светлая» после тёмной возвращает класс light', async () => {
+	it('повторный клик возвращает светлую тему', async () => {
 		const view = await render(
 			<ThemeProvider>
 				<ThemeToggle />
 			</ThemeProvider>,
 		)
 
-		await view.getByRole('button', { name: 'Переключить тему' }).click()
-		await view.getByRole('menuitem', { name: 'Тёмная' }).click()
+		const button = view.getByRole('button', { name: 'Переключить тему' })
+
+		await button.click()
 		await expect.element(document.documentElement).toHaveClass('dark')
 
-		await view.getByRole('button', { name: 'Переключить тему' }).click()
-		await view.getByRole('menuitem', { name: 'Светлая' }).click()
-
+		await button.click()
 		await expect.element(document.documentElement).toHaveClass('light')
 	})
 })
