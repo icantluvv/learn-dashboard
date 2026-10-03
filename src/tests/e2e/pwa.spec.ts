@@ -28,18 +28,38 @@ test('манифест отдаётся и заполнен', async ({ request }
 	expect(manifest.start_url).toBe('/')
 })
 
-test('каждая иконка из манифеста и apple-touch-icon отдаются как изображения', async ({
-	request,
-}) => {
+test('каждая иконка из манифеста отдаётся как изображение', async ({ request }) => {
 	const manifestResponse = await request.get('/manifest.webmanifest')
 	const manifest = (await manifestResponse.json()) as WebAppManifest
 
-	const iconPaths = [...manifest.icons.map((icon) => icon.src), '/apple-touch-icon.png']
+	for (const icon of manifest.icons) {
+		const response = await request.get(icon.src)
 
-	for (const path of iconPaths) {
-		const response = await request.get(path)
+		expect(response.ok(), `${icon.src} should respond 200`).toBe(true)
+		expect(response.headers()['content-type']).toMatch(/^image\//)
+	}
+})
 
-		expect(response.ok(), `${path} should respond 200`).toBe(true)
+test('apple-touch-icon и favicon отдаются по хешированному URL', async ({ request }) => {
+	const htmlResponse = await request.get('/')
+	const html = await htmlResponse.text()
+
+	const appleIconHref = /<link[^>]+rel="apple-touch-icon"[^>]+href="([^"]+)"/.exec(html)?.[1]
+	const iconHref = /<link[^>]+rel="icon"[^>]+href="([^"]+)"/.exec(html)?.[1]
+
+	expect(appleIconHref, 'apple-touch-icon link should be present').toBeTruthy()
+	expect(iconHref, 'icon link should be present').toBeTruthy()
+
+	for (const href of [appleIconHref, iconHref]) {
+		if (href === undefined) {
+			continue
+		}
+
+		expect(href).toMatch(/\?/)
+
+		const response = await request.get(href)
+
+		expect(response.ok(), `${href} should respond 200`).toBe(true)
 		expect(response.headers()['content-type']).toMatch(/^image\//)
 	}
 })

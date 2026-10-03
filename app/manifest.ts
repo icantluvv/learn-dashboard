@@ -4,7 +4,7 @@ import { BRAND_NAME, BRAND_SHORT_NAME, CONTENT_LANGUAGE, SITE_DESCRIPTION } from
 
 export default function manifest(): MetadataRoute.Manifest {
 	return {
-		background_color: '#1c2637',
+		background_color: '#ffffff',
 		description: SITE_DESCRIPTION,
 		display: 'standalone',
 		icons: [
