@@ -5,7 +5,7 @@ export function CoreBannerSkeleton() {
 		<div className={`
 			relative flex h-40 w-full items-end overflow-hidden rounded-2xl p-6 border-shaded
 			md:h-64 md:p-8
-			lg:h-96
+			lg:h-70
 		`}>
 			<Skeleton className="absolute inset-0 rounded-none" />
 

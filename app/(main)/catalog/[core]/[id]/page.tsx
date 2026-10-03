@@ -11,10 +11,10 @@ import { getSkillById } from '#/modules/skills/server/skills-repository'
 import { buildPageMetadata, getCoreSeoCopy } from '#/seo'
 import { getQueryClient } from '#/utils/get-query-client'
 import {
-	BackButton,
 	SkillDetailContent,
 	SkillDetailError,
 } from '@/(main)/catalog/[core]/[id]/_components/skill-detail'
+import { BackButton } from '@/(main)/catalog/[core]/_components/back-button'
 
 import { isSkillInCore } from './skill-route'
 

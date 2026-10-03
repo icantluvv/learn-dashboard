@@ -9,6 +9,7 @@ import { getCoreByType } from '#/modules/cores/server/cores-repository'
 import { getSkills } from '#/modules/skills/server/skills-repository'
 import { buildPageMetadata, getCoreSeoCopy } from '#/seo'
 import { getQueryClient } from '#/utils/get-query-client'
+import { BackButton } from '@/(main)/catalog/[core]/_components/back-button'
 import { Catalog } from '@/(main)/catalog/[core]/_components/catalog'
 import { CorePlaceholder } from '@/(main)/catalog/[core]/_components/core-placeholder'
 import { SidebarFilters } from '@/(main)/catalog/[core]/_components/sidebar-filters'
@@ -61,6 +62,7 @@ export default async function CatalogCorePage({ params }: CatalogCorePageProps) 
 
 	return (
 		<HydrationBoundary state={dehydrate(queryClient)}>
+			<BackButton />
 			<div className={`
 				page-wrapper v-stack gap-4
 				md:flex-row md:gap-12
