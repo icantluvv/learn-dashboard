@@ -1,17 +1,21 @@
-## 1. Перенос BackButton в общую директорию
+## 1. Перенос BackButton в shared-директорию
 
-- [x] 1.1 Создать `app/(main)/catalog/[core]/_components/back-button/back-button.tsx` с
-      содержимым текущего
+- [x] 1.1 Создать `src/components/back-button/back-button.tsx` с содержимым текущего
       `app/(main)/catalog/[core]/[id]/_components/skill-detail/back-button.tsx` (без изменений
       логики/разметки).
 - [x] 1.2 Перенести `back-button.test.tsx` рядом, обновив только относительный импорт при
       необходимости.
-- [x] 1.3 Создать `app/(main)/catalog/[core]/_components/back-button/index.ts` с
+- [x] 1.3 Создать `src/components/back-button/index.ts` с
       `export { BackButton } from './back-button'`.
 - [x] 1.4 Удалить `back-button.tsx` и `back-button.test.tsx` из
       `[id]/_components/skill-detail/` и убрать реэкспорт `BackButton` из
       `skill-detail/index.ts`.
-- [x] 1.5 Обновить импорт `BackButton` в `app/(main)/catalog/[core]/[id]/page.tsx` на новый путь.
+- [x] 1.5 Обновить импорт `BackButton` в `app/(main)/catalog/[core]/[id]/page.tsx` на
+      `#/components/back-button`.
+- [x] 1.6 (по итогам ревью) Промежуточное размещение в
+      `app/(main)/catalog/[core]/_components/back-button/` признано слишком узким — компонент не
+      содержит доменной логики каталога, поэтому перенесён в `src/components/back-button/`;
+      импорты в обеих `page.tsx` обновлены на `#/components/back-button`.
 
 ## 2. Добавление кнопки на страницу каталога направления
 
@@ -26,7 +30,7 @@
 ## 3. Тесты
 
 - [x] 3.1 Прогнать перенесённый `back-button.test.tsx` на новом месте
-      (`npx vitest run app/\(main\)/catalog/\[core\]/_components/back-button/back-button.test.tsx --project component`).
+      (`npx vitest run src/components/back-button/back-button.test.tsx --project component`).
 - [x] 3.2 Component-тест страницы `/catalog/{core}` не добавлен: в кодбейзе нет ни одного
       `page.test.tsx` для async Server Component страниц (включая уже существующую
       `/catalog/{core}/{id}`). Условие показа кнопки покрыто мануальной проверкой и структурной

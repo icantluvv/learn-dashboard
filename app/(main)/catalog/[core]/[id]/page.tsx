@@ -4,6 +4,7 @@ import { getSkillByIdQueryOptions } from '@repo/api'
 import { dehydrate, HydrationBoundary } from '@tanstack/react-query'
 import { notFound } from 'next/navigation'
 
+import { BackButton } from '#/components/back-button'
 import { resolveSkillCore } from '#/constants/skill-cores'
 import { getCurrentUser } from '#/lib/auth/get-session'
 import { isSkillCompleted } from '#/modules/skills/server/skill-completion-repository.server'
@@ -14,7 +15,6 @@ import {
 	SkillDetailContent,
 	SkillDetailError,
 } from '@/(main)/catalog/[core]/[id]/_components/skill-detail'
-import { BackButton } from '@/(main)/catalog/[core]/_components/back-button'
 
 import { isSkillInCore } from './skill-route'
 
