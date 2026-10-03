@@ -10,7 +10,7 @@ vi.mock('#/lib/auth/database.server', () => ({
 	getAuthDbPool: () => ({ query }),
 }))
 
-const { isSkillCompleted, setSkillCompletion } =
+const { getCompletedSkillsByCore, isSkillCompleted, setSkillCompletion } =
 	await import('./skill-completion-repository.server')
 
 function foreignKeyViolation() {
@@ -110,6 +110,104 @@ describe('skill completion repository', () => {
 			await expect(setSkillCompletion('user-1', 'js-closures', true)).rejects.toThrow(
 				'connection terminated',
 			)
+		})
+	})
+
+	describe('getCompletedSkillsByCore', () => {
+		it('returns an empty list when the user has no completed skills', async () => {
+			query.mockResolvedValue({ rows: [] })
+
+			await expect(getCompletedSkillsByCore('user-1')).resolves.toStrictEqual([])
+		})
+
+		it('groups completed skills under a single core', async () => {
+			query.mockResolvedValue({
+				rows: [
+					{
+						core: 'frontend',
+						core_name: 'Frontend',
+						skill_id: 'js-closures',
+						skill_title: 'Замыкания',
+					},
+					{
+						core: 'frontend',
+						core_name: 'Frontend',
+						skill_id: 'js-promises',
+						skill_title: 'Промисы',
+					},
+				],
+			})
+
+			await expect(getCompletedSkillsByCore('user-1')).resolves.toStrictEqual([
+				{
+					core: 'frontend',
+					coreName: 'Frontend',
+					skills: [
+						{ id: 'js-closures', title: 'Замыкания' },
+						{ id: 'js-promises', title: 'Промисы' },
+					],
+				},
+			])
+		})
+
+		it('groups completed skills across several cores and preserves row order', async () => {
+			query.mockResolvedValue({
+				rows: [
+					{
+						core: 'frontend',
+						core_name: 'Frontend',
+						skill_id: 'js-closures',
+						skill_title: 'Замыкания',
+					},
+					{
+						core: 'backend',
+						core_name: 'Backend',
+						skill_id: 'db-indexes',
+						skill_title: 'Индексы БД',
+					},
+				],
+			})
+
+			await expect(getCompletedSkillsByCore('user-1')).resolves.toStrictEqual([
+				{
+					core: 'frontend',
+					coreName: 'Frontend',
+					skills: [{ id: 'js-closures', title: 'Замыкания' }],
+				},
+				{
+					core: 'backend',
+					coreName: 'Backend',
+					skills: [{ id: 'db-indexes', title: 'Индексы БД' }],
+				},
+			])
+		})
+
+		it('excludes cores without any completed skill by construction', async () => {
+			query.mockResolvedValue({
+				rows: [
+					{
+						core: 'frontend',
+						core_name: 'Frontend',
+						skill_id: 'js-closures',
+						skill_title: 'Замыкания',
+					},
+				],
+			})
+
+			const groups = await getCompletedSkillsByCore('user-1')
+
+			expect(groups).toHaveLength(1)
+			expect(groups[0]!.core).toBe('frontend')
+		})
+
+		it('scopes the query to the given user', async () => {
+			query.mockResolvedValue({ rows: [] })
+
+			await getCompletedSkillsByCore('user-42')
+
+			expect(query).toHaveBeenCalledWith(expect.stringContaining('user_completed_skill'), [
+				'user-42',
+			])
 		})
 	})
 })

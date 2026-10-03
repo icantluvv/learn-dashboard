@@ -1,4 +1,6 @@
 import type { CurrentUser } from '#/lib/auth/get-session'
+import type { UpdateAvatarActionResult } from '#/modules/auth/types'
+import type { CompletedSkillsCoreGroup } from '#/modules/skills/server/skill-completion-repository.server'
 
 import { describe, expect, it, vi } from 'vitest'
 
@@ -13,6 +15,8 @@ vi.mock('@repo/api', async (importOriginal) => {
 
 const { ProfileView } = await import('./profile-view')
 
+const updateAvatarAction = vi.fn<(formData: FormData) => Promise<UpdateAvatarActionResult>>()
+
 const user: CurrentUser = {
 	id: 'user-1',
 	name: 'Сергей',
@@ -21,6 +25,8 @@ const user: CurrentUser = {
 	age: 28,
 	role: 'developer',
 }
+
+const noSkillGroups: CompletedSkillsCoreGroup[] = []
 
 describe('<ProfileView />', () => {
 	it('показывает экран загрузки, пока запрос выполняется', async () => {
@@ -31,7 +37,9 @@ describe('<ProfileView />', () => {
 			isLoading: true,
 		})
 
-		const view = await renderWithProviders(<ProfileView />)
+		const view = await renderWithProviders(
+			<ProfileView updateAvatarAction={updateAvatarAction} />,
+		)
 
 		await expect.element(view.getByText('Сергей')).not.toBeInTheDocument()
 		await expect
@@ -47,7 +55,9 @@ describe('<ProfileView />', () => {
 			isLoading: false,
 		})
 
-		const view = await renderWithProviders(<ProfileView />)
+		const view = await renderWithProviders(
+			<ProfileView updateAvatarAction={updateAvatarAction} />,
+		)
 
 		await expect
 			.element(view.getByText('Войдите в профиль, чтобы увидеть свои данные'))
@@ -68,7 +78,9 @@ describe('<ProfileView />', () => {
 			isLoading: false,
 		})
 
-		const view = await renderWithProviders(<ProfileView />)
+		const view = await renderWithProviders(
+			<ProfileView updateAvatarAction={updateAvatarAction} />,
+		)
 
 		await expect
 			.element(view.getByText('Не удалось загрузить профиль. Попробуйте обновить страницу.'))
@@ -81,7 +93,9 @@ describe('<ProfileView />', () => {
 	it('показывает данные профиля для авторизованного пользователя', async () => {
 		useGetAuthMe.mockReturnValue({ data: user, error: null, isError: false, isLoading: false })
 
-		const view = await renderWithProviders(<ProfileView />)
+		const view = await renderWithProviders(
+			<ProfileView updateAvatarAction={updateAvatarAction} />,
+		)
 
 		await expect.element(view.getByText('Сергей')).toBeVisible()
 		await expect.element(view.getByText('user@example.com')).toBeVisible()
@@ -97,7 +111,9 @@ describe('<ProfileView />', () => {
 			isLoading: false,
 		})
 
-		const view = await renderWithProviders(<ProfileView />)
+		const view = await renderWithProviders(
+			<ProfileView updateAvatarAction={updateAvatarAction} />,
+		)
 
 		await expect.element(view.getByText('Сергей Пантелеев')).toBeVisible()
 	})
@@ -105,7 +121,9 @@ describe('<ProfileView />', () => {
 	it('показывает только имя, если фамилия не задана', async () => {
 		useGetAuthMe.mockReturnValue({ data: user, error: null, isError: false, isLoading: false })
 
-		const view = await renderWithProviders(<ProfileView />)
+		const view = await renderWithProviders(
+			<ProfileView updateAvatarAction={updateAvatarAction} />,
+		)
 
 		await expect.element(view.getByText('Сергей')).toBeVisible()
 		await expect.element(view.getByText('Сергей Пантелеев')).not.toBeInTheDocument()
@@ -124,8 +142,80 @@ describe('<ProfileView />', () => {
 			isLoading: false,
 		})
 
-		const view = await renderWithProviders(<ProfileView />)
+		const view = await renderWithProviders(
+			<ProfileView updateAvatarAction={updateAvatarAction} />,
+		)
 
 		await expect.element(view.getByText(label)).toBeVisible()
+	})
+
+	it('показывает возраст, если он задан', async () => {
+		useGetAuthMe.mockReturnValue({ data: user, error: null, isError: false, isLoading: false })
+
+		const view = await renderWithProviders(
+			<ProfileView updateAvatarAction={updateAvatarAction} />,
+		)
+
+		await expect.element(view.getByText('28 лет')).toBeVisible()
+	})
+
+	it('не показывает строку с возрастом, если он не задан', async () => {
+		const { age, ...userWithoutAge } = user
+		void age
+		useGetAuthMe.mockReturnValue({
+			data: userWithoutAge,
+			error: null,
+			isError: false,
+			isLoading: false,
+		})
+
+		const view = await renderWithProviders(
+			<ProfileView updateAvatarAction={updateAvatarAction} />,
+		)
+
+		await expect.element(view.getByText('лет', { exact: false })).not.toBeInTheDocument()
+	})
+
+	it('показывает сообщение об отсутствии изученных навыков, если групп нет', async () => {
+		useGetAuthMe.mockReturnValue({ data: user, error: null, isError: false, isLoading: false })
+
+		const view = await renderWithProviders(
+			<ProfileView
+				completedSkillGroups={noSkillGroups}
+				updateAvatarAction={updateAvatarAction}
+			/>,
+		)
+
+		await expect
+			.element(view.getByText('Вы ещё не отметили ни одного навыка изученным'))
+			.toBeVisible()
+	})
+
+	it('показывает изученные навыки, сгруппированные по направлениям', async () => {
+		useGetAuthMe.mockReturnValue({ data: user, error: null, isError: false, isLoading: false })
+		const groups: CompletedSkillsCoreGroup[] = [
+			{
+				core: 'frontend',
+				coreName: 'Frontend',
+				skills: [{ id: 'js-closures', title: 'Замыкания' }],
+			},
+			{
+				core: 'backend',
+				coreName: 'Backend',
+				skills: [{ id: 'db-indexes', title: 'Индексы БД' }],
+			},
+		]
+
+		const view = await renderWithProviders(
+			<ProfileView completedSkillGroups={groups} updateAvatarAction={updateAvatarAction} />,
+		)
+
+		await expect.element(view.getByText('Frontend')).toBeVisible()
+		await expect.element(view.getByText('Замыкания')).toBeVisible()
+		await expect.element(view.getByText('Backend')).toBeVisible()
+		await expect.element(view.getByText('Индексы БД')).toBeVisible()
+		await expect
+			.element(view.getByText('Вы ещё не отметили ни одного навыка изученным'))
+			.not.toBeInTheDocument()
 	})
 })

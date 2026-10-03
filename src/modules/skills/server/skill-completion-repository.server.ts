@@ -1,3 +1,5 @@
+import type { Core } from '@repo/api'
+
 import { getAuthDbPool } from '#/lib/auth/database.server'
 
 import 'server-only'
@@ -87,4 +89,58 @@ export async function setSkillCompletion(
 
 		throw error
 	}
+}
+
+export interface CompletedSkillSummaryItem {
+	id: string
+	title: string
+}
+
+export interface CompletedSkillsCoreGroup {
+	core: Core['type']
+	coreName: string
+	skills: CompletedSkillSummaryItem[]
+}
+
+interface CompletedSkillRow {
+	core: Core['type']
+	core_name: string
+	skill_id: string
+	skill_title: string
+}
+
+/**
+ * Группирует только по направлениям, в которых есть хотя бы один изученный навык: пустые группы не
+ * нужны секции профиля (см. `profile-completed-skills-summary` spec).
+ */
+export async function getCompletedSkillsByCore(
+	userId: string,
+): Promise<CompletedSkillsCoreGroup[]> {
+	const result = await getAuthDbPool().query<CompletedSkillRow>(
+		`select
+			 skills.core as core,
+			 cores.name as core_name,
+			 skills.id as skill_id,
+			 skills.title as skill_title
+		 from user_completed_skill
+		 join skills on skills.id = user_completed_skill.skill_id
+		 join cores on cores.type = skills.core
+		 where user_completed_skill.user_id = $1
+		 order by cores.display_order asc, skills.title asc`,
+		[userId],
+	)
+	const groups = new Map<Core['type'], CompletedSkillsCoreGroup>()
+
+	for (const row of result.rows) {
+		let group = groups.get(row.core)
+
+		if (group == null) {
+			group = { core: row.core, coreName: row.core_name, skills: [] }
+			groups.set(row.core, group)
+		}
+
+		group.skills.push({ id: row.skill_id, title: row.skill_title })
+	}
+
+	return [...groups.values()]
 }

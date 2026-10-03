@@ -1,7 +1,7 @@
 'use server'
 
 import type { ValidatedAvatar } from './avatar'
-import type { AuthActionResult } from './types'
+import type { AuthActionResult, UpdateAvatarActionResult } from './types'
 
 import { APIError } from 'better-auth/api'
 import { headers } from 'next/headers'
@@ -128,6 +128,54 @@ export async function signUpAction(formData: FormData): Promise<AuthActionResult
 	}
 
 	return { ok: true }
+}
+
+export async function updateAvatarAction(formData: FormData): Promise<UpdateAvatarActionResult> {
+	const avatarEntry = formData.get('avatar')
+	const avatarFile = avatarEntry instanceof File && avatarEntry.size > 0 ? avatarEntry : undefined
+
+	if (avatarFile == null) {
+		return { ok: false, error: 'Выберите изображение' }
+	}
+
+	const validated = await validateAvatarFile(avatarFile)
+
+	if (typeof validated === 'string') {
+		return { ok: false, error: validated }
+	}
+
+	const requestHeaders = await headers()
+	const session = await auth.api.getSession({ headers: requestHeaders })
+
+	if (session == null) {
+		return { ok: false, error: genericErrorMessage }
+	}
+
+	const avatarId = crypto.randomUUID()
+	const avatarUrl = new URL(
+		`/api/avatars/${avatarId}`,
+		serverEnvironment.BETTER_AUTH_URL,
+	).toString()
+
+	try {
+		await saveAvatar({
+			id: avatarId,
+			userId: session.user.id,
+			contentType: validated.contentType,
+			byteLength: validated.bytes.byteLength,
+			bytes: validated.bytes,
+		})
+	} catch {
+		return { ok: false, error: genericErrorMessage }
+	}
+
+	try {
+		await auth.api.updateUser({ headers: requestHeaders, body: { image: avatarUrl } })
+	} catch {
+		return { ok: false, error: genericErrorMessage }
+	}
+
+	return { ok: true, image: avatarUrl }
 }
 
 export async function signInAction(values: unknown): Promise<AuthActionResult> {

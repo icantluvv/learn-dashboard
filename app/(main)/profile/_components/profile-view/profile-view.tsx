@@ -1,5 +1,10 @@
 'use client'
 
+import type { ReactNode } from 'react'
+
+import type { UpdateAvatarAction } from '#/modules/auth/types'
+import type { CompletedSkillsCoreGroup } from '#/modules/skills/server/skill-completion-repository.server'
+
 import { useGetAuthMe } from '@repo/api'
 
 import { ProfileAuthenticated } from './profile-authenticated'
@@ -15,20 +20,52 @@ function isUnauthorizedError(error: unknown): boolean {
 	return 'status' in error.cause && error.cause.status === 401
 }
 
-export function ProfileView() {
+interface ProfileViewProps {
+	completedSkillGroups?: CompletedSkillsCoreGroup[]
+	updateAvatarAction: UpdateAvatarAction
+}
+
+const noCompletedSkillGroups: CompletedSkillsCoreGroup[] = []
+
+export function ProfileView({
+	completedSkillGroups = noCompletedSkillGroups,
+	updateAvatarAction,
+}: ProfileViewProps) {
 	const { data, error, isError, isLoading } = useGetAuthMe({ query: { retry: false } })
 
 	if (isLoading) {
-		return <ProfileLoading />
+		return (
+			<CenteredState>
+				<ProfileLoading />
+			</CenteredState>
+		)
 	}
 
 	if (isError) {
-		return isUnauthorizedError(error) ? <ProfileGuest /> : <ProfileError />
+		return (
+			<CenteredState>
+				{isUnauthorizedError(error) ? <ProfileGuest /> : <ProfileError />}
+			</CenteredState>
+		)
 	}
 
 	if (data == null) {
-		return <ProfileError />
+		return (
+			<CenteredState>
+				<ProfileError />
+			</CenteredState>
+		)
 	}
 
-	return <ProfileAuthenticated user={data} />
+	return (
+		<ProfileAuthenticated
+			completedSkillGroups={completedSkillGroups}
+			updateAvatarAction={updateAvatarAction}
+			user={data}
+		/>
+	)
+}
+
+function CenteredState({ children }: { children: ReactNode }) {
+	return <div className="flex flex-1 items-center justify-center">{children}</div>
 }

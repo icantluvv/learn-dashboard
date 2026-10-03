@@ -6,8 +6,14 @@ interface AuthApiCall {
 	headers: Headers
 }
 
+interface SessionResult {
+	user: { id: string }
+}
+
 const signUpEmail = vi.fn<(options: AuthApiCall) => Promise<unknown>>()
 const signInEmail = vi.fn<(options: AuthApiCall) => Promise<unknown>>()
+const getSession = vi.fn<(options: { headers: Headers }) => Promise<SessionResult | null>>()
+const updateUser = vi.fn<(options: AuthApiCall) => Promise<unknown>>()
 const saveAvatar = vi.fn<(input: unknown) => Promise<void>>()
 const deleteUserAfterAvatarFailure = vi.fn<(userId: string) => Promise<void>>()
 vi.mock('#/lib/auth/server', () => ({
@@ -15,6 +21,8 @@ vi.mock('#/lib/auth/server', () => ({
 		api: {
 			signUpEmail: async (options: AuthApiCall) => signUpEmail(options),
 			signInEmail: async (options: AuthApiCall) => signInEmail(options),
+			getSession: async (options: { headers: Headers }) => getSession(options),
+			updateUser: async (options: AuthApiCall) => updateUser(options),
 		},
 	},
 }))
@@ -28,7 +36,19 @@ vi.mock('next/headers', () => ({
 	headers: async () => new Headers(),
 }))
 
-const { signInAction, signUpAction } = await import('./actions')
+const { signInAction, signUpAction, updateAvatarAction } = await import('./actions')
+
+function pngFile(name = 'a.png') {
+	return new File([new Uint8Array([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a])], name, {
+		type: 'image/png',
+	})
+}
+
+function avatarFormData(file: File) {
+	const formData = new FormData()
+	formData.set('avatar', file)
+	return formData
+}
 
 const validSignUp = {
 	name: 'Сергей',
@@ -164,6 +184,117 @@ describe('signUpAction', () => {
 
 		expect(deleteUserAfterAvatarFailure).toHaveBeenCalledWith('user-1')
 		expect(result).toMatchObject({ ok: false, formError: expect.any(String) as string })
+	})
+})
+
+describe('updateAvatarAction', () => {
+	beforeEach(() => {
+		getSession.mockReset()
+		updateUser.mockReset()
+		saveAvatar.mockReset()
+	})
+
+	it('saves the file, updates the session user image and returns its URL', async () => {
+		getSession.mockResolvedValue({ user: { id: 'user-1' } })
+		updateUser.mockResolvedValue({})
+
+		const result = await updateAvatarAction(avatarFormData(pngFile()))
+
+		expect(result.ok).toBe(true)
+		expect(result).toMatchObject({
+			ok: true,
+			image: expect.stringMatching(
+				/^http:\/\/localhost:3000\/api\/avatars\/[0-9a-f-]+$/,
+			) as string,
+		})
+		expect(saveAvatar).toHaveBeenCalledWith(
+			expect.objectContaining({ userId: 'user-1', contentType: 'image/png', byteLength: 8 }),
+		)
+
+		if (!result.ok) {
+			throw new Error('expected updateAvatarAction to succeed')
+		}
+
+		expect(updateUser.mock.calls[0]?.[0]?.body).toMatchObject({ image: result.image })
+	})
+
+	it('rejects a request without a selected file', async () => {
+		const result = await updateAvatarAction(new FormData())
+
+		expect(result).toStrictEqual({ ok: false, error: 'Выберите изображение' })
+		expect(getSession).not.toHaveBeenCalled()
+		expect(saveAvatar).not.toHaveBeenCalled()
+	})
+
+	it('rejects a file with a disallowed MIME type', async () => {
+		const file = new File(['data'], 'a.gif', { type: 'image/gif' })
+
+		const result = await updateAvatarAction(avatarFormData(file))
+
+		if (result.ok) {
+			throw new Error('expected updateAvatarAction to fail')
+		}
+
+		expect(result.error).toContain('формат')
+		expect(getSession).not.toHaveBeenCalled()
+		expect(saveAvatar).not.toHaveBeenCalled()
+	})
+
+	it('rejects a file that exceeds the size limit', async () => {
+		const oversized = new File([new Uint8Array(5 * 1024 * 1024 + 1)], 'a.png', {
+			type: 'image/png',
+		})
+
+		const result = await updateAvatarAction(avatarFormData(oversized))
+
+		if (result.ok) {
+			throw new Error('expected updateAvatarAction to fail')
+		}
+
+		expect(result.error).toContain('5 МБ')
+		expect(saveAvatar).not.toHaveBeenCalled()
+	})
+
+	it('rejects content whose bytes do not match the declared format', async () => {
+		const spoofed = new File(['not an image'], 'a.png', { type: 'image/png' })
+
+		const result = await updateAvatarAction(avatarFormData(spoofed))
+
+		if (result.ok) {
+			throw new Error('expected updateAvatarAction to fail')
+		}
+
+		expect(result.error).toContain('Содержимое')
+		expect(getSession).not.toHaveBeenCalled()
+	})
+
+	it('rejects the request when there is no active session, without storing the file', async () => {
+		getSession.mockResolvedValue(null)
+
+		const result = await updateAvatarAction(avatarFormData(pngFile()))
+
+		expect(result.ok).toBe(false)
+		expect(saveAvatar).not.toHaveBeenCalled()
+		expect(updateUser).not.toHaveBeenCalled()
+	})
+
+	it('reports a generic error and leaves the current image when storage fails', async () => {
+		getSession.mockResolvedValue({ user: { id: 'user-1' } })
+		saveAvatar.mockRejectedValue(new Error('database unavailable'))
+
+		const result = await updateAvatarAction(avatarFormData(pngFile()))
+
+		expect(result.ok).toBe(false)
+		expect(updateUser).not.toHaveBeenCalled()
+	})
+
+	it('reports a generic error when Better Auth fails to update the user', async () => {
+		getSession.mockResolvedValue({ user: { id: 'user-1' } })
+		updateUser.mockRejectedValue(new Error('unexpected failure'))
+
+		const result = await updateAvatarAction(avatarFormData(pngFile()))
+
+		expect(result.ok).toBe(false)
 	})
 })
 
