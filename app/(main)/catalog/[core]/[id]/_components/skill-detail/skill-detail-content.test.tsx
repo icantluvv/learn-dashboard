@@ -74,7 +74,7 @@ describe('<SkillDetailContent />', () => {
 	it('shows the completion button next to the title', async () => {
 		const view = await renderContent()
 
-		await expect.element(view.getByRole('link', { name: 'Не изучен' })).toBeVisible()
+		await expect.element(view.getByRole('link', { name: 'Изучить' })).toBeVisible()
 	})
 
 	it('shows a message instead of the list when there are no questions', async () => {

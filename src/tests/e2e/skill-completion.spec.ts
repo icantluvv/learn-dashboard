@@ -42,7 +42,8 @@ async function openFirstSkill(page: Page) {
 	return page.url()
 }
 
-const completionButton = (page: Page) => page.getByRole('button', { name: 'Изучен' })
+// Подпись переключается между «Изучить» и «Изучен», поэтому локатор принимает оба варианта.
+const completionButton = (page: Page) => page.getByRole('button', { name: /^Изуч(ить|ен)$/ })
 
 test('авторизованный пользователь отмечает навык изученным и снимает отметку', async ({ page }) => {
 	await signUp(page, uniqueEmail())
@@ -91,7 +92,7 @@ test('гость уходит на вход и возвращается на с�
 	const skillUrl = await openFirstSkill(page)
 	const skillPath = new URL(skillUrl).pathname
 
-	await page.getByRole('link', { name: 'Изучен' }).click()
+	await page.getByRole('link', { name: 'Изучить' }).click()
 
 	await expect(page).toHaveURL(`/sign-in?next=${encodeURIComponent(skillPath)}`)
 

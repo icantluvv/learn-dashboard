@@ -10,6 +10,7 @@ interface CopyQuestionButtonProps {
 
 const tooltipLabel = 'копировать вопрос'
 const iconClassName = 'size-4 transition-transform group-active/button:scale-75'
+const copiedIconClassName = `${iconClassName} text-brand-primary`
 
 export function CopyQuestionButton({ question }: CopyQuestionButtonProps) {
 	const [isCopied, setIsCopied] = useState(false)
@@ -42,7 +43,7 @@ export function CopyQuestionButton({ question }: CopyQuestionButtonProps) {
 						}}
 					>
 						{isCopied ? (
-							<Check className={iconClassName} />
+							<Check className={copiedIconClassName} />
 						) : (
 							<Copy className={iconClassName} />
 						)}

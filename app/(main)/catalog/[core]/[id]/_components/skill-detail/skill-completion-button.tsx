@@ -22,12 +22,19 @@ const buttonWidthClassName = `
 	md:w-fit
 `
 
+// Отмеченное состояние использует брендовый фиолетовый вместо тёмной заливки варианта default.
+const completedClassName = `
+	bg-brand-primary
+	hover:bg-brand-primary/90
+	active:bg-brand-primary/90
+`
+
 export function SkillCompletionButton({ isAuthenticated, skillId }: SkillCompletionButtonProps) {
 	const pathname = usePathname()
 	const queryClient = useQueryClient()
 	const { data: skill } = useGetSkillById({ id: skillId })
 	const completed = skill?.completed ?? false
-	const label = completed ? 'Изучен' : 'Не изучен'
+	const label = completed ? 'Изучен' : 'Изучить'
 
 	const { isPending, mutate } = useSetSkillCompletion({
 		mutation: {
@@ -59,7 +66,7 @@ export function SkillCompletionButton({ isAuthenticated, skillId }: SkillComplet
 
 	return (
 		<Button
-			className={buttonWidthClassName}
+			className={cn(buttonWidthClassName, completed && completedClassName)}
 			variant={completed ? 'default' : 'outline'}
 			aria-pressed={completed}
 			disabled={isPending}
@@ -67,12 +74,12 @@ export function SkillCompletionButton({ isAuthenticated, skillId }: SkillComplet
 				mutate({ id: skillId, data: { completed: !completed } })
 			}}
 		>
+			{label}
 			{isPending ? (
 				<Spinner className="size-4" />
 			) : completed ? (
 				<Check className="size-4" />
 			) : null}
-			{label}
 		</Button>
 	)
 }
