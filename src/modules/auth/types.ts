@@ -9,3 +9,6 @@ export type SignUpAction = (values: FormData) => Promise<AuthActionResult>
 
 export type UpdateAvatarActionResult = { error: string; ok: false } | { image: string; ok: true }
 export type UpdateAvatarAction = (formData: FormData) => Promise<UpdateAvatarActionResult>
+
+export type RemoveAvatarActionResult = { error: string; ok: false } | { ok: true }
+export type RemoveAvatarAction = () => Promise<RemoveAvatarActionResult>

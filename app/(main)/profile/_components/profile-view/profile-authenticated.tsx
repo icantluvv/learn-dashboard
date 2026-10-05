@@ -1,7 +1,7 @@
 'use client'
 
 import type { CurrentUser } from '#/lib/auth/get-session'
-import type { UpdateAvatarAction } from '#/modules/auth/types'
+import type { RemoveAvatarAction, UpdateAvatarAction } from '#/modules/auth/types'
 import type { CompletedSkillsCoreGroup } from '#/modules/skills/server/skill-completion-repository.server'
 
 import { Button } from '@repo/core'
@@ -19,12 +19,14 @@ const ROLE_LABELS = {
 
 interface ProfileAuthenticatedProps {
 	completedSkillGroups: CompletedSkillsCoreGroup[]
+	removeAvatarAction: RemoveAvatarAction
 	updateAvatarAction: UpdateAvatarAction
 	user: CurrentUser
 }
 
 export function ProfileAuthenticated({
 	completedSkillGroups,
+	removeAvatarAction,
 	updateAvatarAction,
 	user,
 }: ProfileAuthenticatedProps) {
@@ -38,7 +40,11 @@ export function ProfileAuthenticated({
 
 				<div className="v-stack items-start gap-6 px-6 pb-8">
 					<div className="relative z-10 -mt-10">
-						<ProfileAvatarUpload action={updateAvatarAction} user={user} />
+						<ProfileAvatarUpload
+							action={updateAvatarAction}
+							removeAction={removeAvatarAction}
+							user={user}
+						/>
 					</div>
 
 					<div className="v-stack gap-1">

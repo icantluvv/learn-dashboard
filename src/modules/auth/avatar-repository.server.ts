@@ -50,3 +50,7 @@ export async function getAvatar(id: string): Promise<AvatarRecord | null> {
 export async function deleteUserAfterAvatarFailure(userId: string) {
 	await getAuthDbPool().query('delete from "user" where "id" = $1', [userId])
 }
+
+export async function deleteAvatar(id: string) {
+	await getAuthDbPool().query('delete from user_avatar where id = $1', [id])
+}

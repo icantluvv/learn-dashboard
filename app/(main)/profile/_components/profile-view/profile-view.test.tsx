@@ -1,5 +1,5 @@
 import type { CurrentUser } from '#/lib/auth/get-session'
-import type { UpdateAvatarActionResult } from '#/modules/auth/types'
+import type { RemoveAvatarActionResult, UpdateAvatarActionResult } from '#/modules/auth/types'
 import type { CompletedSkillsCoreGroup } from '#/modules/skills/server/skill-completion-repository.server'
 
 import { describe, expect, it, vi } from 'vitest'
@@ -15,6 +15,7 @@ vi.mock('@repo/api', async (importOriginal) => {
 
 const { ProfileView } = await import('./profile-view')
 
+const removeAvatarAction = vi.fn<() => Promise<RemoveAvatarActionResult>>()
 const updateAvatarAction = vi.fn<(formData: FormData) => Promise<UpdateAvatarActionResult>>()
 
 const user: CurrentUser = {
@@ -38,7 +39,10 @@ describe('<ProfileView />', () => {
 		})
 
 		const view = await renderWithProviders(
-			<ProfileView updateAvatarAction={updateAvatarAction} />,
+			<ProfileView
+				removeAvatarAction={removeAvatarAction}
+				updateAvatarAction={updateAvatarAction}
+			/>,
 		)
 
 		await expect.element(view.getByText('Сергей')).not.toBeInTheDocument()
@@ -56,7 +60,10 @@ describe('<ProfileView />', () => {
 		})
 
 		const view = await renderWithProviders(
-			<ProfileView updateAvatarAction={updateAvatarAction} />,
+			<ProfileView
+				removeAvatarAction={removeAvatarAction}
+				updateAvatarAction={updateAvatarAction}
+			/>,
 		)
 
 		await expect
@@ -79,7 +86,10 @@ describe('<ProfileView />', () => {
 		})
 
 		const view = await renderWithProviders(
-			<ProfileView updateAvatarAction={updateAvatarAction} />,
+			<ProfileView
+				removeAvatarAction={removeAvatarAction}
+				updateAvatarAction={updateAvatarAction}
+			/>,
 		)
 
 		await expect
@@ -94,7 +104,10 @@ describe('<ProfileView />', () => {
 		useGetAuthMe.mockReturnValue({ data: user, error: null, isError: false, isLoading: false })
 
 		const view = await renderWithProviders(
-			<ProfileView updateAvatarAction={updateAvatarAction} />,
+			<ProfileView
+				removeAvatarAction={removeAvatarAction}
+				updateAvatarAction={updateAvatarAction}
+			/>,
 		)
 
 		await expect.element(view.getByText('Сергей')).toBeVisible()
@@ -112,7 +125,10 @@ describe('<ProfileView />', () => {
 		})
 
 		const view = await renderWithProviders(
-			<ProfileView updateAvatarAction={updateAvatarAction} />,
+			<ProfileView
+				removeAvatarAction={removeAvatarAction}
+				updateAvatarAction={updateAvatarAction}
+			/>,
 		)
 
 		await expect.element(view.getByText('Сергей Пантелеев')).toBeVisible()
@@ -122,7 +138,10 @@ describe('<ProfileView />', () => {
 		useGetAuthMe.mockReturnValue({ data: user, error: null, isError: false, isLoading: false })
 
 		const view = await renderWithProviders(
-			<ProfileView updateAvatarAction={updateAvatarAction} />,
+			<ProfileView
+				removeAvatarAction={removeAvatarAction}
+				updateAvatarAction={updateAvatarAction}
+			/>,
 		)
 
 		await expect.element(view.getByText('Сергей')).toBeVisible()
@@ -143,7 +162,10 @@ describe('<ProfileView />', () => {
 		})
 
 		const view = await renderWithProviders(
-			<ProfileView updateAvatarAction={updateAvatarAction} />,
+			<ProfileView
+				removeAvatarAction={removeAvatarAction}
+				updateAvatarAction={updateAvatarAction}
+			/>,
 		)
 
 		await expect.element(view.getByText(label)).toBeVisible()
@@ -153,7 +175,10 @@ describe('<ProfileView />', () => {
 		useGetAuthMe.mockReturnValue({ data: user, error: null, isError: false, isLoading: false })
 
 		const view = await renderWithProviders(
-			<ProfileView updateAvatarAction={updateAvatarAction} />,
+			<ProfileView
+				removeAvatarAction={removeAvatarAction}
+				updateAvatarAction={updateAvatarAction}
+			/>,
 		)
 
 		await expect.element(view.getByText('28 лет')).toBeVisible()
@@ -170,7 +195,10 @@ describe('<ProfileView />', () => {
 		})
 
 		const view = await renderWithProviders(
-			<ProfileView updateAvatarAction={updateAvatarAction} />,
+			<ProfileView
+				removeAvatarAction={removeAvatarAction}
+				updateAvatarAction={updateAvatarAction}
+			/>,
 		)
 
 		await expect.element(view.getByText('лет', { exact: false })).not.toBeInTheDocument()
@@ -182,6 +210,7 @@ describe('<ProfileView />', () => {
 		const view = await renderWithProviders(
 			<ProfileView
 				completedSkillGroups={noSkillGroups}
+				removeAvatarAction={removeAvatarAction}
 				updateAvatarAction={updateAvatarAction}
 			/>,
 		)
@@ -207,7 +236,11 @@ describe('<ProfileView />', () => {
 		]
 
 		const view = await renderWithProviders(
-			<ProfileView completedSkillGroups={groups} updateAvatarAction={updateAvatarAction} />,
+			<ProfileView
+				completedSkillGroups={groups}
+				removeAvatarAction={removeAvatarAction}
+				updateAvatarAction={updateAvatarAction}
+			/>,
 		)
 
 		await expect.element(view.getByText('Frontend')).toBeVisible()

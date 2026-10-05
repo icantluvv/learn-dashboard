@@ -2,7 +2,7 @@
 
 import type { ReactNode } from 'react'
 
-import type { UpdateAvatarAction } from '#/modules/auth/types'
+import type { RemoveAvatarAction, UpdateAvatarAction } from '#/modules/auth/types'
 import type { CompletedSkillsCoreGroup } from '#/modules/skills/server/skill-completion-repository.server'
 
 import { useGetAuthMe } from '@repo/api'
@@ -22,6 +22,7 @@ function isUnauthorizedError(error: unknown): boolean {
 
 interface ProfileViewProps {
 	completedSkillGroups?: CompletedSkillsCoreGroup[]
+	removeAvatarAction: RemoveAvatarAction
 	updateAvatarAction: UpdateAvatarAction
 }
 
@@ -29,6 +30,7 @@ const noCompletedSkillGroups: CompletedSkillsCoreGroup[] = []
 
 export function ProfileView({
 	completedSkillGroups = noCompletedSkillGroups,
+	removeAvatarAction,
 	updateAvatarAction,
 }: ProfileViewProps) {
 	const { data, error, isError, isLoading } = useGetAuthMe({ query: { retry: false } })
@@ -60,6 +62,7 @@ export function ProfileView({
 	return (
 		<ProfileAuthenticated
 			completedSkillGroups={completedSkillGroups}
+			removeAvatarAction={removeAvatarAction}
 			updateAvatarAction={updateAvatarAction}
 			user={data}
 		/>

@@ -40,7 +40,7 @@ function TooltipContent({
 			>
 				<TooltipPrimitive.Popup data-slot="tooltip-content" className={cn(`
 					inline-flex w-fit max-w-xs origin-(--transform-origin) items-center gap-1.5
-					rounded-md bg-foreground px-3 py-1.5 text-xs text-background duration-100
+					rounded-md bg-card px-3 py-1.5 text-xs text-card-foreground duration-100
 					data-[side=bottom]:slide-in-from-top-2
 					data-[side=left]:slide-in-from-right-2
 					data-[side=right]:slide-in-from-left-2
@@ -50,7 +50,7 @@ function TooltipContent({
 				`, className)} {...props}>
 					{children}
 					<TooltipPrimitive.Arrow className={`
-						size-2.5 rotate-45 rounded-[2px] bg-foreground
+						size-2.5 rotate-45 rounded-[2px] bg-card
 						data-[side=bottom]:top-1
 						data-[side=left]:top-1/2! data-[side=left]:-right-1
 						data-[side=left]:-translate-y-1/2

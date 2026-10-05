@@ -2,7 +2,7 @@ import { getAuthMeQueryKey } from '@repo/api'
 import { dehydrate, HydrationBoundary } from '@tanstack/react-query'
 
 import { getCurrentUser } from '#/lib/auth/get-session'
-import { updateAvatarAction } from '#/modules/auth'
+import { removeAvatarAction, updateAvatarAction } from '#/modules/auth'
 import { getCompletedSkillsByCore } from '#/modules/skills/server/skill-completion-repository.server'
 import { buildPageMetadata } from '#/seo'
 import { getQueryClient } from '#/utils/get-query-client'
@@ -30,6 +30,7 @@ export default async function ProfilePage() {
 			<HydrationBoundary state={dehydrate(queryClient)}>
 				<ProfileView
 					completedSkillGroups={completedSkillGroups}
+					removeAvatarAction={removeAvatarAction}
 					updateAvatarAction={updateAvatarAction}
 				/>
 			</HydrationBoundary>

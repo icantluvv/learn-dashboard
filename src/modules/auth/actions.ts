@@ -1,16 +1,17 @@
 'use server'
 
 import type { ValidatedAvatar } from './avatar'
-import type { AuthActionResult, UpdateAvatarActionResult } from './types'
+import type { AuthActionResult, RemoveAvatarActionResult, UpdateAvatarActionResult } from './types'
 
 import { APIError } from 'better-auth/api'
 import { headers } from 'next/headers'
 
 import { serverEnvironment } from '#/env/server'
+import { getAvatarIdFromImage } from '#/lib/auth/avatar-url'
 import { auth } from '#/lib/auth/server'
 
 import { validateAvatarFile } from './avatar'
-import { deleteUserAfterAvatarFailure, saveAvatar } from './avatar-repository.server'
+import { deleteAvatar, deleteUserAfterAvatarFailure, saveAvatar } from './avatar-repository.server'
 import { signInSchema, signUpSchema } from './schemas'
 
 const genericErrorMessage = 'Не удалось выполнить запрос. Попробуйте ещё раз'
@@ -176,6 +177,36 @@ export async function updateAvatarAction(formData: FormData): Promise<UpdateAvat
 	}
 
 	return { ok: true, image: avatarUrl }
+}
+
+export async function removeAvatarAction(): Promise<RemoveAvatarActionResult> {
+	const requestHeaders = await headers()
+	const session = await auth.api.getSession({ headers: requestHeaders })
+
+	if (session == null) {
+		return { ok: false, error: genericErrorMessage }
+	}
+
+	const avatarId =
+		session.user.image == null ? undefined : getAvatarIdFromImage(session.user.image)
+
+	if (avatarId == null) {
+		return { ok: false, error: genericErrorMessage }
+	}
+
+	try {
+		await deleteAvatar(avatarId)
+	} catch {
+		// Best-effort: осиротевшая запись в user_avatar не раздаётся, т.к. image сбрасывается ниже.
+	}
+
+	try {
+		await auth.api.updateUser({ headers: requestHeaders, body: { image: null } })
+	} catch {
+		return { ok: false, error: genericErrorMessage }
+	}
+
+	return { ok: true }
 }
 
 export async function signInAction(values: unknown): Promise<AuthActionResult> {

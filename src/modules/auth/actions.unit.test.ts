@@ -7,7 +7,7 @@ interface AuthApiCall {
 }
 
 interface SessionResult {
-	user: { id: string }
+	user: { id: string; image?: string | null }
 }
 
 const signUpEmail = vi.fn<(options: AuthApiCall) => Promise<unknown>>()
@@ -15,6 +15,7 @@ const signInEmail = vi.fn<(options: AuthApiCall) => Promise<unknown>>()
 const getSession = vi.fn<(options: { headers: Headers }) => Promise<SessionResult | null>>()
 const updateUser = vi.fn<(options: AuthApiCall) => Promise<unknown>>()
 const saveAvatar = vi.fn<(input: unknown) => Promise<void>>()
+const deleteAvatar = vi.fn<(id: string) => Promise<void>>()
 const deleteUserAfterAvatarFailure = vi.fn<(userId: string) => Promise<void>>()
 vi.mock('#/lib/auth/server', () => ({
 	auth: {
@@ -29,6 +30,7 @@ vi.mock('#/lib/auth/server', () => ({
 
 vi.mock('./avatar-repository.server', () => ({
 	saveAvatar: async (input: unknown) => saveAvatar(input),
+	deleteAvatar: async (id: string) => deleteAvatar(id),
 	deleteUserAfterAvatarFailure: async (userId: string) => deleteUserAfterAvatarFailure(userId),
 }))
 
@@ -36,7 +38,8 @@ vi.mock('next/headers', () => ({
 	headers: async () => new Headers(),
 }))
 
-const { signInAction, signUpAction, updateAvatarAction } = await import('./actions')
+const { removeAvatarAction, signInAction, signUpAction, updateAvatarAction } =
+	await import('./actions')
 
 function pngFile(name = 'a.png') {
 	return new File([new Uint8Array([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a])], name, {
@@ -293,6 +296,83 @@ describe('updateAvatarAction', () => {
 		updateUser.mockRejectedValue(new Error('unexpected failure'))
 
 		const result = await updateAvatarAction(avatarFormData(pngFile()))
+
+		expect(result.ok).toBe(false)
+	})
+})
+
+describe('removeAvatarAction', () => {
+	beforeEach(() => {
+		getSession.mockReset()
+		updateUser.mockReset()
+		deleteAvatar.mockReset()
+	})
+
+	it('deletes the stored avatar and clears the user image', async () => {
+		getSession.mockResolvedValue({
+			user: { id: 'user-1', image: 'http://localhost:3000/api/avatars/avatar-1' },
+		})
+		updateUser.mockResolvedValue({})
+
+		const result = await removeAvatarAction()
+
+		expect(result).toStrictEqual({ ok: true })
+		expect(deleteAvatar).toHaveBeenCalledWith('avatar-1')
+		expect(updateUser.mock.calls[0]?.[0]?.body).toStrictEqual({ image: null })
+	})
+
+	it('reports an error without clearing the image when there is no active session', async () => {
+		getSession.mockResolvedValue(null)
+
+		const result = await removeAvatarAction()
+
+		expect(result.ok).toBe(false)
+		expect(deleteAvatar).not.toHaveBeenCalled()
+		expect(updateUser).not.toHaveBeenCalled()
+	})
+
+	it('reports an error without clearing the image when the user has no image', async () => {
+		getSession.mockResolvedValue({ user: { id: 'user-1' } })
+
+		const result = await removeAvatarAction()
+
+		expect(result.ok).toBe(false)
+		expect(deleteAvatar).not.toHaveBeenCalled()
+		expect(updateUser).not.toHaveBeenCalled()
+	})
+
+	it('reports an error without clearing the image when it is not an avatar URL', async () => {
+		getSession.mockResolvedValue({
+			user: { id: 'user-1', image: 'https://example.com/avatar.png' },
+		})
+
+		const result = await removeAvatarAction()
+
+		expect(result.ok).toBe(false)
+		expect(deleteAvatar).not.toHaveBeenCalled()
+		expect(updateUser).not.toHaveBeenCalled()
+	})
+
+	it('still clears the image when deleting the stored file fails (best-effort)', async () => {
+		getSession.mockResolvedValue({
+			user: { id: 'user-1', image: 'http://localhost:3000/api/avatars/avatar-1' },
+		})
+		deleteAvatar.mockRejectedValue(new Error('database unavailable'))
+		updateUser.mockResolvedValue({})
+
+		const result = await removeAvatarAction()
+
+		expect(result).toStrictEqual({ ok: true })
+		expect(updateUser).toHaveBeenCalledTimes(1)
+	})
+
+	it('reports a generic error when Better Auth fails to clear the image', async () => {
+		getSession.mockResolvedValue({
+			user: { id: 'user-1', image: 'http://localhost:3000/api/avatars/avatar-1' },
+		})
+		updateUser.mockRejectedValue(new Error('unexpected failure'))
+
+		const result = await removeAvatarAction()
 
 		expect(result.ok).toBe(false)
 	})

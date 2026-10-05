@@ -56,8 +56,8 @@ function PopoverContent({
 				className="isolate z-50"
 			>
 				<PopoverPrimitive.Popup data-slot="popover-content" className={cn(`
-					origin-(--transform-origin) rounded-xl bg-popover p-4 text-sm
-					text-popover-foreground shadow-md ring-1 ring-foreground/10 duration-100
+					origin-(--transform-origin) rounded-xl bg-card p-4 text-sm
+					text-card-foreground shadow-md ring-1 ring-foreground/10 duration-100
 					outline-none
 					data-[side=bottom]:slide-in-from-top-2
 					data-[side=left]:slide-in-from-right-2
