@@ -9,6 +9,7 @@ interface CopyQuestionButtonProps {
 }
 
 const tooltipLabel = 'копировать вопрос'
+const iconClassName = 'size-4 transition-transform group-active/button:scale-75'
 
 export function CopyQuestionButton({ question }: CopyQuestionButtonProps) {
 	const [isCopied, setIsCopied] = useState(false)
@@ -29,14 +30,22 @@ export function CopyQuestionButton({ question }: CopyQuestionButtonProps) {
 				render={
 					<Button
 						aria-label={tooltipLabel}
-						className="shrink-0 text-muted-foreground"
+						className={`
+							shrink-0 text-muted-foreground
+							hover:bg-transparent hover:text-foreground
+							dark:hover:bg-transparent
+						`}
 						size="icon-sm"
 						variant="ghost"
 						onClick={() => {
 							void copyQuestion()
 						}}
 					>
-						{isCopied ? <Check className="size-4" /> : <Copy className="size-4" />}
+						{isCopied ? (
+							<Check className={iconClassName} />
+						) : (
+							<Copy className={iconClassName} />
+						)}
 					</Button>
 				}
 			/>
