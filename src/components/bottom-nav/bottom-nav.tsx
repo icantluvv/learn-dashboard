@@ -14,7 +14,7 @@ export function BottomNav() {
 	return (
 		<nav aria-label="Основная навигация" className={`
 			fixed inset-x-0 bottom-0 z-40 flex items-stretch justify-around gap-1 border-t
-			border-border bg-sidebar px-2 pt-2.5 pb-[max(0.625rem,env(safe-area-inset-bottom))]
+			border-border bg-sidebar px-2 pt-1.5 pb-[max(0.5rem,env(safe-area-inset-bottom))]
 			text-card-foreground
 			lg:hidden
 		`}>
@@ -28,12 +28,12 @@ export function BottomNav() {
 						href={link.href}
 						aria-current={isActive ? 'page' : undefined}
 						className={cn(`
-							v-stack min-h-14 min-w-16 flex-1 items-center justify-start gap-1.5
-							py-1.5 text-xs text-heading/45 transition-colors
+							v-stack min-h-12 min-w-16 flex-1 items-center justify-start gap-1 py-1
+							text-xs text-heading/45 transition-colors
 							aria-[current=page]:text-brand-primary
 						`)}
 					>
-						<Icon className="size-7" aria-hidden="true" />
+						<Icon className="size-6" aria-hidden="true" />
 						{link.label}
 					</Link>
 				)

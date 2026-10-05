@@ -37,7 +37,7 @@ export function ProfileAuthenticated({
 				<div className="h-24 w-full bg-gradient-to-br from-brand-primary to-brand-secondary" />
 
 				<div className="v-stack items-start gap-6 px-6 pb-8">
-					<div className="-mt-10">
+					<div className="relative z-10 -mt-10">
 						<ProfileAvatarUpload action={updateAvatarAction} user={user} />
 					</div>
 

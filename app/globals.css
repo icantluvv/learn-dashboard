@@ -5,7 +5,7 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-	--background: oklch(1 0 0);
+	--background: #f1f1f3;
 	--foreground: oklch(0.145 0 0);
 	--gray-ultralight: #f1f1f3;
 	--sidebar: #ffffff;
@@ -132,7 +132,7 @@ body {
 }
 
 .dark {
-	--background: #1c2637;
+	--background: #2b2e3e;
 	--foreground: #ededed;
 	--gray-ultralight: #2b2e3e;
 	--sidebar: #24242e;
@@ -180,5 +180,17 @@ body {
 	select,
 	textarea {
 		@apply font-sans;
+	}
+
+	@media (width < theme(--breakpoint-lg)) {
+		html,
+		body {
+			scrollbar-width: none;
+		}
+
+		html::-webkit-scrollbar,
+		body::-webkit-scrollbar {
+			display: none;
+		}
 	}
 }

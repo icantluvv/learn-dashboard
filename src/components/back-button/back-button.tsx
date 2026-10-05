@@ -11,6 +11,7 @@ export function BackButton() {
 		<Button className={`
 			w-fit gap-2 px-0 text-sm font-medium text-heading transition-colors duration-200
 			hover:bg-transparent hover:text-muted-foreground
+			dark:hover:bg-transparent
 		`} variant="ghost" onClick={() => router.back()}>
 			<ArrowLeft className="size-4" />
 			Назад

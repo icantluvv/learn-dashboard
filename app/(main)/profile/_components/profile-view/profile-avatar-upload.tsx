@@ -6,6 +6,7 @@ import type { UpdateAvatarAction } from '#/modules/auth/types'
 import { getAuthMeQueryKey } from '@repo/api'
 import { Spinner } from '@repo/core'
 import { useQueryClient } from '@tanstack/react-query'
+import { Camera } from 'lucide-react'
 import Image from 'next/image'
 import { useState } from 'react'
 
@@ -65,8 +66,8 @@ export function ProfileAvatarUpload({ action, user }: ProfileAvatarUploadProps) 
 	return (
 		<div className="v-stack items-center gap-2">
 			<label htmlFor="profile-avatar-file" className={`
-				relative block size-20 shrink-0 cursor-pointer overflow-hidden rounded-full
-				bg-heading/10 border-shaded
+				group relative z-10 block size-20 shrink-0 cursor-pointer overflow-hidden
+				rounded-full bg-card
 			`}>
 				{previewUrl == null ? (
 					<Avatar user={user} />
@@ -78,6 +79,13 @@ export function ProfileAvatarUpload({ action, user }: ProfileAvatarUploadProps) 
 						style={{ backgroundImage: `url(${previewUrl})` }}
 					/>
 				)}
+				<span className={`
+					absolute inset-0 flex items-center justify-center bg-black/0 opacity-0
+					transition-[background-color,opacity] duration-200
+					group-hover:bg-black/40 group-hover:opacity-100
+				`}>
+					<Camera className="size-6 text-white" aria-hidden="true" />
+				</span>
 				{isUploading ? (
 					<span className="absolute inset-0 flex items-center justify-center bg-black/40">
 						<Spinner className="size-6 text-white" />

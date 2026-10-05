@@ -20,10 +20,10 @@ export function AccountDrawer() {
 			<DrawerTrigger
 				render={
 					<button type="button" className={`
-						v-stack min-h-14 min-w-16 flex-1 items-center justify-start gap-1.5 py-1.5
+						v-stack min-h-12 min-w-16 flex-1 items-center justify-start gap-1 py-1
 						text-xs text-heading/45 transition-colors
 					`}>
-						<MenuIcon className="size-7" aria-hidden="true" />
+						<MenuIcon className="size-6" aria-hidden="true" />
 						{BOTTOM_NAV_MENU_ACTION.label}
 					</button>
 				}
