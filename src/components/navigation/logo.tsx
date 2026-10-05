@@ -10,13 +10,15 @@ export function Logo() {
 			aria-label={`${BRAND_NAME} — на главную`}
 			className="inline-flex items-center gap-2"
 		>
-			<Image
-				src="/icon.svg"
-				alt=""
-				width={36}
-				height={36}
-				className="size-9 shrink-0 rounded-lg"
-			/>
+			<Image src="/icon.svg" alt="" width={36} height={36} className={`
+					size-9 shrink-0 rounded-lg
+					dark:hidden
+				`} />
+
+			<Image src="/icon-dark.svg" alt="" width={36} height={36} className={`
+					hidden size-9 shrink-0 rounded-lg
+					dark:block
+				`} />
 		</Link>
 	)
 }
