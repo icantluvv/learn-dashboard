@@ -1,7 +1,5 @@
-// TODO: заменить на реальный адрес поддержки.
-export const SUPPORT_EMAIL = 'support@starskills.ru'
+export const SUPPORT_EMAIL = 'spanteleev670@gmail.com'
 
-// TODO: заменить на реальную ссылку на Telegram поддержки.
-export const SUPPORT_TELEGRAM_URL = 'https://t.me/starskills_support'
+export const SUPPORT_TELEGRAM_URL = 'https://t.me/vvhatineed'
 
 export const SUPPORT_MAILTO_URL = `mailto:${SUPPORT_EMAIL}`

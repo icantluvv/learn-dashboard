@@ -10,11 +10,17 @@ import { Logo } from '#/components/navigation'
 import { BOTTOM_NAV_MENU_ACTION } from '#/components/navigation/nav-links'
 import { SupportDialog, SupportFab } from '#/components/support'
 import { ThemeToggle } from '#/components/theme-toggle'
+import { useBreakpoints } from '#/hooks/use-breakpoints'
 
 const MenuIcon = BOTTOM_NAV_MENU_ACTION.icon
 
 export function AccountDrawer() {
 	const user = useCurrentUser(null)
+	const { gtLg } = useBreakpoints()
+
+	if (gtLg) {
+		return null
+	}
 
 	return (
 		<Drawer swipeDirection="right">

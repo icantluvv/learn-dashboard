@@ -4,6 +4,7 @@ import type { ReactElement } from 'react'
 
 import {
 	buttonVariants,
+	cn,
 	Dialog,
 	DialogContent,
 	DialogDescription,
@@ -22,7 +23,7 @@ export function SupportDialog({ trigger }: { trigger: ReactElement }) {
 		<Dialog>
 			<DialogTrigger render={trigger} />
 
-			<DialogContent>
+			<DialogContent className="bg-background text-foreground">
 				<DialogHeader>
 					<DialogTitle>Поддержка</DialogTitle>
 					<DialogDescription>
@@ -31,19 +32,26 @@ export function SupportDialog({ trigger }: { trigger: ReactElement }) {
 				</DialogHeader>
 
 				<DialogFooter>
-					<a href={SUPPORT_MAILTO_URL} className={buttonVariants({ variant: 'default' })}>
-						<MailIcon aria-hidden="true" />
+					<a
+						href={SUPPORT_MAILTO_URL}
+						className={cn(buttonVariants({ variant: 'default' }), `
+								bg-brand-primary text-white
+								hover:bg-brand-primary/90
+								active:bg-brand-primary/80
+							`)}
+					>
 						Почта
+						<MailIcon aria-hidden="true" />
 					</a>
 
 					<a
 						href={SUPPORT_TELEGRAM_URL}
 						target="_blank"
 						rel="noreferrer nofollow"
-						className={buttonVariants({ variant: 'outline' })}
+						className={cn(buttonVariants({ variant: 'outline' }))}
 					>
-						<TelegramIcon />
 						Telegram
+						<TelegramIcon />
 					</a>
 				</DialogFooter>
 			</DialogContent>
