@@ -12,17 +12,13 @@ interface SkillCardProps {
 export function SkillCard({ skill }: SkillCardProps) {
 	return (
 		<Link href={`/catalog/${skill.core}/${skill.id}`} className="flex">
-			<Card className={`
-				size-full rounded-2xl shadow-none ring-0 transition-transform border-shaded
-				hover:scale-[1.02]
-				active:scale-97
-			`}>
+			<Card className="size-full interactive-scale rounded-2xl shadow-none ring-0">
 				<CardContent className="v-stack gap-4">
 					<div className="flex items-center justify-between gap-4">
 						<span className="text-xs font-medium text-muted-foreground">
 							{skill.topic}
 						</span>
-						<span className="text-xs font-medium text-muted-foreground">
+						<span className="text-xs font-medium text-brand-primary">
 							{DIFFICULTY_LABELS[skill.difficulty]}
 						</span>
 					</div>

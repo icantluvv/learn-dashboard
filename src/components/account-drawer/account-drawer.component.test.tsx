@@ -62,4 +62,36 @@ describe('<AccountDrawer />', () => {
 
 		await expect.element(view.getByRole('button', { name: 'Переключить тему' })).toBeVisible()
 	})
+
+	it('гостю показывает кнопку поддержки в меню', async () => {
+		getAuthMe.mockRejectedValue(new Error('Unauthorized', { cause: { status: 401 } }))
+
+		const view = await renderWithProviders(<AccountDrawer />)
+
+		await view.getByRole('button', { name: 'Меню' }).click()
+
+		await expect.element(view.getByRole('button', { name: 'Поддержка' })).toBeVisible()
+	})
+
+	it('авторизованному пользователю показывает кнопку поддержки в меню', async () => {
+		getAuthMe.mockResolvedValue(user)
+
+		const view = await renderWithProviders(<AccountDrawer />)
+
+		await view.getByRole('button', { name: 'Меню' }).click()
+
+		await expect.element(view.getByRole('button', { name: 'Поддержка' })).toBeVisible()
+	})
+
+	it('открывает диалог поддержки из меню, не закрывая его', async () => {
+		getAuthMe.mockRejectedValue(new Error('Unauthorized', { cause: { status: 401 } }))
+
+		const view = await renderWithProviders(<AccountDrawer />)
+
+		await view.getByRole('button', { name: 'Меню' }).click()
+		await view.getByRole('button', { name: 'Поддержка' }).click()
+
+		await expect.element(view.getByRole('heading', { name: 'Поддержка' })).toBeVisible()
+		await expect.element(view.getByText('Войти', { exact: true })).toBeInTheDocument()
+	})
 })

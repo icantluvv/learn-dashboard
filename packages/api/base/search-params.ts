@@ -14,10 +14,10 @@ function appendSearchParam(searchParams: URLSearchParams, key: string, value: un
 	searchParams.append(key, value === null ? 'null' : String(value))
 }
 
-export function serializeSearchParams(params: object) {
+export function serializeSearchParams(params: Record<string, unknown>) {
 	const searchParams = new URLSearchParams()
 
-	for (const [key, value] of Object.entries(params as Record<string, unknown>)) {
+	for (const [key, value] of Object.entries(params)) {
 		appendSearchParam(searchParams, key, value)
 	}
 

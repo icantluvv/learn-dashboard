@@ -8,6 +8,7 @@ import { AccountSummary } from '#/components/auth-status/account-summary'
 import { useCurrentUser } from '#/components/auth-status/use-current-user'
 import { Logo } from '#/components/navigation'
 import { BOTTOM_NAV_MENU_ACTION } from '#/components/navigation/nav-links'
+import { SupportDialog, SupportFab } from '#/components/support'
 import { ThemeToggle } from '#/components/theme-toggle'
 
 const MenuIcon = BOTTOM_NAV_MENU_ACTION.icon
@@ -37,7 +38,7 @@ export function AccountDrawer() {
 					['--drawer-content-height' as string]: '100dvh',
 				}}
 			>
-				<div className="v-stack h-full gap-8 p-6 pt-[max(1.5rem,env(safe-area-inset-top))]">
+				<div className="relative v-stack h-full gap-8 p-6 pt-[max(1.5rem,env(safe-area-inset-top))]">
 					<DrawerClose
 						render={
 							<button type="button" aria-label="Закрыть меню" className={`
@@ -66,6 +67,12 @@ export function AccountDrawer() {
 					) : (
 						<AccountSummary user={user} />
 					)}
+
+					<SupportDialog
+						trigger={
+							<SupportFab className="absolute right-6 bottom-[max(1.5rem,env(safe-area-inset-bottom))]" />
+						}
+					/>
 				</div>
 			</DrawerContent>
 		</Drawer>

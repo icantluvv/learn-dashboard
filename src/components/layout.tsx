@@ -1,6 +1,9 @@
 import { BottomNav } from '#/components/bottom-nav'
 import { PwaInstallBanner } from '#/components/pwa-install'
 import { Sidebar } from '#/components/sidebar'
+import { SupportDialog, SupportFab } from '#/components/support'
+
+const desktopSupportFabClassName = 'fixed right-6 bottom-6 z-40 hidden lg:grid'
 
 export function Layout({ children }: { children: React.ReactNode }) {
 	return (
@@ -17,6 +20,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
 				`}>{children}</div>
 
 				<PwaInstallBanner />
+
+				<SupportDialog trigger={<SupportFab className={desktopSupportFabClassName} />} />
 
 				<BottomNav />
 			</div>

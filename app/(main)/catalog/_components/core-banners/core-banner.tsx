@@ -19,10 +19,8 @@ interface CoreBannerProps {
 export function CoreBanner({ core }: CoreBannerProps) {
 	return (
 		<Link href={`/catalog/${core.type}`} className={`
-			group relative flex h-40 w-full items-end overflow-hidden rounded-2xl p-6
-			transition-transform border-shaded
-			hover:scale-[1.01]
-			active:scale-[0.99]
+			group relative flex h-40 w-full interactive-scale items-end overflow-hidden rounded-2xl
+			p-6
 			md:h-64 md:p-8
 			lg:h-70
 		`}>
