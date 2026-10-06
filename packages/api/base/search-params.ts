@@ -14,7 +14,9 @@ function appendSearchParam(searchParams: URLSearchParams, key: string, value: un
 	searchParams.append(key, value === null ? 'null' : String(value))
 }
 
-export function serializeSearchParams(params: Record<string, unknown>) {
+// Kubb-generated query parameter types do not declare an index signature.
+// eslint-disable-next-line typescript/no-restricted-types
+export function serializeSearchParams(params: object) {
 	const searchParams = new URLSearchParams()
 
 	for (const [key, value] of Object.entries(params)) {
