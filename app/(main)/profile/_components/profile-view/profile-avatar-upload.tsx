@@ -7,11 +7,11 @@ import { getAuthMeQueryKey } from '@repo/api'
 import { cn, Popover, PopoverContent, PopoverTrigger, Spinner } from '@repo/core'
 import { useQueryClient } from '@tanstack/react-query'
 import { Camera, Trash2, Upload } from 'lucide-react'
-import Image from 'next/image'
 import { useState } from 'react'
 
-import { getAvatarDisplayUrl } from '#/lib/auth/avatar-url'
 import { AVATAR_ACCEPT, getAvatarFileError } from '#/modules/auth/avatar'
+
+import { ProfileAvatar } from './profile-avatar'
 
 interface ProfileAvatarUploadProps {
 	action: UpdateAvatarAction
@@ -95,7 +95,7 @@ export function ProfileAvatarUpload({ action, removeAction, user }: ProfileAvata
 							overflow-hidden rounded-full
 						`, user.image == null ? 'bg-brand-primary' : 'bg-card')}>
 							{previewUrl == null ? (
-								<Avatar user={user} />
+								<ProfileAvatar user={user} />
 							) : (
 								<span
 									role="img"
@@ -164,35 +164,12 @@ export function ProfileAvatarUpload({ action, removeAction, user }: ProfileAvata
 					)}
 				</PopoverContent>
 			</Popover>
+
 			{error == null ? null : (
 				<p role="alert" className="text-sm text-destructive">
 					{error}
 				</p>
 			)}
 		</div>
-	)
-}
-
-function Avatar({ user }: { user: CurrentUser }) {
-	if (user.image == null) {
-		return (
-			<span
-				aria-hidden="true"
-				className="flex size-full items-center justify-center text-lg font-semibold text-white"
-			>
-				{user.name.slice(0, 1).toUpperCase()}
-			</span>
-		)
-	}
-
-	return (
-		<Image
-			src={getAvatarDisplayUrl(user.image)}
-			alt=""
-			width={80}
-			height={80}
-			className="size-full object-cover"
-			unoptimized
-		/>
 	)
 }

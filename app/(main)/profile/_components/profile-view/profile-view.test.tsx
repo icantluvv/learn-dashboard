@@ -2,15 +2,20 @@ import type { CurrentUser } from '#/lib/auth/get-session'
 import type { RemoveAvatarActionResult, UpdateAvatarActionResult } from '#/modules/auth/types'
 import type { CompletedSkillsCoreGroup } from '#/modules/skills/server/skill-completion-repository.server'
 
-import { describe, expect, it, vi } from 'vitest'
+import * as allure from 'allure-js-commons'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
+import { nextRouterMock } from '#/tests/mocks/next-navigation'
 import { renderWithProviders } from '#/tests/render'
 
-const { useGetAuthMe } = vi.hoisted(() => ({ useGetAuthMe: vi.fn() }))
+const { useGetAuthMe, useGetCompletedSkillsByCore } = vi.hoisted(() => ({
+	useGetAuthMe: vi.fn(),
+	useGetCompletedSkillsByCore: vi.fn(),
+}))
 
 vi.mock('@repo/api', async (importOriginal) => {
 	const actual = await importOriginal<typeof import('@repo/api')>()
-	return { ...actual, useGetAuthMe }
+	return { ...actual, useGetAuthMe, useGetCompletedSkillsByCore }
 })
 
 const { ProfileView } = await import('./profile-view')
@@ -30,6 +35,16 @@ const user: CurrentUser = {
 const noSkillGroups: CompletedSkillsCoreGroup[] = []
 
 describe('<ProfileView />', () => {
+	beforeEach(() => {
+		useGetCompletedSkillsByCore.mockReturnValue({
+			data: noSkillGroups,
+			isError: false,
+			isFetching: false,
+			isLoading: false,
+			refetch: vi.fn(),
+		})
+	})
+
 	it('показывает экран загрузки, пока запрос выполняется', async () => {
 		useGetAuthMe.mockReturnValue({
 			data: undefined,
@@ -51,53 +66,30 @@ describe('<ProfileView />', () => {
 			.not.toBeInTheDocument()
 	})
 
-	it('показывает гостевой экран, когда сессии нет (401)', async () => {
+	it.each([401, 403, 500])('показывает ошибку без редиректа при ответе %s', async (status) => {
+		await allure.labels(
+			{ name: 'layer', value: 'component' },
+			{ name: 'feature', value: 'Авторизация' },
+			{ name: 'story', value: 'Отображение ошибки загрузки профиля без редиректа' },
+			{ name: 'severity', value: 'critical' },
+		)
 		useGetAuthMe.mockReturnValue({
 			data: undefined,
-			error: new Error('Unauthorized', { cause: { status: 401 } }),
+			error: new Error('Request failed', { cause: { status } }),
 			isError: true,
 			isLoading: false,
 		})
-
 		const view = await renderWithProviders(
 			<ProfileView
 				removeAvatarAction={removeAvatarAction}
 				updateAvatarAction={updateAvatarAction}
 			/>,
 		)
-
-		await expect
-			.element(view.getByText('Войдите в профиль, чтобы увидеть свои данные'))
-			.toBeVisible()
-		await expect
-			.element(view.getByRole('link', { name: 'Войти' }))
-			.toHaveAttribute('href', '/sign-in')
-		await expect
-			.element(view.getByRole('link', { name: 'Регистрация' }))
-			.toHaveAttribute('href', '/sign-up')
-	})
-
-	it('показывает экран ошибки при сбое, не связанном с отсутствием сессии', async () => {
-		useGetAuthMe.mockReturnValue({
-			data: undefined,
-			error: new Error('Internal Server Error', { cause: { status: 500 } }),
-			isError: true,
-			isLoading: false,
-		})
-
-		const view = await renderWithProviders(
-			<ProfileView
-				removeAvatarAction={removeAvatarAction}
-				updateAvatarAction={updateAvatarAction}
-			/>,
-		)
-
 		await expect
 			.element(view.getByText('Не удалось загрузить профиль. Попробуйте обновить страницу.'))
 			.toBeVisible()
-		await expect
-			.element(view.getByText('Войдите в профиль, чтобы увидеть свои данные'))
-			.not.toBeInTheDocument()
+		expect(nextRouterMock.replace).not.toHaveBeenCalled()
+		await expect.element(view.getByText('Сергей')).not.toBeInTheDocument()
 	})
 
 	it('показывает данные профиля для авторизованного пользователя', async () => {
@@ -205,11 +197,20 @@ describe('<ProfileView />', () => {
 	})
 
 	it('показывает сообщение об отсутствии изученных навыков, если групп нет', async () => {
+		await allure.labels(
+			{ name: 'layer', value: 'component' },
+			{ name: 'feature', value: 'profile' },
+			{
+				name: 'story',
+				value: 'показывает сообщение об отсутствии изученных навыков, если групп нет',
+			},
+			{ name: 'severity', value: 'normal' },
+		)
+
 		useGetAuthMe.mockReturnValue({ data: user, error: null, isError: false, isLoading: false })
 
 		const view = await renderWithProviders(
 			<ProfileView
-				completedSkillGroups={noSkillGroups}
 				removeAvatarAction={removeAvatarAction}
 				updateAvatarAction={updateAvatarAction}
 			/>,
@@ -221,6 +222,16 @@ describe('<ProfileView />', () => {
 	})
 
 	it('показывает изученные навыки, сгруппированные по направлениям', async () => {
+		await allure.labels(
+			{ name: 'layer', value: 'component' },
+			{ name: 'feature', value: 'profile' },
+			{
+				name: 'story',
+				value: 'показывает изученные навыки, сгруппированные по направлениям',
+			},
+			{ name: 'severity', value: 'normal' },
+		)
+
 		useGetAuthMe.mockReturnValue({ data: user, error: null, isError: false, isLoading: false })
 		const groups: CompletedSkillsCoreGroup[] = [
 			{
@@ -235,9 +246,16 @@ describe('<ProfileView />', () => {
 			},
 		]
 
+		useGetCompletedSkillsByCore.mockReturnValue({
+			data: groups,
+			isError: false,
+			isFetching: false,
+			isLoading: false,
+			refetch: vi.fn(),
+		})
+
 		const view = await renderWithProviders(
 			<ProfileView
-				completedSkillGroups={groups}
 				removeAvatarAction={removeAvatarAction}
 				updateAvatarAction={updateAvatarAction}
 			/>,

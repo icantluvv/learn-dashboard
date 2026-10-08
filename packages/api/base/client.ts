@@ -17,22 +17,17 @@ import { serializeSearchParams } from './search-params'
 
 export { setOnProfileIncomplete, setOnUnauthorized } from './client-handlers'
 
-/** Subset of FetchRequestConfig */
 export interface RequestConfig<TData = unknown> {
 	baseURL?: string
 	credentials?: RequestCredentials
 	data?: FormData | TData
 	headers?: [string, string][] | Record<string, string>
 	method?: 'DELETE' | 'GET' | 'HEAD' | 'OPTIONS' | 'PATCH' | 'POST' | 'PUT'
-	// Record<string, unknown> breaks assignability of Kubb-generated typed query param objects
-	// (no index signature); see the identical constraint in packages/api/database/client.ts.
-	// eslint-disable-next-line typescript/no-restricted-types
-	params?: object
+	params?: Record<string, unknown>
 	signal?: AbortSignal
 	url?: string
 }
 
-/** Subset of FetchResponse */
 export interface ResponseConfig<TData = unknown> {
 	data: TData
 	headers: Headers
@@ -77,7 +72,8 @@ export function isAuthPath(url: string | undefined) {
 export function isSameOriginPath(url: string | undefined) {
 	return (
 		url != null &&
-		(url === '/api/cores' ||
+		(url === '/api/me/completed-skills' ||
+			url === '/api/cores' ||
 			url === '/api/skills' ||
 			url.startsWith('/api/skills/') ||
 			isAuthPath(url))
@@ -85,10 +81,10 @@ export function isSameOriginPath(url: string | undefined) {
 }
 
 export function getBaseUrl(url: string | undefined) {
-	// Skills are served by this app's own Route Handlers (backed by Supabase) —
-	// no external backend exists for them, so requests stay same-origin.
 	if (isSameOriginPath(url)) {
-		return ''
+		return globalThis.window === undefined
+			? new URL(serverEnvironment.BETTER_AUTH_URL).origin
+			: ''
 	}
 
 	if (globalThis.window === undefined) {
@@ -103,7 +99,6 @@ export function getBaseUrl(url: string | undefined) {
 }
 
 function isEnvFlagEnabled(value: boolean | string | undefined) {
-	// В CI skipValidation возвращает raw env-строки без zod transform.
 	return value === true || value === 'true'
 }
 

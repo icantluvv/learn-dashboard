@@ -1,6 +1,7 @@
 'use client'
 
 import {
+	getCompletedSkillsByCoreQueryKey,
 	getDashboardStatsQueryKey,
 	getSkillByIdQueryKey,
 	useGetSkillById,
@@ -17,12 +18,8 @@ interface SkillCompletionButtonProps {
 	skillId: string
 }
 
-const buttonWidthClassName = `
-	w-full gap-2
-	md:w-fit
-`
+const buttonWidthClassName = 'w-full gap-2 md:w-fit'
 
-// Отмеченное состояние использует брендовый фиолетовый вместо тёмной заливки варианта default.
 const completedClassName = `
 	bg-brand-primary
 	hover:bg-brand-primary/90
@@ -43,6 +40,7 @@ export function SkillCompletionButton({ isAuthenticated, skillId }: SkillComplet
 					current == null ? current : { ...current, completed: result.completed },
 				)
 				void queryClient.invalidateQueries({ queryKey: getDashboardStatsQueryKey() })
+				void queryClient.invalidateQueries({ queryKey: getCompletedSkillsByCoreQueryKey() })
 			},
 			onError: () => {
 				toast.add({

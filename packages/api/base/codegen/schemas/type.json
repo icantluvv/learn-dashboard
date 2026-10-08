@@ -1,0 +1,6 @@
+{
+	"type": "string",
+	"enum": ["frontend", "backend", "devops", "design"],
+	"example": "frontend",
+	"x-readme-ref-name": "type"
+}

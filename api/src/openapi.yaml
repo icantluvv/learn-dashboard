@@ -26,6 +26,8 @@ paths:
     $ref: paths/api_example.yaml
   /api/me:
     $ref: paths/api_me.yaml
+  /api/me/completed-skills:
+    $ref: paths/api_me_completed_skills.yaml
   /api/skills:
     $ref: paths/api_skills.yaml
   /api/skills/{id}:

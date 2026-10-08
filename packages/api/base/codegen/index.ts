@@ -6,6 +6,8 @@ export type { GetExampleQueryKey } from './hooks/exampleController/useGetExample
 export type { GetExampleSuspenseQueryKey } from './hooks/exampleController/useGetExampleSuspense'
 export type { GetAuthMeQueryKey } from './hooks/meController/useGetAuthMe'
 export type { GetAuthMeSuspenseQueryKey } from './hooks/meController/useGetAuthMeSuspense'
+export type { GetCompletedSkillsByCoreQueryKey } from './hooks/meController/useGetCompletedSkillsByCore'
+export type { GetCompletedSkillsByCoreSuspenseQueryKey } from './hooks/meController/useGetCompletedSkillsByCoreSuspense'
 export type { GetSkillByIdQueryKey } from './hooks/skillsController/useGetSkillById'
 export type { GetSkillByIdSuspenseQueryKey } from './hooks/skillsController/useGetSkillByIdSuspense'
 export type { GetSkillsQueryKey } from './hooks/skillsController/useGetSkills'
@@ -16,6 +18,7 @@ export type { Core } from './types/Core'
 export type { DashboardStats } from './types/DashboardStats'
 export type { Skill } from './types/Skill'
 export type { SkillCompletion } from './types/SkillCompletion'
+export type { Type } from './types/Type'
 export type {
 	GetCores200,
 	GetCoresQuery,
@@ -38,6 +41,12 @@ export type {
 	GetAuthMeQuery,
 	GetAuthMeQueryResponse,
 } from './types/meController/GetAuthMe'
+export type {
+	GetCompletedSkillsByCore200,
+	GetCompletedSkillsByCore401,
+	GetCompletedSkillsByCoreQuery,
+	GetCompletedSkillsByCoreQueryResponse,
+} from './types/meController/GetCompletedSkillsByCore'
 export type {
 	GetSkillById200,
 	GetSkillById404,
@@ -65,6 +74,7 @@ export { getCores } from './clients/coresController/getCores'
 export { getDashboardStats } from './clients/dashboardController/getDashboardStats'
 export { getExample } from './clients/exampleController/getExample'
 export { getAuthMe } from './clients/meController/getAuthMe'
+export { getCompletedSkillsByCore } from './clients/meController/getCompletedSkillsByCore'
 export { getSkillById } from './clients/skillsController/getSkillById'
 export { getSkills } from './clients/skillsController/getSkills'
 export { setSkillCompletion } from './clients/skillsController/setSkillCompletion'
@@ -92,6 +102,12 @@ export { useGetAuthMe } from './hooks/meController/useGetAuthMe'
 export { getAuthMeSuspenseQueryKey } from './hooks/meController/useGetAuthMeSuspense'
 export { getAuthMeSuspenseQueryOptions } from './hooks/meController/useGetAuthMeSuspense'
 export { useGetAuthMeSuspense } from './hooks/meController/useGetAuthMeSuspense'
+export { getCompletedSkillsByCoreQueryKey } from './hooks/meController/useGetCompletedSkillsByCore'
+export { getCompletedSkillsByCoreQueryOptions } from './hooks/meController/useGetCompletedSkillsByCore'
+export { useGetCompletedSkillsByCore } from './hooks/meController/useGetCompletedSkillsByCore'
+export { getCompletedSkillsByCoreSuspenseQueryKey } from './hooks/meController/useGetCompletedSkillsByCoreSuspense'
+export { getCompletedSkillsByCoreSuspenseQueryOptions } from './hooks/meController/useGetCompletedSkillsByCoreSuspense'
+export { useGetCompletedSkillsByCoreSuspense } from './hooks/meController/useGetCompletedSkillsByCoreSuspense'
 export { getSkillByIdQueryKey } from './hooks/skillsController/useGetSkillById'
 export { getSkillByIdQueryOptions } from './hooks/skillsController/useGetSkillById'
 export { useGetSkillById } from './hooks/skillsController/useGetSkillById'
@@ -128,6 +144,11 @@ export {
 	getAuthMe401Schema,
 	getAuthMeQueryResponseSchema,
 } from './zod/meController/getAuthMeSchema'
+export {
+	getCompletedSkillsByCore200Schema,
+	getCompletedSkillsByCore401Schema,
+	getCompletedSkillsByCoreQueryResponseSchema,
+} from './zod/meController/getCompletedSkillsByCoreSchema'
 export { skillCompletionSchema } from './zod/skillCompletionSchema'
 export { skillSchema } from './zod/skillSchema'
 export {
@@ -150,3 +171,4 @@ export {
 	setSkillCompletionMutationResponseSchema,
 	setSkillCompletionPathParamsSchema,
 } from './zod/skillsController/setSkillCompletionSchema'
+export { typeSchema } from './zod/typeSchema'

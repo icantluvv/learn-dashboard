@@ -5,7 +5,8 @@
 		"type": {
 			"type": "string",
 			"enum": ["frontend", "backend", "devops", "design"],
-			"example": "frontend"
+			"example": "frontend",
+			"x-readme-ref-name": "type"
 		},
 		"name": { "type": "string", "minLength": 1, "example": "Frontend" },
 		"description": {

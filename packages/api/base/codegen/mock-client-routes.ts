@@ -6,11 +6,17 @@ import { createGetCoresQueryResponse } from './mocks/coresController/createGetCo
 import { createGetDashboardStatsQueryResponse } from './mocks/dashboardController/createGetDashboardStats'
 import { createGetExampleQueryResponse } from './mocks/exampleController/createGetExample'
 import { createGetAuthMeQueryResponse } from './mocks/meController/createGetAuthMe'
+import { createGetCompletedSkillsByCoreQueryResponse } from './mocks/meController/createGetCompletedSkillsByCore'
 import { createGetSkillByIdQueryResponse } from './mocks/skillsController/createGetSkillById'
 import { createGetSkillsQueryResponse } from './mocks/skillsController/createGetSkills'
 import { createSetSkillCompletionMutationResponse } from './mocks/skillsController/createSetSkillCompletion'
 
 export const mockRoutes = [
+	{
+		method: 'GET',
+		pattern: /^\/api\/me\/completed-skills$/,
+		create: createGetCompletedSkillsByCoreQueryResponse,
+	},
 	{
 		method: 'GET',
 		pattern: /^\/api\/dashboard-stats$/,
